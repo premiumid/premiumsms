@@ -2,49 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import ServiceIcon from '@/components/ServiceIcon'
 
 interface Service {
   slug: string
   name: string
   icon_url?: string
-}
-
-function getColor(slug: string): string {
-  const colors: Record<string, string> = {
-    telegram: '#2AABEE', whatsapp: '#25D366', instagram: '#E4405F',
-    facebook: '#1877F2', tiktok: '#000000', google: '#EA4335',
-    twitter: '#000000', discord: '#5865F2', netflix: '#E50914',
-    spotify: '#1DB954', steam: '#1b2838',
-  }
-  return colors[slug.toLowerCase()] || '#0f172a'
-}
-
-function ServiceIcon({ service, size = 40, className }: { service: Service; size?: number; className?: string }) {
-  const iconSize = Math.round(size * 0.6)
-  return (
-    <div
-      className={className}
-      style={{ width: size, height: size, borderRadius: 8, background: getColor(service.slug), display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={`https://cdn.simpleicons.org/${service.slug}/ffffff`}
-        alt={service.name}
-        width={iconSize}
-        height={iconSize}
-        style={{ display: 'block' }}
-        onError={(e) => {
-          const el = e.currentTarget as HTMLImageElement
-          el.style.display = 'none'
-          const fb = el.nextElementSibling as HTMLElement | null
-          if (fb) fb.style.display = 'flex'
-        }}
-      />
-      <span style={{ display: 'none', color: 'white', fontWeight: 'bold', fontSize: size * 0.3 + 'px', alignItems: 'center', justifyContent: 'center' }}>
-        {service.name[0]}
-      </span>
-    </div>
-  )
 }
 
 export default function DashboardClient({ initialServices, isLoggedIn, activeRentals, balance }: { initialServices: Service[]; isLoggedIn: boolean; activeRentals?: number; balance?: number }) {
@@ -97,7 +60,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedApp(app.slug) }}
             >
               <div className="catalog-sidebar-item-left">
-                <ServiceIcon service={app} size={24} />
+                <ServiceIcon slug={app.slug} name={app.name} size={24} />
                 {app.name}
               </div>
             </div>
@@ -122,7 +85,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedApp(app.slug) }}
             >
-              <ServiceIcon service={app} size={48} className="catalog-app-icon" />
+              <ServiceIcon slug={app.slug} name={app.name} size={48} />
               <div className="catalog-app-name">{app.name}</div>
             </div>
           ))}
@@ -210,7 +173,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
             style={{ width: '100%', background: 'white', border: '1px solid var(--border-color)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
           >
             {(activeApp || initialServices[0]) ? (
-              <ServiceIcon service={activeApp || initialServices[0]} size={20} />
+              <ServiceIcon slug={(activeApp || initialServices[0]).slug} name={(activeApp || initialServices[0]).name} size={20} />
             ) : (
               <span style={{ width: 20, height: 20, borderRadius: 4, background: '#0f172a' }} />
             )}

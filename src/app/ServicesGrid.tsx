@@ -53,7 +53,7 @@ export default function ServicesGrid() {
       <div className="services-grid">
         {filtered.map(s => (
           <Link key={s.name} href="/register" className="service-card">
-            <ServiceIcon slug={s.slug} color={s.color} name={s.name} />
+            <ServiceIcon slug={s.slug} name={s.name} />
             <span className="service-card-name">{s.name}</span>
             <span className="service-card-price">from {s.price}</span>
           </Link>

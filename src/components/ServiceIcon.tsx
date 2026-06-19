@@ -2,17 +2,28 @@
 
 import { useState } from 'react'
 
+const BG_COLORS: Record<string, string> = {
+  telegram: '#2AABEE', whatsapp: '#25D366', instagram: '#E4405F',
+  facebook: '#1877F2', tiktok: '#000000', google: '#EA4335',
+  twitter: '#000000', discord: '#5865F2', netflix: '#E50914',
+  spotify: '#1DB954', steam: '#1b2838',
+}
+
+export function getServiceColor(slug: string): string {
+  return BG_COLORS[slug.toLowerCase()] || '#0f172a'
+}
+
 interface ServiceIconProps {
   slug: string
-  color: string
   name: string
   size?: number
   iconSize?: number
   rounded?: boolean
 }
 
-export default function ServiceIcon({ slug, color, name, size = 48, iconSize = 28, rounded = true }: ServiceIconProps) {
+export default function ServiceIcon({ slug, name, size = 48, iconSize = 28, rounded = true }: ServiceIconProps) {
   const [failed, setFailed] = useState(!slug)
+  const color = getServiceColor(slug)
 
   return (
     <div

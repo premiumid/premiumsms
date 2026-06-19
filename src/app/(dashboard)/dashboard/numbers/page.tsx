@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import ServiceIcon from '@/components/ServiceIcon'
 
 
 interface Service {
@@ -155,31 +156,7 @@ export default function RentNumberPage() {
                   onClick={() => selectService(s.slug)}
                   id={`btn-service-${s.slug}`}
                 >
-                  {(() => {
-                    const bgColors: Record<string, string> = {
-                      telegram: '#2AABEE', whatsapp: '#25D366', instagram: '#E4405F',
-                      facebook: '#1877F2', tiktok: '#000000', google: '#EA4335',
-                      twitter: '#000000', discord: '#5865F2', netflix: '#E50914',
-                      spotify: '#1DB954', steam: '#1b2838',
-                    }
-                    const bg = bgColors[s.slug.toLowerCase()] || '#0f172a'
-                    return (
-                      <div style={{ width: 28, height: 28, borderRadius: 6, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={`https://cdn.simpleicons.org/${s.slug}/ffffff`}
-                          alt={s.name}
-                          width={16}
-                          height={16}
-                          style={{ display: 'block' }}
-                          onError={(e) => {
-                            const el = e.currentTarget as HTMLImageElement
-                            el.style.display = 'none'
-                          }}
-                        />
-                      </div>
-                    )
-                  })()}
+                  <ServiceIcon slug={s.slug} name={s.name} size={28} iconSize={16} />
                   <span className="service-name">{s.name}</span>
                 </button>
               ))}

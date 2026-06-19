@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import ServiceIcon from '@/components/ServiceIcon'
 
 interface Country {
   code: string
@@ -13,39 +14,6 @@ interface Service {
   slug: string
   name: string
   icon_url?: string
-}
-
-function ServiceIcon({ service, size = 32 }: { service: Service; size?: number }) {
-  const colors: Record<string, string> = {
-    telegram: '#2AABEE', whatsapp: '#25D366', instagram: '#E4405F',
-    facebook: '#1877F2', tiktok: '#000000', google: '#EA4335',
-    twitter: '#000000', discord: '#5865F2', netflix: '#E50914',
-    spotify: '#1DB954', steam: '#1b2838',
-  }
-  const bg = colors[service.slug.toLowerCase()] || '#0f172a'
-  const iconSize = Math.round(size * 0.6)
-
-  return (
-    <div style={{ width: size, height: size, borderRadius: 8, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={`https://cdn.simpleicons.org/${service.slug}/ffffff`}
-        alt={service.name}
-        width={iconSize}
-        height={iconSize}
-        style={{ display: 'block' }}
-        onError={(e) => {
-          const el = e.currentTarget as HTMLImageElement
-          el.style.display = 'none'
-          const fb = el.nextElementSibling as HTMLElement | null
-          if (fb) fb.style.display = 'flex'
-        }}
-      />
-      <span style={{ display: 'none', color: 'white', fontWeight: 'bold', fontSize: size * 0.35 + 'px', alignItems: 'center', justifyContent: 'center' }}>
-        {service.name[0]}
-      </span>
-    </div>
-  )
 }
 
 function CountryFlag({ code, name }: { code: string; name: string }) {
@@ -188,7 +156,7 @@ export default function RentalsClient({
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedApp(app.slug) }}
             >
-              <ServiceIcon service={app} size={48} />
+              <ServiceIcon slug={app.slug} name={app.name} size={48} />
               <div className="catalog-app-name">{app.name}</div>
             </div>
           ))}
@@ -209,7 +177,7 @@ export default function RentalsClient({
           <div style={{ background: 'white', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1.5rem', border: '1px solid var(--accent-primary)', boxShadow: '0 0 0 1px var(--accent-primary)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <ServiceIcon service={activeApp} size={32} />
+                <ServiceIcon slug={activeApp.slug} name={activeApp.name} size={32} />
                 <div>
                   <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{activeApp.name}</div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>

@@ -55,7 +55,7 @@ export default function ServicesPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
           {popular.map(s => (
             <div key={s.name} style={{ background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <ServiceIcon slug={s.slug} color={s.color} name={s.name} />
+              <ServiceIcon slug={s.slug} name={s.name} />
               <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{s.name}</h3>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', flexGrow: 1 }}>{s.desc}</p>
               <Link href="/register" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%' }}>Get a Number</Link>
@@ -70,7 +70,7 @@ export default function ServicesPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
           {rest.map(s => (
             <div key={s.name} style={{ background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <ServiceIcon slug={s.slug} color={s.color} name={s.name} />
+              <ServiceIcon slug={s.slug} name={s.name} />
               <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{s.name}</h3>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', flexGrow: 1 }}>{s.desc}</p>
               <Link href="/register" className="btn btn-secondary" style={{ marginTop: '0.5rem', width: '100%' }}>Get a Number</Link>
