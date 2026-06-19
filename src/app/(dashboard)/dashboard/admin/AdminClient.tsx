@@ -89,16 +89,16 @@ function SVGChart({
   const secondLinePath = secondPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
 
   return (
-    <div className="glass-panel p-4 flex-1 flex flex-col justify-between card-glow">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-semibold text-text-secondary">{title}</h3>
+    <div className="glass-panel p-4 card-glow flex flex-1 flex-col justify-between">
+      <div className="chart-card-header">
+        <h3 className="chart-card-title">{title}</h3>
         {secondValueKey && (
-          <div className="flex gap-3 text-[10px] font-semibold uppercase" style={{ display: 'flex', gap: '0.75rem' }}>
-            <span className="flex items-center gap-1 text-accent-tertiary" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <span className="w-2 h-2 rounded-full bg-accent-primary" style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-primary)' }} /> Rentals
+          <div className="chart-legend-row">
+            <span className="chart-legend-item" style={{ color: 'var(--accent-tertiary)' }}>
+              <span className="chart-legend-dot" style={{ background: 'var(--accent-primary)' }} /> Rentals
             </span>
-            <span className="flex items-center gap-1 text-warning" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <span className="w-2 h-2 rounded-full bg-[#f59e0b]" style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b' }} /> Signups
+            <span className="chart-legend-item" style={{ color: 'var(--warning)' }}>
+              <span className="chart-legend-dot" style={{ background: '#f59e0b' }} /> Signups
             </span>
           </div>
         )}
@@ -338,16 +338,16 @@ export default function AdminClient({
       </div>
 
       {/* System Monitoring & Visual Analytics Grid */}
-      <div className="monitoring-grid mb-8" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
+      <div className="monitoring-grid mb-8">
         {/* System Health Card */}
-        <div className="glass-panel p-6" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div className="flex justify-between items-center mb-3" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 className="section-title mt-0 mb-0" style={{ margin: 0, fontSize: '1.1rem' }}>System Health</h3>
+        <div className="glass-panel p-6 system-health-card">
+          <div className="system-health-header">
+            <h3 className="section-title mt-0 mb-0" style={{ fontSize: '1.1rem' }}>System Health</h3>
             <button 
               onClick={fetchHealth} 
               disabled={isLoadingHealth} 
-              className="btn btn-secondary py-1 px-3 text-xs"
-              style={{ minHeight: 'auto', padding: '0.4rem 0.8rem', fontSize: '0.75rem', cursor: 'pointer' }}
+              className="btn btn-secondary py-1 px-3"
+              style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }}
             >
               {isLoadingHealth ? 'Polling...' : (
                 <>
@@ -358,71 +358,71 @@ export default function AdminClient({
             </button>
           </div>
 
-          <div className="flex flex-col gap-4" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="p-3 rounded-md" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '0.75rem' }}>
+          <div className="flex flex-col gap-4">
+            <div className="system-status-row">
               <div>
-                <p className="text-sm font-semibold mb-1" style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', color: 'var(--text-primary)' }}>Database Latency</p>
-                <p className="text-xs text-text-tertiary" style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Supabase Postgres</p>
+                <p className="system-status-label">Database Latency</p>
+                <p className="system-status-meta">Supabase Postgres</p>
               </div>
-              <div className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div className="system-status-value">
                 {health ? (
                   <>
                     <span className={`system-status-indicator ${health.database.healthy ? 'indicator-healthy' : 'indicator-error'}`} />
-                    <span className="font-mono text-sm" style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>{health.database.latencyMs}ms</span>
+                    <span className="font-mono text-sm">{health.database.latencyMs}ms</span>
                   </>
                 ) : (
-                  <span className="text-xs text-text-tertiary" style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Checking...</span>
+                  <span className="text-tertiary text-xs">Checking...</span>
                 )}
               </div>
             </div>
 
-            <div className="p-3 rounded-md" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '0.75rem' }}>
+            <div className="system-status-row">
               <div>
-                <p className="text-sm font-semibold mb-1" style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', color: 'var(--text-primary)' }}>Upstream API Status</p>
-                <p className="text-xs text-text-tertiary" style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>VirtualSMS integration</p>
+                <p className="system-status-label">Upstream API Status</p>
+                <p className="system-status-meta">VirtualSMS integration</p>
               </div>
-              <div className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div className="system-status-value">
                 {health ? (
                   <>
                     <span className={`system-status-indicator ${health.provider.healthy ? 'indicator-healthy' : 'indicator-error'}`} />
-                    <span className="font-mono text-sm" style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>{health.provider.latencyMs}ms</span>
+                    <span className="font-mono text-sm">{health.provider.latencyMs}ms</span>
                   </>
                 ) : (
-                  <span className="text-xs text-text-tertiary" style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Checking...</span>
+                  <span className="text-tertiary text-xs">Checking...</span>
                 )}
               </div>
             </div>
 
-            <div className="p-3 rounded-md" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '0.75rem' }}>
-              <p className="text-sm font-semibold" style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Rental Status Ratios</p>
+            <div className="status-ratio-card">
+              <p className="status-ratio-card-title">Rental Status Ratios</p>
               {health ? (
-                <div className="grid grid-cols-4 gap-2 text-center text-xs mt-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', textAlign: 'center', fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                  <div style={{ background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.15)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
-                    <span className="block text-success font-semibold" style={{ display: 'block', color: 'var(--success)', fontWeight: '600' }}>{health.stats.completed}</span>
-                    <span className="text-[10px] text-text-tertiary uppercase" style={{ display: 'block', fontSize: '9px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Done</span>
+                <div className="status-ratio-grid">
+                  <div className="status-ratio-item done">
+                    <span className="status-ratio-number done">{health.stats.completed}</span>
+                    <span className="status-ratio-label">Done</span>
                   </div>
-                  <div style={{ background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.15)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
-                    <span className="block text-accent-tertiary font-semibold" style={{ display: 'block', color: 'var(--accent-tertiary)', fontWeight: '600' }}>{health.stats.active}</span>
-                    <span className="text-[10px] text-text-tertiary uppercase" style={{ display: 'block', fontSize: '9px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Active</span>
+                  <div className="status-ratio-item active">
+                    <span className="status-ratio-number active">{health.stats.active}</span>
+                    <span className="status-ratio-label">Active</span>
                   </div>
-                  <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.15)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
-                    <span className="block text-danger font-semibold" style={{ display: 'block', color: '#fca5a5', fontWeight: '600' }}>{health.stats.cancelled}</span>
-                    <span className="text-[10px] text-text-tertiary uppercase" style={{ display: 'block', fontSize: '9px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Cxl</span>
+                  <div className="status-ratio-item cancelled">
+                    <span className="status-ratio-number cancelled">{health.stats.cancelled}</span>
+                    <span className="status-ratio-label">Cxl</span>
                   </div>
-                  <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.15)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
-                    <span className="block text-warning font-semibold" style={{ display: 'block', color: 'var(--warning)', fontWeight: '600' }}>{health.stats.expired}</span>
-                    <span className="text-[10px] text-text-tertiary uppercase" style={{ display: 'block', fontSize: '9px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Exp</span>
+                  <div className="status-ratio-item expired">
+                    <span className="status-ratio-number expired">{health.stats.expired}</span>
+                    <span className="status-ratio-label">Exp</span>
                   </div>
                 </div>
               ) : (
-                <span className="text-xs text-text-tertiary" style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Loading breakdown...</span>
+                <span className="text-tertiary text-xs">Loading breakdown...</span>
               )}
             </div>
           </div>
         </div>
 
         {/* Charts Container */}
-        <div style={{ display: 'flex', gap: '1.5rem', flexDirection: 'row', flexWrap: 'wrap' }}>
+        <div className="charts-row">
           <SVGChart 
             title="Wallet Top-Up Volume (USD)" 
             data={topupsTrend} 
@@ -550,7 +550,7 @@ export default function AdminClient({
               </thead>
               <tbody>
                 {filteredUsers.map(u => (
-                  <tr key={u.id} className={targetUserId === u.id ? 'active-row bg-[#ffffff0a]' : ''} onClick={() => setTargetUserId(u.id)} style={{ cursor: 'pointer' }}>
+                  <tr key={u.id} className={targetUserId === u.id ? 'active-row' : ''} onClick={() => setTargetUserId(u.id)} style={{ cursor: 'pointer' }}>
                     <td>{u.email}</td>
                     <td>
                       <span className={`status-badge status-${u.role === 'admin' ? 'completed' : 'expired'}`}>

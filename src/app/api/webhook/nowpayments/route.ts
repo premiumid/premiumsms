@@ -3,7 +3,7 @@ import crypto from 'crypto'
 import { createAdminClient, creditWalletBalance } from '@/lib/supabase/admin'
 import { requireEnv } from '@/lib/validate'
 
-const IPN_SECRET = requireEnv('NOWPAYMENTS_IPN_SECRET')
+
 
 const VALID_STATUSES = new Set(['waiting', 'confirming', 'confirmed', 'sending', 'partially_paid', 'finished', 'failed', 'refunded', 'expired'])
 
@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
   let paymentIdStr = 'unknown'
+  const IPN_SECRET = requireEnv('NOWPAYMENTS_IPN_SECRET')
 
   try {
     const rawBody = await request.text()

@@ -51,8 +51,8 @@ export default function SettingsPage() {
       </div>
 
       {/* Profile Info */}
-      <div className="glass-panel" style={{ padding: '1.5rem', maxWidth: 560, marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem' }}>
+      <div className="glass-panel p-6" style={{ maxWidth: 560, marginBottom: '1.5rem' }}>
+        <h2 className="text-sm font-bold mb-4" style={{ fontSize: '1.125rem' }}>
           Profile
         </h2>
         {loading ? (
@@ -61,13 +61,13 @@ export default function SettingsPage() {
             <div className="skeleton-line" style={{ width: '40%', height: 14 }} />
           </div>
         ) : user ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem' }}>
+          <div className="flex flex-col" style={{ gap: '0.75rem', fontSize: '0.875rem' }}>
             <div>
-              <span style={{ color: 'var(--text-tertiary)', fontWeight: 600, marginRight: '0.5rem' }}>Email</span>
+              <span className="font-semibold text-tertiary" style={{ marginRight: '0.5rem' }}>Email</span>
               <span>{user.email}</span>
             </div>
             <div>
-              <span style={{ color: 'var(--text-tertiary)', fontWeight: 600, marginRight: '0.5rem' }}>Joined</span>
+              <span className="font-semibold text-tertiary" style={{ marginRight: '0.5rem' }}>Joined</span>
               <span><FormattedDate date={user.created_at} /></span>
             </div>
           </div>
@@ -75,11 +75,11 @@ export default function SettingsPage() {
       </div>
 
       {/* Danger Zone */}
-      <div className="glass-panel" style={{ padding: '1.5rem', maxWidth: 560, borderColor: '#fecaca' }}>
-        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem', color: '#dc2626' }}>
+      <div className="glass-panel p-6" style={{ maxWidth: 560, borderColor: '#fecaca' }}>
+        <h2 className="font-bold mb-2" style={{ fontSize: '1.125rem', color: '#dc2626' }}>
           Delete Account
         </h2>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+        <p className="text-sm text-secondary mb-6" style={{ lineHeight: 1.6 }}>
           Once you delete your account, all your data will be permanently removed.
           This includes your profile, wallet balance, rental history, and API keys.
           This action cannot be undone.
@@ -94,8 +94,8 @@ export default function SettingsPage() {
             Delete Account
           </button>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>
+          <div className="flex flex-col" style={{ gap: '1rem' }}>
+            <p className="font-semibold text-sm">
               Type <strong>DELETE</strong> to confirm:
             </p>
             <input
@@ -103,16 +103,12 @@ export default function SettingsPage() {
               value={confirmText}
               onChange={e => setConfirmText(e.target.value)}
               placeholder='Type "DELETE" to confirm'
-              style={{
-                width: '100%', padding: '0.625rem 1rem',
-                border: '1px solid var(--border-color)',
-                borderRadius: 'var(--radius-md)', fontSize: '0.875rem', outline: 'none'
-              }}
+              className="input-field"
             />
             {error && (
-              <p style={{ fontSize: '0.8125rem', color: '#dc2626' }}>{error}</p>
+              <p className="text-xs" style={{ color: '#dc2626' }}>{error}</p>
             )}
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div className="flex" style={{ gap: '0.75rem' }}>
               <button
                 className="btn"
                 style={{ background: '#dc2626', color: 'white' }}

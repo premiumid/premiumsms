@@ -239,14 +239,14 @@ export default function ApiClient({ initialKeys }: ApiClientProps) {
           <p className="topup-desc mb-4">Integrate real SMS verifications directly into your codebase or tools.</p>
           <div className="api-overview-bullets text-sm">
             <div className="bullet-item">
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="bullet-icon" style={{ flexShrink: 0 }}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="bullet-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <div>
                 <strong>Authentication</strong>
                 <p className="text-secondary">Attach your API Key to the request header as <code>X-API-Key: your_key_here</code>.</p>
               </div>
             </div>
             <div className="bullet-item mt-4">
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="bullet-icon" style={{ flexShrink: 0 }}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="bullet-icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
               <div>
                 <strong>Rate Limits & Pricing</strong>
                 <p className="text-secondary">Requests are limited to 60 calls per minute. Standard fees apply per rental order.</p>
@@ -285,8 +285,8 @@ export default function ApiClient({ initialKeys }: ApiClientProps) {
 
         <div className="docs-sections">
           {/* Endpoint 1 */}
-          <div className="docs-endpoint-section border-b pb-6 mb-6">
-            <div className="endpoint-header mb-4">
+          <div className="docs-endpoint-section">
+            <div className="endpoint-header">
               <span className="method-badge get">GET</span>
               <code className="endpoint-path">/api/services</code>
               <span className="endpoint-desc">List available services</span>
@@ -324,8 +324,8 @@ export default function ApiClient({ initialKeys }: ApiClientProps) {
           </div>
 
           {/* Endpoint 2 */}
-          <div className="docs-endpoint-section border-b pb-6 mb-6">
-            <div className="endpoint-header mb-4">
+          <div className="docs-endpoint-section">
+            <div className="endpoint-header">
               <span className="method-badge post">POST</span>
               <code className="endpoint-path">/api/rentals</code>
               <span className="endpoint-desc">Rent a new number</span>

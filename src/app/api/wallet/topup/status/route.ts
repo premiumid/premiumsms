@@ -2,11 +2,12 @@ import { authenticateRequest } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireEnv, errorResponse, handleApiError } from '@/lib/validate'
 
-const NOWPAYMENTS_API_KEY = requireEnv('NOWPAYMENTS_API_KEY')
+
 
 export async function GET(request: Request) {
   const auth = await authenticateRequest(request)
   if (!auth.ok) return auth.response
+  const NOWPAYMENTS_API_KEY = requireEnv('NOWPAYMENTS_API_KEY')
 
   try {
     const { searchParams } = new URL(request.url)

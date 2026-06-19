@@ -5,7 +5,8 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: var(--bg-color);
+  background: #0a0f1d;
+  color: #f8fafc;
   overflow: hidden;
 }
 
@@ -15,16 +16,19 @@
   align-items: center;
   padding: 0 1.5rem;
   height: 72px;
-  background: white;
-  border-bottom: 1px solid var(--border-color);
+  background: rgba(10, 15, 29, 0.7);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   flex-shrink: 0;
+  z-index: 40;
 }
 
 .app-brand {
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 800;
-  color: var(--text-primary) !important;
+  color: #f8fafc !important;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -57,7 +61,7 @@
   align-items: center;
   gap: 0.5rem;
   height: 100%;
-  color: var(--text-secondary) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
   font-weight: 600;
   font-size: 0.875rem;
   border-bottom: 2px solid transparent;
@@ -66,11 +70,11 @@
 }
 
 .app-tab:hover {
-  color: var(--text-primary) !important;
+  color: white !important;
 }
 
 .app-tab.active {
-  color: var(--text-primary) !important;
+  color: white !important;
   border-bottom-color: var(--accent-primary);
 }
 
@@ -82,11 +86,18 @@
 
 .app-balance {
   font-weight: 700;
-  color: var(--text-primary);
-  background: var(--bg-tertiary);
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1);
   padding: 0.5rem 1rem;
   border-radius: 9999px;
   font-size: 0.875rem;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s;
+}
+
+.app-balance:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .app-content-wrapper {
@@ -116,8 +127,8 @@
 }
 
 .catalog-sidebar {
-  background: white;
-  border-right: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.02);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   display: none;
   flex-direction: column;
   overflow: hidden;
@@ -131,17 +142,23 @@
 
 .catalog-sidebar-search {
   padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .catalog-sidebar-search input {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 9999px;
-  border: 1px solid var(--border-color);
-  background: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
   outline: none;
   font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.catalog-sidebar-search input:focus {
+  border-color: var(--accent-primary);
 }
 
 .catalog-sidebar-list {
@@ -158,14 +175,15 @@
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   margin-bottom: 0.25rem;
+  transition: all 0.2s;
 }
 
 .catalog-sidebar-item:hover, .catalog-sidebar-item.active {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
 }
 
 .catalog-sidebar-item-left {
@@ -175,7 +193,7 @@
 }
 
 .catalog-main {
-  background: var(--bg-color);
+  background: transparent;
   overflow-y: auto;
   padding: 2rem;
   display: flex;
@@ -190,10 +208,11 @@
 .catalog-header h1 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
+  color: white;
 }
 
 .catalog-header p {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.875rem;
 }
 
@@ -204,24 +223,29 @@
   margin-bottom: 3rem;
 }
 
-/* Stats cards */
 .stats-card {
   flex: 1;
   min-width: 160px;
-  background: white;
-  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-lg);
   padding: 1rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
   text-decoration: none;
   color: inherit;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .stats-card:hover {
-  box-shadow: var(--shadow-md);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
 }
 
 .stats-card-label {
@@ -235,6 +259,7 @@
 .stats-card-value {
   font-size: 1.5rem;
   font-weight: 700;
+  color: white;
 }
 
 .stats-card-cta {
@@ -254,24 +279,29 @@
   text-align: center;
   gap: 0.5rem;
   cursor: pointer;
-  padding: 1rem;
+  padding: 1.25rem 1rem;
   border-radius: var(--radius-lg);
-  border: 2px solid transparent;
-  transition: all 0.2s;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
   color: inherit;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .catalog-app-card:hover {
-  background: white;
-  box-shadow: var(--shadow-sm);
-  border-color: var(--border-color);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.2);
 }
 
 .catalog-app-card.active {
-  background: white;
+  background: rgba(255, 255, 255, 0.08);
   border-color: var(--accent-primary);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 0 0 1px var(--accent-primary), 0 10px 25px -5px rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
 }
 
 .catalog-app-icon {
@@ -289,33 +319,36 @@
 .catalog-app-name {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .catalog-step-indicator {
-  background: white;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 9999px;
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   margin-top: auto;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .step-indicator-item {
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: var(--text-tertiary);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .step-indicator-item.active {
-  color: var(--text-primary);
+  color: white;
 }
 
 .step-indicator-num {
@@ -325,14 +358,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.1);
   font-weight: 700;
   font-size: 0.875rem;
+  transition: all 0.3s ease;
 }
 
 .step-indicator-item.active .step-indicator-num {
   background: var(--accent-primary);
   color: white;
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
 }
 
 .step-indicator-text {
@@ -347,11 +382,12 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
+  color: var(--accent-highlight);
 }
 
 .catalog-right {
-  background: white;
-  border-left: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.01);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
   padding: 1.5rem;
   overflow-y: auto;
   display: none;
@@ -364,20 +400,24 @@
 }
 
 .order-summary-box {
-  background: var(--bg-color);
+  background: rgba(255, 255, 255, 0.03);
   border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 1.5rem;
   text-align: center;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .order-summary-box h3 {
   font-size: 1.125rem;
   margin-bottom: 0.5rem;
+  color: white;
 }
 
 .order-summary-box p {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.6);
   margin-bottom: 1.5rem;
 }
 
@@ -394,25 +434,18 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.75rem;
+  border-radius: 9999px;
+  justify-content: center;
 }
 
 .order-summary-features li::before {
   content: "✓";
   color: var(--success);
   font-weight: bold;
-}
-
-.order-summary-features li {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  padding: 0.75rem;
-  border-radius: 9999px;
-  justify-content: center;
 }
 
 /* Stats grid */
@@ -429,7 +462,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .activity-section-label {
@@ -447,8 +480,8 @@
   align-items: center;
   padding: 0.5rem 0;
   text-decoration: none;
-  color: inherit;
-  border-bottom: 1px solid var(--border-color);
+  color: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 0.875rem;
 }
 
@@ -462,6 +495,7 @@
 
 .activity-row-primary {
   font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .activity-row-date {
@@ -473,7 +507,7 @@
 /* Catalog stats bar */
 .catalog-stats-bar {
   text-align: center;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.875rem;
   margin-bottom: 2rem;
   display: flex;
@@ -486,7 +520,7 @@
 .step-connector {
   width: 40px;
   height: 1px;
-  background: var(--border-color);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Right sidebar */
@@ -504,16 +538,17 @@
 .catalog-right-title {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
+  color: white;
 }
 
 .catalog-right-desc {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .catalog-right-note {
   font-size: 0.75rem;
-  color: var(--text-tertiary);
+  color: rgba(255, 255, 255, 0.4);
   margin-bottom: 1rem;
 }
 
@@ -529,28 +564,30 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border-color);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .catalog-right-or {
   font-size: 0.75rem;
-  color: var(--text-tertiary);
+  color: rgba(255, 255, 255, 0.4);
   font-weight: 600;
 }
 
 .catalog-right-cta {
   width: 100%;
-  background: white;
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  transition: all 0.2s;
 }
 
 .catalog-right-cta:hover {
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .catalog-right-cta-placeholder {

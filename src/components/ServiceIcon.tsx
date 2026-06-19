@@ -6,7 +6,11 @@ const BG_COLORS: Record<string, string> = {
   telegram: '#2AABEE', whatsapp: '#25D366', instagram: '#E4405F',
   facebook: '#1877F2', tiktok: '#000000', google: '#EA4335',
   twitter: '#000000', discord: '#5865F2', netflix: '#E50914',
-  spotify: '#1DB954', steam: '#1b2838',
+  spotify: '#1DB954', steam: '#1b2838', amazon: '#FF9900',
+  uber: '#000000', paypal: '#00457C', binance: '#F3BA2F',
+  coinbase: '#0052FF', tinder: '#FF6B6B', signal: '#3A76F0',
+  wechat: '#07C160', viber: '#7360F2', line: '#00B900',
+  snapchat: '#FFFC00', microsoft: '#00A4EF', apple: '#A2AAAD',
 }
 
 export function getServiceColor(slug: string): string {

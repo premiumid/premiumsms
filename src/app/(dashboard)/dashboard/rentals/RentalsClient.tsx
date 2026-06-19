@@ -95,7 +95,7 @@ export default function RentalsClient({
             onChange={e => setSearch(e.target.value)}
           />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', fontSize: '0.625rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <div className="catalog-sidebar-header">
           <span>AVAILABLE NOW - {filteredCountries.length}</span>
         </div>
         <div className="catalog-sidebar-list">
@@ -108,43 +108,43 @@ export default function RentalsClient({
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedCountry(c.code) }}
             >
-              <div className="catalog-sidebar-item-left" style={{ gap: '0.625rem' }}>
+              <div className="catalog-sidebar-item-left">
                 <CountryFlag code={c.code} name={c.name} />
                 {c.name}
               </div>
             </div>
           ))}
 
-          <div style={{ padding: '1rem', textAlign: 'center', marginTop: '1rem' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginBottom: '0.5rem' }}>Can&apos;t find yours?</div>
-            <button className="btn btn-secondary" style={{ width: '100%', fontSize: '0.75rem', padding: '0.5rem' }}>+ Request it</button>
+          <div className="catalog-sidebar-footer">
+            <div className="text-tertiary text-xs mb-1">Can&apos;t find yours?</div>
+            <button className="btn btn-secondary w-full text-xs" style={{ padding: '0.5rem' }}>+ Request it</button>
           </div>
         </div>
       </aside>
 
       {/* Main Content — Services */}
       <main className="catalog-main">
-        <h1 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: 700 }}>Rent a Number</h1>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <div style={{ position: 'relative', width: '100%', maxWidth: '400px' }}>
+        <h1>Rent a Number</h1>
+        <div className="catalog-search-bar">
+          <div className="catalog-search-input-wrap">
             <input
               type="text"
+              className="catalog-search-input"
               placeholder={`Search ${initialServices.length} services in ${activeCountry?.name || '...'}...`}
               value={serviceSearch}
               onChange={e => setServiceSearch(e.target.value)}
-              style={{ width: '100%', padding: '0.75rem 1rem 0.75rem 2.5rem', borderRadius: '9999px', border: '1px solid var(--border-color)', outline: 'none' }}
             />
-            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)', display: 'flex' }}>
+            <span className="catalog-search-icon">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </span>
           </div>
-          <div style={{ display: 'flex', background: 'var(--bg-tertiary)', padding: '0.25rem', borderRadius: '9999px' }}>
-            <button style={{ padding: '0.5rem 1rem', borderRadius: '9999px', border: 'none', background: 'transparent', fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Full Access</button>
-            <button style={{ padding: '0.5rem 1rem', borderRadius: '9999px', border: 'none', background: 'white', fontWeight: 600, fontSize: '0.875rem', color: 'var(--accent-primary)', boxShadow: 'var(--shadow-sm)' }}>Platform Rental</button>
+          <div className="catalog-filter-pills">
+            <button className="catalog-filter-pill">Full Access</button>
+            <button className="catalog-filter-pill active">Platform Rental</button>
           </div>
         </div>
 
-        <div style={{ textAlign: 'center', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-tertiary)', letterSpacing: '0.05em', marginBottom: '1.5rem' }}>POPULAR</div>
+        <div className="catalog-section-label">POPULAR</div>
 
         <div className="catalog-apps-grid">
           {filteredServices.slice(0, 24).map(app => (
@@ -165,67 +165,67 @@ export default function RentalsClient({
 
       {/* Right Sidebar — Order Summary */}
       <aside className="catalog-right" style={{ background: '#f8fafc' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h2 style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <div className="order-summary-header">
+          <h2 className="order-summary-title">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Order Summary
           </h2>
-          <div style={{ background: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent-primary)', boxShadow: 'var(--shadow-sm)' }}>1</div>
+          <div className="order-count-badge">1</div>
         </div>
 
         {activeApp && activeCountry && (
-          <div style={{ background: 'white', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1.5rem', border: '1px solid var(--accent-primary)', boxShadow: '0 0 0 1px var(--accent-primary)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className="order-selected-app">
+            <div className="order-selected-row">
+              <div className="order-selected-info">
                 <ServiceIcon slug={activeApp.slug} name={activeApp.name} size={32} />
                 <div>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{activeApp.name}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                  <div className="order-selected-name">{activeApp.name}</div>
+                  <div className="order-selected-location">
                     <CountryFlag code={activeCountry.code} name={activeCountry.name} />
                     {activeCountry.name}
                   </div>
                 </div>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{priceDisplay}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>1d</div>
+              <div className="order-selected-price">
+                <div className="order-price-value">{priceDisplay}</div>
+                <div className="order-price-duration">1d</div>
               </div>
             </div>
 
-            <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.5rem' }}>DURATION</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-              <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', border: '1px solid var(--accent-primary)', background: '#f5f3ff', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <input type="radio" name="duration" defaultChecked style={{ accentColor: 'var(--accent-primary)' }} />
-                  <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>1 day</span>
+            <div className="order-duration-label">DURATION</div>
+            <div className="order-duration-options">
+              <label className="order-duration-option selected">
+                <div className="order-duration-radio">
+                  <input type="radio" name="duration" defaultChecked />
+                  <span className="order-duration-label-text">1 day</span>
                 </div>
-                <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>{priceDisplay}</span>
+                <span className="order-duration-price">{priceDisplay}</span>
               </label>
-              <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <input type="radio" name="duration" style={{ accentColor: 'var(--accent-primary)' }} />
-                  <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>3 days</span>
+              <label className="order-duration-option unselected">
+                <div className="order-duration-radio">
+                  <input type="radio" name="duration" />
+                  <span className="order-duration-label-text">3 days</span>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>
+                <div className="order-selected-price">
+                  <div className="order-duration-price">
                     {price !== null ? `$${(price * 3).toFixed(2)}` : '—'}
                   </div>
-                  <div style={{ fontSize: '0.625rem', color: 'var(--text-tertiary)' }}>3-day bundle</div>
+                  <div className="order-duration-bundle">3-day bundle</div>
                 </div>
               </label>
             </div>
           </div>
         )}
 
-        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', marginTop: 'auto' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>1 rental</span>
-            <span style={{ fontSize: '1.25rem', fontWeight: 700 }}>{priceDisplay}</span>
+        <div className="order-footer">
+          <div className="order-total-row">
+            <span className="order-total-label">1 rental</span>
+            <span className="order-total-value">{priceDisplay}</span>
           </div>
-          <Link href={isLoggedIn ? '/dashboard/numbers' : '/register'} className="btn btn-primary" style={{ width: '100%', marginBottom: '0.5rem' }}>
+          <Link href={isLoggedIn ? '/dashboard/numbers' : '/register'} className="btn btn-primary w-full" style={{ marginBottom: '0.5rem' }}>
             {isLoggedIn ? 'Rent this Number →' : 'Sign up to checkout'}
           </Link>
-          <div style={{ fontSize: '0.75rem', color: 'var(--success)', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
+          <div className="order-guarantee">
             <span>✓</span> 20-min no SMS refund
           </div>
         </div>

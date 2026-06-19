@@ -45,17 +45,17 @@ export default function Home() {
             </div>
           </div>
           <div className="hero-image">
-            {/* Using a placeholder since we don't have the 3D phone asset */}
-            <div style={{ width: '320px', height: '640px', background: '#0f172a', borderRadius: '40px', border: '8px solid #334155', position: 'relative', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
-              <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '120px', height: '24px', background: '#334155', borderBottomLeftRadius: '12px', borderBottomRightRadius: '12px' }}></div>
-              <div style={{ padding: '4rem 1rem 1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '12px', color: 'white', fontSize: '0.875rem' }}>
+            <div className="animate-float hero-mockup-wrapper">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/iphone-mockup.png" alt="iPhone Mockup" className="hero-iphone-mockup" />
+              <div className="hero-bubbles-container">
+                <div className="hero-bubble anim-delay-1">
                   <strong>Snapchat</strong><br/>Your Snapchat code is 88412
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '12px', color: 'white', fontSize: '0.875rem' }}>
+                <div className="hero-bubble anim-delay-2">
                   <strong>Telegram</strong><br/>Your Telegram code is 94726. Do not share this.
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '12px', color: 'white', fontSize: '0.875rem' }}>
+                <div className="hero-bubble anim-delay-3">
                   <strong>WhatsApp</strong><br/>Your WhatsApp verification code is 228-714
                 </div>
               </div>
@@ -89,21 +89,21 @@ export default function Home() {
       </section>
 
       {/* Services Grid */}
-      <section className="container" style={{ padding: "6rem 1.5rem" }}>
+      <section className="container section-padding">
         <div className="section-header-center">
-          <h2 className="section-title">Browse Services & Prices</h2>
-          <p className="section-subtitle">See exactly what you&apos;ll pay before signing up. Real prices, live stock.</p>
+          <h2 className="section-title">Verify accounts on 5,000+ services globally</h2>
+          <p className="section-subtitle">Trusted by users and businesses worldwide. See exactly what you&apos;ll pay before signing up.</p>
         </div>
         <ServicesGrid />
-        <div className="services-footer" style={{ marginTop: '3rem' }}>
-          <Link href="/services" className="btn btn-secondary" style={{ padding: '0.75rem 2rem', borderRadius: '9999px', fontWeight: 600 }}>
+        <div className="services-footer mt-3rem">
+          <Link href="/services" className="btn btn-secondary btn-pill-lg">
             View All Services &rarr;
           </Link>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="container" style={{ padding: "2rem 1.5rem 6rem 1.5rem" }}>
+      <section className="container section-padding-sm">
         <div className="section-header-center">
           <h2 className="section-title">How It Works</h2>
           <p className="section-subtitle">Get verified in three simple steps</p>
@@ -134,54 +134,69 @@ export default function Home() {
       </section>
 
       {/* Features Split */}
-      <section className="container" style={{ padding: "2rem 1.5rem 6rem 1.5rem" }}>
+      <section className="container section-padding-sm">
         <div className="features-split">
           <div className="features-content">
-            <div style={{ color: 'var(--accent-primary)', fontSize: '0.875rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '1rem' }}>ABOUT OUR SERVICE</div>
+            <div className="text-uppercase-label">ABOUT OUR SERVICE</div>
             <h2>What is a temporary SMS number?</h2>
-            <p>Ensure reliable SMS delivery with real physical SIM cards. VirtualSMS provides clean, non-VoIP numbers for OTP verification, multi-account management, and AI agent automation. Unlike standard virtual numbers, our carrier routes work seamlessly on platforms that filter or reject VoIP providers like Twilio and Google Voice.</p>
-            <p>Access numbers across 145+ countries for over 2,500 platforms. Whether you need a 20-minute disposable number for a quick OTP or a private long-term rental for ongoing account security, our automated platform delivers your SMS codes instantly.</p>
+            <p className="text-lg-primary">
+              Ensure reliable SMS delivery with <strong>real physical SIM cards</strong>. Avoid the frustration of blocked VoIP numbers from providers like Twilio or Google Voice.
+            </p>
+            <ul className="flex-col-gap-3">
+              <li className="flex-row-center-gap-2">
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Clean, non-VoIP carrier routes</span>
+              </li>
+              <li className="flex-row-center-gap-2">
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>145+ countries supported</span>
+              </li>
+              <li className="flex-row-center-gap-2">
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Instant code delivery</span>
+              </li>
+            </ul>
             
-            <h4 style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '1.125rem' }}>When you might need a temporary SMS number</h4>
+            <h4 className="mt-1rem mb-1rem text-lg-primary mb-0">Common use cases</h4>
             <ul className="features-list">
               <li>
-                <span style={{ color: 'var(--accent-primary)' }}>✓</span>
-                <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}><strong>High deliverability verification:</strong> Successfully receive OTPs on platforms (WhatsApp, Telegram, Tinder) that filter or reject standard virtual numbers.</span>
+                <span className="text-accent-primary">✓</span>
+                <span className="text-sm-secondary"><strong>Everyday Privacy:</strong> Keep your real phone number off public databases and avoid spam when registering for services.</span>
               </li>
               <li>
-                <span style={{ color: 'var(--accent-primary)' }}>✓</span>
-                <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}><strong>Protect personal privacy:</strong> Keep your real phone number off public databases and avoid spam when registering for services.</span>
+                <span className="text-accent-primary">✓</span>
+                <span className="text-sm-secondary"><strong>High Deliverability:</strong> Successfully receive OTPs on platforms (WhatsApp, Telegram, Tinder) that reject VoIP numbers.</span>
               </li>
               <li>
-                <span style={{ color: 'var(--accent-primary)' }}>✓</span>
-                <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}><strong>Scale automated workflows:</strong> Programmatically rent numbers via REST API or MCP for AI agents, QA testing, and automated signup flows.</span>
+                <span className="text-accent-primary">✓</span>
+                <span className="text-sm-secondary"><strong>Developer Workflows:</strong> Programmatically rent numbers via REST API or MCP for AI agents and automated testing.</span>
               </li>
             </ul>
           </div>
           <div className="features-grid">
             <div className="feature-box">
-            <div className="feature-box-icon" style={{ background: '#fef2f2', color: '#ef4444' }}>
+            <div className="feature-box-icon bg-red-50">
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
             </div>
             <h4>Real non-VoIP SIMs</h4>
             <p>Our numbers originate from real mobile carrier SIMs. Ensure seamless registration and high deliverability rates across global platforms.</p>
           </div>
           <div className="feature-box">
-            <div className="feature-box-icon" style={{ background: '#eff6ff', color: '#3b82f6' }}>
+            <div className="feature-box-icon bg-blue-50">
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             </div>
             <h4>145+ global regions</h4>
             <p>Access local numbers from top-tier carriers worldwide. Ideal for regional account unlocking and localized market testing.</p>
           </div>
           <div className="feature-box">
-            <div className="feature-box-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>
+            <div className="feature-box-icon bg-green-50">
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </div>
             <h4>Pay as you go</h4>
             <p>No hidden subscriptions. Browse live stock and prices freely, top up via crypto or SBP, and pay only for the numbers you actually use.</p>
           </div>
           <div className="feature-box">
-            <div className="feature-box-icon" style={{ background: '#fffbeb', color: '#f59e0b' }}>
+            <div className="feature-box-icon bg-yellow-50">
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             </div>
               <h4>Instant auto-refunds</h4>
@@ -192,7 +207,7 @@ export default function Home() {
       </section>
 
       {/* Physical SIM vs VoIP */}
-      <section className="container" style={{ padding: "4rem 1.5rem 6rem 1.5rem" }}>
+      <section className="container section-padding-lg">
         <div className="section-header-center">
           <h2 className="section-title">Why Physical SIM Cards?</h2>
           <p className="section-subtitle">Why buyers switch from VoIP to real SIM numbers</p>
@@ -200,7 +215,7 @@ export default function Home() {
         <div className="vs-grid">
           <div className="vs-card">
             <div className="vs-header">
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>LEGACY SOLUTIONS</div>
+              <div className="text-uppercase-label-muted">LEGACY SOLUTIONS</div>
               <div className="vs-title">VOIP NUMBERS</div>
               <div className="vs-subtitle">Virtual / online numbers</div>
             </div>
@@ -214,9 +229,9 @@ export default function Home() {
           </div>
           <div className="vs-card winner">
             <div className="vs-header">
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-primary)', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>THE MODERN STANDARD</div>
-              <div className="vs-title" style={{ color: 'var(--accent-primary)' }}>PHYSICAL SIMS</div>
-              <div className="vs-subtitle" style={{ color: 'var(--accent-primary)' }}>VirtualSMS</div>
+              <div className="text-uppercase-label-accent">THE MODERN STANDARD</div>
+              <div className="vs-title text-accent-primary">PHYSICAL SIMS</div>
+              <div className="vs-subtitle text-accent-primary">VirtualSMS</div>
             </div>
             <ul className="vs-list">
               <li className="vs-item good">Better acceptance</li>
@@ -230,7 +245,7 @@ export default function Home() {
       </section>
 
       {/* Popular Countries */}
-      <section className="container" style={{ padding: "4rem 1.5rem 6rem 1.5rem", background: '#f8fafc' }}>
+      <section className="container section-padding-lg bg-slate-50">
         <div className="section-header-center">
           <h2 className="section-title">Popular Countries</h2>
           <p className="section-subtitle">Real SIM cards sourced from 145+ countries worldwide</p>
@@ -261,22 +276,22 @@ export default function Home() {
       </section>
 
       {/* Simple Pricing */}
-      <section className="container" style={{ padding: "6rem 1.5rem" }}>
+      <section className="container section-padding">
         <div className="section-header-center">
           <h2 className="section-title">Simple Pricing</h2>
           <p className="section-subtitle">Pay only for what you use. No subscriptions, no hidden fees.</p>
         </div>
         <div className="pricing-grid">
-          <div className="pricing-card" style={{ borderTop: '4px solid #f59e0b' }}>
+          <div className="pricing-card border-top-yellow">
             <div className="pricing-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <div className="flex-row-center-gap-2 mb-2">
                 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                <h3 className="pricing-title" style={{ marginBottom: 0 }}>Verifications</h3>
+                <h3 className="pricing-title mb-0">Verifications</h3>
               </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>One-time verification code</p>
+              <p className="text-sm-muted">One-time verification code</p>
             </div>
             <div className="pricing-price">$0.05<span>/code</span></div>
-            <p style={{ color: 'var(--text-tertiary)', fontSize: '0.75rem', marginBottom: '2rem' }}>Starting from &bull; varies by service & country</p>
+            <p className="text-xs-muted">Starting from &bull; varies by service & country</p>
             <ul className="pricing-features">
               <li>Receive one SMS verification code</li>
               <li>Auto-refund if no code arrives</li>
@@ -284,28 +299,28 @@ export default function Home() {
               <li>Works with 2,500+ apps</li>
               <li>Instant delivery — usually &lt;60s</li>
             </ul>
-            <Link href="/register" className="btn" style={{ width: '100%', background: '#0f172a', color: 'white' }}>
+            <Link href="/register" className="btn btn-dark-full">
               Buy Activation &rarr;
             </Link>
           </div>
-          <div className="pricing-card featured" style={{ borderTop: '4px solid var(--accent-primary)' }}>
+          <div className="pricing-card featured border-top-accent">
             <div className="pricing-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <div className="flex-row-center-gap-2 mb-2">
                 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                <h3 className="pricing-title" style={{ marginBottom: 0 }}>Rentals</h3>
+                <h3 className="pricing-title mb-0">Rentals</h3>
               </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Dedicated number, multiple SMS</p>
+              <p className="text-sm-muted">Dedicated number, multiple SMS</p>
             </div>
             <div className="pricing-price">$3<span>/day</span></div>
-            <p style={{ color: 'var(--text-tertiary)', fontSize: '0.75rem', marginBottom: '2rem' }}>Starting from &bull; varies by service & country</p>
+            <p className="text-xs-muted">Starting from &bull; varies by service & country</p>
             <ul className="pricing-features">
-              <li>Dedicated real SIM number</li>
-              <li>Receive unlimited SMS for duration</li>
-              <li>1, 7, 30 or 90-day rentals</li>
-              <li>Keep the same number to re-verify</li>
-              <li>Ideal for accounts needing ongoing access</li>
+              <li><strong className="text-primary-color">Unlimited SMS</strong> for the rental duration</li>
+              <li><strong className="text-primary-color">Dedicated number</strong> exclusively yours</li>
+              <li>Re-verify the same account easily</li>
+              <li>1, 7, 30, or 90-day options</li>
+              <li>Ideal for ongoing account security</li>
             </ul>
-            <Link href="/register" className="btn btn-primary" style={{ width: '100%' }}>
+            <Link href="/register" className="btn btn-primary w-full">
               Rent a Number &rarr;
             </Link>
           </div>
@@ -313,18 +328,18 @@ export default function Home() {
       </section>
 
       {/* AI Agents / MCP */}
-      <section className="container" style={{ padding: "2rem 1.5rem 6rem 1.5rem" }}>
+      <section className="container section-padding-sm">
         <div className="ai-section">
           <div className="ai-content">
-            <div style={{ background: 'rgba(255,255,255,0.1)', padding: '0.25rem 0.75rem', borderRadius: '9999px', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', fontWeight: 600, color: 'white', marginBottom: '1.5rem' }}>
-              <span style={{ width: '8px', height: '8px', background: 'var(--accent-tertiary)', borderRadius: '50%' }}></span>
-              AVAILABLE AS AI AGENTS
+            <div className="ai-badge">
+              <span className="ai-dot"></span>
+              WEB DASHBOARD & API
             </div>
-            <h2>Real-SIM SMS verification for AI agents.</h2>
-            <p>One canonical endpoint for agents to receive OTP codes across 145+ countries and 2,500+ services. Pay-as-you-go via v402 USOC deposits or prepaid API keys. Real SIM cards, no VoIP.</p>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-              <Link href="/docs" className="btn" style={{ background: 'white', color: '#0f172a' }}>Explore MCP Server &rarr;</Link>
-              <Link href="/docs" className="btn" style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}>Agent Docs & API</Link>
+            <h2>Built for everyone. Powerful enough for developers.</h2>
+            <p>Whether you need a single number for a quick WhatsApp registration via our simple web interface, or thousands of numbers programmatically via our REST API and AI Agents. Real SIM cards, zero friction.</p>
+            <div className="flex-gap-4-mt-8">
+              <Link href="/docs" className="btn btn-white">Explore MCP Server &rarr;</Link>
+              <Link href="/docs" className="btn btn-glass">Agent Docs & API</Link>
             </div>
             <div className="ai-stats">
               <div className="ai-stat">
@@ -346,24 +361,28 @@ export default function Home() {
             </div>
           </div>
           <div className="code-window">
-            <div className="code-header">
-              <div className="code-dot dot-red"></div>
-              <div className="code-dot dot-yellow"></div>
-              <div className="code-dot dot-green"></div>
+            <div className="code-header flex-between-center">
+              <div className="flex-gap-2">
+                <div className="code-dot dot-red"></div>
+                <div className="code-dot dot-yellow"></div>
+                <div className="code-dot dot-green"></div>
+              </div>
+              <div className="code-tab">
+                <span className="code-tab-active">MCP Config</span>
+                <span className="code-tab-hover">Node.js</span>
+                <span className="code-tab-hover">Python</span>
+              </div>
             </div>
             <div className="code-body">
 {`{
-  "name": "virtualsms",
-  "version": "1.0.0",
-  "mcp": {
-    "tools": [
-      "buy_number",
-      "get_sms_code",
-      "cancel_number"
-    ]
-  },
-  "config": {
-    "api_key": "env.VIRTUALSMS_KEY"
+  "mcpServers": {
+    "virtualsms": {
+      "command": "npx",
+      "args": ["-y", "@premiumid/mcp-server"],
+      "env": {
+        "VIRTUALSMS_API_KEY": "your_api_key_here"
+      }
+    }
   }
 }`}
             </div>
@@ -372,9 +391,9 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="container" style={{ padding: "4rem 1.5rem 6rem 1.5rem" }}>
+      <section className="container section-padding-lg">
         <div className="section-header-center">
-          <div className="stars">★★★★★ <span style={{fontSize:'1rem', color:'#0f172a'}}>4.8</span></div>
+          <div className="stars">★★★★★ <span className="stars-rating">4.8</span></div>
           <h2 className="section-title">What customers say</h2>
           <p className="section-subtitle">Rated 4.8/5 by customers across Trustpilot and direct reviews.</p>
         </div>
@@ -384,8 +403,8 @@ export default function Home() {
             <p className="testimonial-text">&ldquo;Needed a TikTok account from a different region. Used a Lithuanian number. Code came in fast. USDT worked.&rdquo;</p>
             <div className="testimonial-author">
               <div>
-                <div style={{fontWeight:700}}>Nerijus</div>
-                <div style={{fontSize:'0.75rem', color:'var(--text-tertiary)'}}>Lithuania</div>
+                <div className="font-bold">Nerijus</div>
+                <div className="text-xs-tertiary">Lithuania</div>
               </div>
               <div className="trustpilot-logo">✓ Trustpilot</div>
             </div>
@@ -395,8 +414,8 @@ export default function Home() {
             <p className="testimonial-text">&ldquo;Honestly only tried this because two other sites took my money and the WhatsApp code never showed up. These ones are real SIM cards — it just worked.&rdquo;</p>
             <div className="testimonial-author">
               <div>
-                <div style={{fontWeight:700}}>Inga</div>
-                <div style={{fontSize:'0.75rem', color:'var(--text-tertiary)'}}>United Kingdom</div>
+                <div className="font-bold">Inga</div>
+                <div className="text-xs-tertiary">United Kingdom</div>
               </div>
               <div className="trustpilot-logo">✓ Trustpilot</div>
             </div>
@@ -406,8 +425,8 @@ export default function Home() {
             <p className="testimonial-text">&ldquo;Top up with USDT, run my verifications, done. No KYC, no friction.&rdquo;</p>
             <div className="testimonial-author">
               <div>
-                <div style={{fontWeight:700}}>David</div>
-                <div style={{fontSize:'0.75rem', color:'var(--text-tertiary)'}}>Developer</div>
+                <div className="font-bold">David</div>
+                <div className="text-xs-tertiary">Developer</div>
               </div>
               <div className="trustpilot-logo">✓ Trustpilot</div>
             </div>
@@ -416,13 +435,13 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section className="container" style={{ padding: "4rem 1.5rem 6rem 1.5rem" }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '3rem' }}>
-          <div style={{ maxWidth: '400px' }}>
-            <div style={{ color: 'var(--accent-primary)', fontSize: '0.875rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '1rem' }}>QUICK ANSWERS</div>
-            <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>What to know before you buy a number</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Direct answers for users, search engines, and AI assistants evaluating temporary real SIM numbers for SMS verification.</p>
-            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#eff6ff', color: '#3b82f6', padding: '0.75rem 1.5rem', borderRadius: '9999px', fontWeight: 600, fontSize: '0.875rem' }}>
+      <section className="container section-padding-lg">
+        <div className="grid-1-gap-12">
+          <div className="max-w-400">
+            <div className="text-uppercase-label">QUICK ANSWERS</div>
+            <h2 className="text-2xl-mb-4">What to know before you buy a number</h2>
+            <p className="text-secondary-mb-8">Direct answers for users, search engines, and AI assistants evaluating temporary real SIM numbers for SMS verification.</p>
+            <Link href="/contact" className="btn-telegram">
               Ask on Telegram &rarr;
             </Link>
           </div>
@@ -467,11 +486,11 @@ export default function Home() {
       <section className="bottom-cta">
         <h2>Start Getting Verified Today</h2>
         <p>Join thousands of users who trust VirtualSMS for reliable, instant SMS verification.</p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-          <Link href="/register" className="btn" style={{ background: 'white', color: 'var(--accent-primary)' }}>
+        <div className="flex-center-gap-4">
+          <Link href="/register" className="btn btn-white text-accent-primary">
             Create Free Account &rarr;
           </Link>
-          <Link href="/pricing" className="btn" style={{ background: 'rgba(255,255,255,0.2)', color: 'white' }}>
+          <Link href="/pricing" className="btn btn-glass">
             View Full Pricing
           </Link>
         </div>

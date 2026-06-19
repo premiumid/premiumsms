@@ -18,6 +18,7 @@
   --accent-primary: #8b5cf6; /* Violet */
   --accent-secondary: #7c3aed;
   --accent-tertiary: #a78bfa;
+  --accent-highlight: #06b6d4; /* Cyan */
   
   --success: #10b981;
   --success-bg: #ecfdf5;
@@ -43,6 +44,17 @@
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+@keyframes float-up {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 * {
@@ -559,6 +571,13 @@ ul {
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.feature-box:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-tertiary);
 }
 
 .feature-box-icon {
@@ -690,11 +709,22 @@ ul {
   padding: 3rem 2rem;
   position: relative;
   box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
 .pricing-card.featured {
   border-color: var(--accent-primary);
   box-shadow: var(--shadow-xl);
+}
+
+.pricing-card.featured:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 25px 30px -5px rgba(139, 92, 246, 0.2);
 }
 
 .pricing-header {
@@ -1070,3 +1100,68 @@ details[open] .faq-question::after {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
 }
+/* Inline Style Replacements */
+.hero-iphone-mockup { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 10; }
+.hero-bubbles-container { position: absolute; top: 15%; left: 10%; width: 80%; display: flex; flex-direction: column; gap: 1rem; z-index: 20; }
+.hero-bubble { background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; color: white; font-size: 0.875rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+.anim-delay-1 { animation: fade-in-up 0.5s ease-out 0.2s both; }
+.anim-delay-2 { animation: fade-in-up 0.5s ease-out 0.6s both; }
+.anim-delay-3 { animation: fade-in-up 0.5s ease-out 1s both; }
+
+.section-padding { padding: 6rem 1.5rem; }
+.section-padding-lg { padding: 4rem 1.5rem 6rem 1.5rem; }
+.section-padding-sm { padding: 2rem 1.5rem 6rem 1.5rem; }
+.mt-3rem { margin-top: 3rem; }
+.btn-pill-lg { padding: 0.75rem 2rem; border-radius: 9999px; font-weight: 600; }
+
+.text-uppercase-label { color: var(--accent-primary); font-size: 0.875rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem; }
+.text-uppercase-label-muted { color: #94a3b8; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.text-uppercase-label-accent { color: var(--accent-primary); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem; }
+
+.text-lg-primary { font-size: 1.125rem; color: var(--text-primary); margin-bottom: 1.5rem; }
+.flex-col-gap-3 { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+.flex-row-center-gap-2 { display: flex; align-items: center; gap: 0.5rem; }
+.mb-1rem { margin-bottom: 1rem; }
+.mt-1rem { margin-top: 1rem; }
+.text-accent-primary { color: var(--accent-primary); }
+.text-sm-secondary { font-size: 0.875rem; color: var(--text-secondary); }
+
+.bg-red-50 { background: #fef2f2; color: #ef4444; }
+.bg-blue-50 { background: #eff6ff; color: #3b82f6; }
+.bg-green-50 { background: #ecfdf5; color: #10b981; }
+.bg-yellow-50 { background: #fffbeb; color: #f59e0b; }
+
+.bg-slate-50 { background: #f8fafc; }
+.border-top-yellow { border-top: 4px solid #f59e0b; }
+.border-top-accent { border-top: 4px solid var(--accent-primary); }
+.mb-0 { margin-bottom: 0 !important; }
+.text-sm-muted { color: var(--text-secondary); font-size: 0.875rem; }
+.text-xs-muted { color: var(--text-tertiary); font-size: 0.75rem; margin-bottom: 2rem; }
+.btn-dark-full { width: 100%; background: #0f172a; color: white !important; }
+.w-full { width: 100%; }
+.text-primary-color { color: var(--text-primary); }
+
+.ai-badge { background: rgba(255, 255, 255, 0.1); padding: 0.25rem 0.75rem; border-radius: 9999px; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 600; color: white; margin-bottom: 1.5rem; }
+.ai-dot { width: 8px; height: 8px; background: var(--accent-tertiary); border-radius: 50%; }
+.flex-gap-4-mt-8 { display: flex; gap: 1rem; margin-top: 2rem; }
+.btn-white { background: white; color: #0f172a !important; }
+.btn-glass { background: rgba(255,255,255,0.2); color: white !important; }
+.flex-between-center { display: flex; justify-content: space-between; align-items: center; }
+.flex-gap-2 { display: flex; gap: 0.5rem; }
+.code-tab-active { color: white; border-bottom: 2px solid var(--accent-highlight); padding-bottom: 0.25rem; }
+.code-tab { cursor: pointer; transition: color 0.2s; color: #94a3b8; font-size: 0.75rem; font-weight: 600; display: flex; gap: 1rem; }
+.code-tab-hover:hover { color: white; }
+
+.stars-rating { font-size: 1rem; color: #0f172a; }
+.font-bold { font-weight: 700; }
+.text-xs-tertiary { font-size: 0.75rem; color: var(--text-tertiary); }
+
+.grid-1-gap-12 { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+.max-w-400 { max-width: 400px; }
+.text-2xl-mb-4 { font-size: 2rem; margin-bottom: 1rem; }
+.text-secondary-mb-8 { color: var(--text-secondary); margin-bottom: 2rem; }
+.btn-telegram { display: inline-flex; align-items: center; gap: 0.5rem; background: #eff6ff; color: #3b82f6 !important; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; }
+
+.flex-center-gap-4 { display: flex; justify-content: center; gap: 1rem; }
+.hero-mockup-wrapper { width: 320px; height: 640px; position: relative; }
+.mb-2 { margin-bottom: 0.5rem; }

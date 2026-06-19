@@ -2,15 +2,14 @@ import { authenticateRequest } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireEnv, errorResponse, handleApiError } from '@/lib/validate'
 
-const NOWPAYMENTS_API_KEY = requireEnv('NOWPAYMENTS_API_KEY')
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'
 const PAY_CURRENCY = 'usdttrc20'
 
-async function getLiveMinimumUsd(): Promise<number> {
+async function getLiveMinimumUsd(apiKey: string): Promise<number> {
   try {
     const res = await fetch(
       `https://api.nowpayments.io/v1/min-amount?currency_from=${PAY_CURRENCY}`,
-      { headers: { 'x-api-key': NOWPAYMENTS_API_KEY }, cache: 'no-store' }
+      { headers: { 'x-api-key': apiKey }, cache: 'no-store' }
     )
     if (!res.ok) return 3
     const data = await res.json()
@@ -24,6 +23,8 @@ export async function POST(request: Request) {
   const auth = await authenticateRequest(request)
   if (!auth.ok) return auth.response
 
+  const NOWPAYMENTS_API_KEY = requireEnv('NOWPAYMENTS_API_KEY')
+
   try {
     const { amount } = await request.json()
     const amountUsd = Number(amount)
@@ -32,7 +33,7 @@ export async function POST(request: Request) {
       return errorResponse(400, 'Invalid amount')
     }
 
-    const minimumUsd = await getLiveMinimumUsd()
+    const minimumUsd = await getLiveMinimumUsd(NOWPAYMENTS_API_KEY)
     if (amountUsd < minimumUsd) {
       return Response.json({
         error: `Minimum top-up amount is $${minimumUsd.toFixed(2)} USD for USDT (TRC-20). Please enter a higher amount.`,

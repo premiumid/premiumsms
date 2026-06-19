@@ -48,11 +48,11 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
         <div className="stats-grid">
           <Link href="/dashboard/wallet" className="stats-card">
             <span className="stats-card-label">Balance</span>
-            <span className="stats-card-value" style={{ color: 'var(--success)' }}>${(balance ?? 0).toFixed(2)}</span>
+            <span className="stats-card-value text-success">${(balance ?? 0).toFixed(2)}</span>
           </Link>
           <Link href="/dashboard/rentals" className="stats-card">
             <span className="stats-card-label">Active Rentals</span>
-            <span className="stats-card-value" style={{ color: 'var(--accent-primary)' }}>{activeRentals ?? 0}</span>
+            <span className="stats-card-value text-accent">{activeRentals ?? 0}</span>
           </Link>
           <Link href="/dashboard/numbers" className="stats-card stats-card-cta">
             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
@@ -61,14 +61,14 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
         </div>
       )}
       {isLoggedIn && recentTransactions && recentTransactions.length > 0 && (
-        <div className="glass-panel" style={{ marginBottom: '1.5rem' }}>
+        <div className="glass-panel mb-6">
           <div className="activity-header">
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 700 }}>Recent Activity</h3>
-            <Link href="/dashboard/wallet" style={{ fontSize: '0.8125rem', color: 'var(--accent-primary)', fontWeight: 600, textDecoration: 'none' }}>View all</Link>
+            <h3 className="text-sm font-bold">Recent Activity</h3>
+            <Link href="/dashboard/wallet" className="text-xs font-semibold text-accent no-underline">View all</Link>
           </div>
-          <div style={{ padding: '0.5rem 1.25rem' }}>
+          <div className="px-5 py-2">
             {recentRentals && recentRentals.length > 0 && (
-              <div style={{ marginBottom: '0.75rem' }}>
+              <div className="mb-3">
                 <p className="activity-section-label">Rentals</p>
                 {recentRentals.slice(0, 3).map(r => (
                   <Link key={r.id} href={`/dashboard/rentals/${r.id}`} className="activity-row">
@@ -76,7 +76,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
                       <span className="activity-row-primary">{r.phone_number || 'Processing…'}</span>
                       <span className="activity-row-date">{formatDate(r.created_at)}</span>
                     </span>
-                    <span style={{ fontWeight: 600, color: r.status === 'active' ? 'var(--success)' : 'var(--text-tertiary)', fontSize: '0.875rem' }}>${Number(r.price).toFixed(2)}</span>
+                    <span className={`text-sm font-semibold ${r.status === 'active' ? 'text-success' : 'text-tertiary'}`}>${Number(r.price).toFixed(2)}</span>
                   </Link>
                 ))}
               </div>
@@ -90,7 +90,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
                       <span className="activity-row-primary">{tx.description}</span>
                       <span className="activity-row-date">{formatDate(tx.created_at)}</span>
                     </span>
-                    <span style={{ fontWeight: 600, color: tx.type === 'debit' ? 'var(--danger)' : 'var(--success)', fontSize: '0.875rem' }}>
+                    <span className={`text-sm font-semibold ${tx.type === 'debit' ? 'text-danger' : 'text-success'}`}>
                       {tx.type === 'debit' ? '-' : '+'}${Number(tx.amount).toFixed(2)}
                     </span>
                   </div>
@@ -150,9 +150,9 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
         </div>
 
         <div className="catalog-stats-bar">
-          <span style={{ color: 'var(--success)' }}>● {initialServices.length} services</span>
-          <span style={{ color: 'var(--accent-primary)' }}>● 145+ countries</span>
-          <span style={{ color: 'var(--accent-primary)' }}>● From $0.05</span>
+          <span className="text-success">● {initialServices.length} services</span>
+          <span className="text-accent">● 145+ countries</span>
+          <span className="text-accent">● From $0.05</span>
         </div>
 
         <div className="catalog-step-indicator">
@@ -197,20 +197,20 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
         <div className="order-summary-box">
           <ul className="order-summary-features">
             <li>
-              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: 6 }}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="align-middle mr-2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
               Real SIM Cards
             </li>
             <li>
-              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: 6 }}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="align-middle mr-2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               145+ Countries
             </li>
             <li>
-              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: 6 }}><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="align-middle mr-2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
               Auto-Refund
             </li>
           </ul>
 
-          <Link href={isLoggedIn ? '/dashboard/numbers' : '/register'} className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem' }}>
+          <Link href={isLoggedIn ? '/dashboard/numbers' : '/register'} className="btn btn-primary w-full mb-4">
             {isLoggedIn ? 'Rent a Number →' : 'Create Free Account →'}
           </Link>
 

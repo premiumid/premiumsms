@@ -137,7 +137,7 @@ export default function RentalDetailPage() {
     return (
       <div className="dashboard-content">
         <div className="alert-error">
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: 4 }}><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
           {error ?? 'Rental not found'}
         </div>
         <button className="btn btn-secondary" onClick={() => router.back()}>← Go Back</button>
@@ -202,7 +202,7 @@ export default function RentalDetailPage() {
           >
             {cancelling ? 'Cancelling…' : (
                 <>
-                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: 6 }}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   Cancel & Refund
                 </>
               )}
@@ -213,9 +213,9 @@ export default function RentalDetailPage() {
       {/* SMS Inbox */}
       <div className="section-header section-header-spaced">
         <h2 className="section-title">Messages</h2>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div className="flex items-center" style={{ gap: '0.5rem' }}>
           {messages.length > 0 && (
-            <button className="btn btn-secondary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.8rem' }} onClick={() => {
+            <button className="btn btn-secondary btn-small" onClick={() => {
               const blob = new Blob([JSON.stringify({ phone_number: rental?.phone_number, service: rental?.service_slug, messages }, null, 2)], { type: 'application/json' })
               const url = URL.createObjectURL(blob)
               const a = document.createElement('a'); a.href = url; a.download = `sms-${rental?.phone_number || 'export'}.json`; a.click()
@@ -227,7 +227,7 @@ export default function RentalDetailPage() {
           )}
           {rental.status === 'active' && (
             <span className="polling-badge">
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', display: 'inline-block', animation: 'pulse 2s ease-in-out infinite', marginRight: 6 }} />
+              <span className="polling-dot" />
               Live polling every 5s
             </span>
           )}
