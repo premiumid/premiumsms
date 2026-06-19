@@ -156,6 +156,7 @@ export default function RentalsClient({
 
       {/* Main Content — Services */}
       <main className="catalog-main">
+        <h1 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: 700 }}>Rent a Number</h1>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <div style={{ position: 'relative', width: '100%', maxWidth: '400px' }}>
             <input

@@ -31,20 +31,20 @@ export async function GET(request: Request) {
       providerErrorMsg = err instanceof Error ? err.message : 'Upstream provider connection error'
     }
 
-    const { data: rentalsBreakdown } = await admin
+    const { data: statusCounts } = await admin
       .from('rentals')
       .select('status')
 
     const stats = { active: 0, completed: 0, cancelled: 0, expired: 0, total: 0 }
 
-    if (rentalsBreakdown) {
-      stats.total = rentalsBreakdown.length
-      rentalsBreakdown.forEach((r: { status: string }) => {
+    if (statusCounts) {
+      stats.total = statusCounts.length
+      for (const r of statusCounts) {
         if (r.status === 'active') stats.active++
         else if (r.status === 'completed') stats.completed++
-        else if (r.status === 'cancelled' || r.status === 'canceled') stats.cancelled++
+        else if (r.status === 'cancelled') stats.cancelled++
         else if (r.status === 'expired') stats.expired++
-      })
+      }
     }
 
     return Response.json({

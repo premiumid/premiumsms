@@ -10,13 +10,17 @@ export async function GET(request: Request) {
 
   try {
     const supabase = await createClient()
+    const url = new URL(request.url)
+    const page = Math.max(1, parseInt(url.searchParams.get('page') || '1'))
+    const limit = Math.min(100, Math.max(1, parseInt(url.searchParams.get('limit') || '20')))
+    const offset = (page - 1) * limit
 
-    const { data: rentals } = await supabase
+    const { data: rentals, count: total } = await supabase
       .from('rentals')
-      .select('*')
+      .select('*', { count: 'exact' })
       .eq('user_id', auth.user.id)
       .order('created_at', { ascending: false })
-      .limit(20)
+      .range(offset, offset + limit - 1)
 
     const mappedRentals = rentals?.map(r => {
       const parts = (r.provider_name || '').split('|')
@@ -27,7 +31,13 @@ export async function GET(request: Request) {
       }
     })
 
-    return Response.json({ rentals: mappedRentals })
+    return Response.json({
+      rentals: mappedRentals,
+      total: total ?? 0,
+      page,
+      limit,
+      totalPages: Math.ceil((total ?? 0) / limit),
+    })
   } catch (err) {
     return handleApiError(err, 'list rentals')
   }
