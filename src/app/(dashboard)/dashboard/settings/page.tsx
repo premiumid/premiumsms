@@ -1,14 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/components/Toast'
+import FormattedDate from '@/components/FormattedDate'
 
 export default function SettingsPage() {
   const router = useRouter()
+  const { success: toastSuccess, error: toastError } = useToast()
+  const [user, setUser] = useState<{ email: string; created_at: string } | null>(null)
+  const [loading, setLoading] = useState(true)
   const [confirming, setConfirming] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [confirmText, setConfirmText] = useState('')
+
+  useEffect(() => {
+    fetch('/api/account/profile')
+      .then(r => r.json())
+      .then(d => setUser(d))
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
 
   async function handleDelete() {
     setDeleting(true)
@@ -22,6 +35,7 @@ export default function SettingsPage() {
         throw new Error(data.error || 'Failed to delete account')
       }
 
+      toastSuccess('Account deleted successfully')
       router.push('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -36,8 +50,33 @@ export default function SettingsPage() {
         <p className="page-subtitle">Manage your account</p>
       </div>
 
-      <div className="glass-panel" style={{ padding: '1.5rem', maxWidth: 560 }}>
-        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+      {/* Profile Info */}
+      <div className="glass-panel" style={{ padding: '1.5rem', maxWidth: 560, marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem' }}>
+          Profile
+        </h2>
+        {loading ? (
+          <div>
+            <div className="skeleton-line" style={{ width: '60%', height: 16, marginBottom: 8 }} />
+            <div className="skeleton-line" style={{ width: '40%', height: 14 }} />
+          </div>
+        ) : user ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem' }}>
+            <div>
+              <span style={{ color: 'var(--text-tertiary)', fontWeight: 600, marginRight: '0.5rem' }}>Email</span>
+              <span>{user.email}</span>
+            </div>
+            <div>
+              <span style={{ color: 'var(--text-tertiary)', fontWeight: 600, marginRight: '0.5rem' }}>Joined</span>
+              <span><FormattedDate date={user.created_at} /></span>
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      {/* Danger Zone */}
+      <div className="glass-panel" style={{ padding: '1.5rem', maxWidth: 560, borderColor: '#fecaca' }}>
+        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem', color: '#dc2626' }}>
           Delete Account
         </h2>
         <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: 1.6 }}>

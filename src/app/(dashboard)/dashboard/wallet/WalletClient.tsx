@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import FormattedDate from '@/components/FormattedDate'
+import { useToast } from '@/components/Toast'
+import EmptyState from '@/components/EmptyState'
 
 interface Transaction {
   id: string
@@ -62,6 +64,13 @@ function StatusIcon({ type }: { type: string }) {
 
 export default function WalletClient({ initialBalance, initialTransactions, userEmail }: WalletClientProps) {
   const router = useRouter()
+  const { success: toastSuccess, error: toastError } = useToast()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300)
+    return () => clearTimeout(timer)
+  }, [])
 
   const [selectedAmount, setSelectedAmount] = useState<number>(15)
   const [customAmount, setCustomAmount] = useState<string>('')
@@ -161,6 +170,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
         if (isComplete) {
           stopPolling()
           setPaymentStep('success')
+          toastSuccess(`$${paymentData?.priceAmount.toFixed(2)} credited to your wallet`)
           router.refresh()
         } else if (isFailed) {
           stopPolling()
@@ -300,8 +310,28 @@ export default function WalletClient({ initialBalance, initialTransactions, user
       {/* Transaction History */}
       <div className="tx-section glass-panel">
         <h2 className="tx-title">Transaction History</h2>
-        {initialTransactions.length === 0 ? (
-          <p className="tx-empty">No transactions yet. Top up to get started.</p>
+        {loading ? (
+          <div className="tx-list">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="tx-row" style={{ opacity: 0.4 }}>
+                <div className="skeleton-circle" />
+                <div className="tx-info">
+                  <div className="skeleton-line" style={{ width: '60%', height: 14, marginBottom: 6 }} />
+                  <div className="skeleton-line" style={{ width: '40%', height: 12 }} />
+                </div>
+                <div className="tx-amounts">
+                  <div className="skeleton-line" style={{ width: 70, height: 16, marginBottom: 4, marginLeft: 'auto' }} />
+                  <div className="skeleton-line" style={{ width: 90, height: 12, marginLeft: 'auto' }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : initialTransactions.length === 0 ? (
+          <EmptyState
+            icon={<svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>}
+            title="No transactions yet"
+            description="Top up your wallet to get started"
+          />
         ) : (
           <div className="tx-list">
             {initialTransactions.map((tx) => (

@@ -10,7 +10,24 @@ interface Service {
   icon_url?: string
 }
 
-export default function DashboardClient({ initialServices, isLoggedIn, activeRentals, balance }: { initialServices: Service[]; isLoggedIn: boolean; activeRentals?: number; balance?: number }) {
+interface TxRecord {
+  id: string
+  type: string
+  amount: number
+  description: string
+  created_at: string
+}
+
+interface RentalRecord {
+  id: string
+  phone_number: string
+  status: string
+  price: number
+  provider_name: string
+  created_at: string
+}
+
+export default function DashboardClient({ initialServices, isLoggedIn, activeRentals, balance, recentTransactions, recentRentals }: { initialServices: Service[]; isLoggedIn: boolean; activeRentals?: number; balance?: number; recentTransactions?: TxRecord[]; recentRentals?: RentalRecord[] }) {
   const [search, setSearch] = useState('')
   const [selectedApp, setSelectedApp] = useState<string | null>(null)
 
@@ -19,6 +36,11 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
   )
 
   const activeApp = initialServices.find(s => s.slug === selectedApp) || initialServices[0] || null
+
+  const formatDate = (d: string) => {
+    const date = new Date(d)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+  }
 
   return (
     <>
@@ -36,6 +58,46 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             Rent a Number
           </Link>
+        </div>
+      )}
+      {isLoggedIn && (recentTransactions && recentTransactions.length > 0) && (
+        <div className="glass-panel" style={{ marginBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.25rem', borderBottom: '1px solid var(--border-color)' }}>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 700 }}>Recent Activity</h3>
+            <Link href="/dashboard/wallet" style={{ fontSize: '0.8125rem', color: 'var(--accent-primary)', fontWeight: 600 }}>View all</Link>
+          </div>
+          <div style={{ padding: '0.5rem 1.25rem' }}>
+            {recentRentals && recentRentals.length > 0 && (
+              <div style={{ marginBottom: '0.75rem' }}>
+                <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Rentals</p>
+                {recentRentals.map(r => (
+                  <Link key={r.id} href={`/dashboard/rentals/${r.id}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', textDecoration: 'none', color: 'inherit', borderBottom: '1px solid var(--border-color)', fontSize: '0.875rem' }}>
+                    <span>
+                      <span style={{ fontWeight: 500 }}>{r.phone_number || 'Processing…'}</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginLeft: '0.5rem' }}>{formatDate(r.created_at)}</span>
+                    </span>
+                    <span style={{ fontWeight: 600, color: r.status === 'active' ? 'var(--success)' : 'var(--text-tertiary)' }}>${Number(r.price).toFixed(2)}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+            {recentTransactions && recentTransactions.length > 0 && (
+              <div>
+                <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Transactions</p>
+                {recentTransactions.slice(0, 3).map(tx => (
+                  <div key={tx.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid var(--border-color)', fontSize: '0.875rem' }}>
+                    <span>
+                      <span style={{ fontWeight: 500 }}>{tx.description}</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginLeft: '0.5rem' }}>{formatDate(tx.created_at)}</span>
+                    </span>
+                    <span style={{ fontWeight: 600, color: tx.type === 'debit' ? 'var(--danger)' : 'var(--success)' }}>
+                      {tx.type === 'debit' ? '-' : '+'}${Number(tx.amount).toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
       <div className="catalog-grid-layout">
