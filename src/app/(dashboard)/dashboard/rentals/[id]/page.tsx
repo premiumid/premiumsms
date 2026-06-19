@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import FormattedDate from '@/components/FormattedDate'
 import { useToast } from '@/components/Toast'
+import { createClient } from '@/lib/supabase/client'
 
 interface Message {
   id: string
@@ -35,6 +36,31 @@ export default function RentalDetailPage() {
   const [copiedNum, setCopiedNum] = useState(false)
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null)
 
+  function playChime() {
+    try {
+      const AudioContext = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      if (!AudioContext) return
+      const ctx = new AudioContext()
+      const playTone = (freq: number, startTime: number, duration: number) => {
+        const osc = ctx.createOscillator()
+        const gainNode = ctx.createGain()
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq, startTime)
+        gainNode.gain.setValueAtTime(0.15, startTime)
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration)
+        osc.connect(gainNode)
+        gainNode.connect(ctx.destination)
+        osc.start(startTime)
+        osc.stop(startTime + duration)
+      }
+      const now = ctx.currentTime
+      playTone(523.25, now, 0.4) // C5
+      playTone(659.25, now + 0.15, 0.5) // E5
+    } catch (e) {
+      console.warn('Audio synthesis failed:', e)
+    }
+  }
+
   // Fetch rental data
   async function fetchRental() {
     try {
@@ -53,9 +79,9 @@ export default function RentalDetailPage() {
   }
 
   // Initial load — runs once
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     let cancelled = false
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchRental().then(r => {
       if (cancelled || !r) return
       if (r.status === 'active') {
@@ -66,16 +92,47 @@ export default function RentalDetailPage() {
     return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
+  /* eslint-enable react-hooks/set-state-in-effect */
 
-  // Polling interval — separate from initial load
+  // Realtime subscription — replaces 5s polling
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const r = await fetchRental()
-      if (r && r.status !== 'active') {
-        clearInterval(interval)
-      }
-    }, 5000)
-    return () => clearInterval(interval)
+    if (!id) return
+    const supabase = createClient()
+
+    // Listen to incoming messages for this rental
+    const smsChannel = supabase
+      .channel(`sms-messages-${id}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'sms_messages',
+        filter: `rental_id=eq.${id}`
+      }, (payload) => {
+        const newMsg = payload.new as Message
+        setMessages(prev => [newMsg, ...prev])
+        playChime()
+        toastSuccess('New SMS received!')
+      })
+      .subscribe()
+
+    // Listen to updates to the rental itself (e.g. status changes)
+    const rentalChannel = supabase
+      .channel(`rental-status-${id}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'rentals',
+        filter: `id=eq.${id}`
+      }, (payload) => {
+        const updatedRental = payload.new as Rental
+        setRental(updatedRental)
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(smsChannel)
+      supabase.removeChannel(rentalChannel)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 

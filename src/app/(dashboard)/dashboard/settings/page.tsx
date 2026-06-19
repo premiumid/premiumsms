@@ -7,7 +7,7 @@ import FormattedDate from '@/components/FormattedDate'
 
 export default function SettingsPage() {
   const router = useRouter()
-  const { success: toastSuccess, error: toastError } = useToast()
+  const { success: toastSuccess } = useToast()
   const [user, setUser] = useState<{ email: string; created_at: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [confirming, setConfirming] = useState(false)

@@ -15,10 +15,23 @@ export async function GET(request: Request) {
     const limit = Math.min(100, Math.max(1, parseInt(url.searchParams.get('limit') || '20')))
     const offset = (page - 1) * limit
 
-    const { data: rentals, count: total } = await supabase
+    const status = url.searchParams.get('status')
+    const search = url.searchParams.get('search')
+
+    let dbQuery = supabase
       .from('rentals')
       .select('*', { count: 'exact' })
       .eq('user_id', auth.user.id)
+
+    if (status && status !== 'all') {
+      dbQuery = dbQuery.eq('status', status)
+    }
+
+    if (search) {
+      dbQuery = dbQuery.ilike('phone_number', `%${search}%`)
+    }
+
+    const { data: rentals, count: total } = await dbQuery
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 

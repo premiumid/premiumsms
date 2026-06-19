@@ -1,13 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import ServiceIcon from '@/components/ServiceIcon'
 
 interface Service {
   slug: string
   name: string
   icon_url?: string
+}
+
+interface Country {
+  code: string
+  name: string
+  flag?: string
 }
 
 interface TxRecord {
@@ -28,6 +35,7 @@ interface RentalRecord {
 }
 
 export default function DashboardClient({ initialServices, isLoggedIn, recentTransactions, recentRentals }: { initialServices: Service[]; isLoggedIn: boolean; recentTransactions?: TxRecord[]; recentRentals?: RentalRecord[] }) {
+  const router = useRouter()
   const [search, setSearch] = useState('')
   const [selectedApp, setSelectedApp] = useState<string | null>(null)
 
@@ -36,6 +44,76 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
   )
 
   const activeApp = initialServices.find(s => s.slug === selectedApp) || initialServices[0] || null
+
+  const [countries, setCountries] = useState<Country[]>([])
+  const [countriesLoading, setCountriesLoading] = useState(false)
+  const [selectedCountry, setSelectedCountry] = useState<string>('')
+  const [price, setPrice] = useState<number | null>(null)
+  const [priceLoading, setPriceLoading] = useState(false)
+  const [renting, setRenting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const activeAppSlug = activeApp?.slug
+
+  // Fetch countries when activeApp changes
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    if (!activeAppSlug) return
+    setCountriesLoading(true)
+    setCountries([])
+    setSelectedCountry('')
+    setPrice(null)
+    setError(null)
+
+    fetch(`/api/countries?service=${activeAppSlug}`)
+      .then(r => r.json())
+      .then(d => {
+        setCountries(d.countries || [])
+      })
+      .catch(() => setError('Failed to load countries'))
+      .finally(() => setCountriesLoading(false))
+  }, [activeAppSlug])
+
+  // Fetch price when selectedCountry changes
+  useEffect(() => {
+    if (!activeAppSlug || !selectedCountry) {
+      setPrice(null)
+      return
+    }
+    setPriceLoading(true)
+    setPrice(null)
+    setError(null)
+
+    fetch(`/api/price?service=${activeAppSlug}&country=${selectedCountry}`)
+      .then(r => r.json())
+      .then(d => {
+        setPrice(d.price?.price_usd ?? null)
+      })
+      .catch(() => setError('Failed to load price'))
+      .finally(() => setPriceLoading(false))
+  }, [activeAppSlug, selectedCountry])
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  async function handleRent() {
+    if (!activeApp || !selectedCountry || !isLoggedIn) return
+    setRenting(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/rentals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ service: activeApp.slug, country: selectedCountry }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to rent number')
+      }
+      router.push(`/dashboard/rentals/${data.rental.id}`)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+      setRenting(false)
+    }
+  }
 
   const formatDate = (d: string) => {
     const date = new Date(d)
@@ -76,15 +154,15 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
           </div>
           <div className="catalog-sidebar-list overflow-y-auto px-2 pb-4">
             {filteredApps.map(app => (
-              <Link
+              <button
                 key={app.slug}
-                href={isLoggedIn ? `/dashboard/numbers?service=${app.slug}` : '/register'}
-                className={`catalog-sidebar-item flex items-center gap-3${selectedApp === app.slug ? ' active' : ''}`}
-                onClick={(e) => { if (!isLoggedIn) e.preventDefault(); setSelectedApp(app.slug) }}
+                className={`catalog-sidebar-item flex items-center gap-3 w-full text-left${selectedApp === app.slug || (!selectedApp && initialServices[0]?.slug === app.slug) ? ' active' : ''}`}
+                onClick={() => setSelectedApp(app.slug)}
+                style={{ background: 'none', border: 'none' }}
               >
                 <ServiceIcon slug={app.slug} name={app.name} size={20} />
                 <span className="text-sm font-semibold text-primary">{app.name}</span>
-              </Link>
+              </button>
             ))}
           </div>
         </aside>
@@ -98,15 +176,15 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
 
           <div className="catalog-apps-grid">
             {filteredApps.slice(0, 24).map(app => (
-              <Link
+              <button
                 key={app.slug}
-                href={isLoggedIn ? `/dashboard/numbers?service=${app.slug}` : '/register'}
-                className={`catalog-app-card${selectedApp === app.slug ? ' active' : ''}`}
-                onClick={(e) => { if (!isLoggedIn) e.preventDefault(); setSelectedApp(app.slug) }}
+                className={`catalog-app-card w-full text-left${selectedApp === app.slug || (!selectedApp && initialServices[0]?.slug === app.slug) ? ' active' : ''}`}
+                onClick={() => setSelectedApp(app.slug)}
+                style={{ background: 'none', border: 'none' }}
               >
                 <ServiceIcon slug={app.slug} name={app.name} size={48} />
                 <div className="catalog-app-name">{app.name}</div>
-              </Link>
+              </button>
             ))}
           </div>
           
@@ -166,10 +244,44 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
               )}
             </div>
             <h2 className="dynamic-hero-title">{activeApp ? activeApp.name : 'Real SMS Numbers'}</h2>
-            <p className="dynamic-hero-price">From $0.05 / SMS</p>
+            <p className="dynamic-hero-price">
+              {priceLoading ? 'Fetching price…' : price !== null ? `$${price.toFixed(2)}` : 'Select a country'}
+            </p>
           </div>
 
           <div className="order-summary-box-redesigned">
+            {activeApp && (
+              <div className="mb-6">
+                <label htmlFor="dashboard-country-select" className="block text-xs font-bold text-tertiary uppercase tracking-wider mb-2">
+                  Select Country
+                </label>
+                {countriesLoading ? (
+                  <div className="text-sm text-secondary animate-pulse py-2">Loading countries…</div>
+                ) : (
+                  <select
+                    id="dashboard-country-select"
+                    value={selectedCountry}
+                    onChange={e => setSelectedCountry(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent-primary"
+                    style={{ colorScheme: 'dark' }}
+                  >
+                    <option value="" disabled className="bg-neutral-900 text-secondary">-- Choose a country --</option>
+                    {countries.map(c => (
+                      <option key={c.code} value={c.code} className="bg-neutral-900 text-white">
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+            )}
+
+            {error && (
+              <div className="text-xs text-danger mb-4 bg-danger/10 p-2.5 rounded-lg border border-danger/20">
+                {error}
+              </div>
+            )}
+
             <ul className="flex flex-col gap-4 mb-6">
               <li className="flex items-center gap-3 text-sm text-secondary font-medium">
                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 text-success">
@@ -191,12 +303,29 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
               </li>
             </ul>
 
-            <Link
-              href={isLoggedIn ? (activeApp ? `/dashboard/numbers?service=${activeApp.slug}` : '/dashboard/numbers') : '/register'}
-              className="btn btn-primary w-full py-3 shadow-lg shadow-accent/20"
-            >
-              {isLoggedIn ? (activeApp ? `Rent ${activeApp.name} Number →` : 'Rent a Number →') : 'Create Free Account →'}
-            </Link>
+            {isLoggedIn ? (
+              <button
+                onClick={handleRent}
+                disabled={renting || !selectedCountry || price === null}
+                className="btn btn-primary w-full py-3 shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
+                id="dashboard-checkout-btn"
+              >
+                {renting ? (
+                  <>
+                    <span className="spinner-sm animate-spin" /> Renting…
+                  </>
+                ) : (
+                  <>Rent Number Now &rarr;</>
+                )}
+              </button>
+            ) : (
+              <Link
+                href="/register"
+                className="btn btn-primary w-full py-3 shadow-lg shadow-accent/20 block text-center"
+              >
+                Create Free Account &rarr;
+              </Link>
+            )}
           </div>
         </aside>
       </div>

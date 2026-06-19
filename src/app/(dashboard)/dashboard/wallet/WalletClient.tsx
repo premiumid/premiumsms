@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import FormattedDate from '@/components/FormattedDate'
 import { useToast } from '@/components/Toast'
 import EmptyState from '@/components/EmptyState'
+import { createClient } from '@/lib/supabase/client'
+import type { RealtimeChannel } from '@supabase/supabase-js'
 
 interface Transaction {
   id: string
@@ -87,16 +89,17 @@ export default function WalletClient({ initialBalance, initialTransactions, user
   const [txLoading, setTxLoading] = useState(false)
   const [txHasMore, setTxHasMore] = useState(initialTransactions.length >= 20)
 
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const activeChannelRef = useRef<RealtimeChannel | null>(null)
   const modalRef = useRef<HTMLDivElement | null>(null)
   const prevFocusRef = useRef<HTMLElement | null>(null)
 
   const finalAmount = customAmount ? Number(customAmount) : selectedAmount
 
-  const stopPolling = () => {
-    if (pollRef.current) {
-      clearInterval(pollRef.current)
-      pollRef.current = null
+  const stopRealtimeSubscription = () => {
+    if (activeChannelRef.current) {
+      const supabase = createClient()
+      supabase.removeChannel(activeChannelRef.current)
+      activeChannelRef.current = null
     }
   }
 
@@ -138,8 +141,8 @@ export default function WalletClient({ initialBalance, initialTransactions, user
     }
   }, [isModalOpen])
 
-  // Cleanup polling on unmount
-  useEffect(() => () => stopPolling(), [])
+  // Cleanup on unmount
+  useEffect(() => () => stopRealtimeSubscription(), [])
 
   const handleAmountSelect = (amount: number) => {
     setSelectedAmount(amount)
@@ -157,33 +160,36 @@ export default function WalletClient({ initialBalance, initialTransactions, user
     setTimeout(() => setCopied(null), 2000)
   }
 
-  const startPolling = (paymentId: string) => {
-    pollRef.current = setInterval(async () => {
-      try {
-        const res = await fetch(`/api/wallet/topup/status?paymentId=${paymentId}`)
-        const data = await res.json()
-
-        if (!res.ok) return
-
-        const status = data.status as PaymentStatus
+  const startRealtimeSubscription = (paymentId: string) => {
+    stopRealtimeSubscription()
+    const supabase = createClient()
+    const channel = supabase
+      .channel(`payment-status-${paymentId}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'crypto_payments',
+        filter: `nowpayments_id=eq.${paymentId}`
+      }, (payload: { new: { status: string; processed?: boolean } }) => {
+        const status = payload.new.status as PaymentStatus
         setPaymentStatus(status)
 
-        const isComplete = status === 'finished' || status === 'confirmed' || data.processed
+        const isComplete = status === 'finished' || status === 'confirmed' || payload.new.processed
         const isFailed = status === 'failed' || status === 'expired'
 
         if (isComplete) {
-          stopPolling()
+          stopRealtimeSubscription()
           setPaymentStep('success')
-          toastSuccess(`$${paymentData?.priceAmount.toFixed(2)} credited to your wallet`)
+          toastSuccess('Payment credited to your wallet')
           router.refresh()
         } else if (isFailed) {
-          stopPolling()
+          stopRealtimeSubscription()
           setError(`Payment ${status}. Please close and try again.`)
         }
-      } catch {
-        // Network hiccup — keep polling
-      }
-    }, 5000)
+      })
+      .subscribe()
+
+    activeChannelRef.current = channel
   }
 
   const handleCreatePayment = async () => {
@@ -210,7 +216,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
       setPaymentData(data)
       setPaymentStatus('waiting')
       setPaymentStep('awaiting')
-      startPolling(data.paymentId)
+      startRealtimeSubscription(data.paymentId)
 
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -221,7 +227,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
   }
 
   const handleCloseModal = () => {
-    stopPolling()
+    stopRealtimeSubscription()
     setIsModalOpen(false)
     setPaymentData(null)
     setPaymentStatus('waiting')
@@ -421,6 +427,18 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                   )}
                 </div>
 
+                <div className="flex flex-col items-center justify-center my-4 bg-white/5 p-4 rounded-xl border border-white/10">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(paymentData.payAddress)}&color=ffffff&bgcolor=1a1a1a`}
+                    alt="USDT TRC-20 Deposit QR"
+                    width={150}
+                    height={150}
+                    className="rounded-lg shadow-lg border border-white/10"
+                  />
+                  <span className="text-[10px] text-tertiary mt-2 uppercase tracking-widest font-semibold">Scan to Deposit</span>
+                </div>
+
                 <div className="payment-info-box">
                   <p className="payment-info-label">Send exactly this amount:</p>
                   <div className="copy-row">
@@ -457,7 +475,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
 
                 <p className="payment-tracking">
                   <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  Checking blockchain every 5 seconds · Payment ID: <code>{paymentData.paymentId}</code>
+                  Monitoring blockchain in real-time · Payment ID: <code>{paymentData.paymentId}</code>
                 </p>
 
                 {error && <p className="wallet-error">{error}</p>}
