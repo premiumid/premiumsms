@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import FormattedDate from '@/components/FormattedDate'
+import { useToast } from '@/components/Toast'
 
 interface Message {
   id: string
@@ -24,6 +25,7 @@ interface Rental {
 export default function RentalDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
+  const { success: toastSuccess, error: toastError } = useToast()
   const [rental, setRental] = useState<Rental | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
@@ -95,7 +97,9 @@ export default function RentalDetailPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       await fetchRental()
+      toastSuccess('Rental cancelled — refund issued')
     } catch (err) {
+      toastError(err instanceof Error ? err.message : 'Failed to cancel')
       setError(err instanceof Error ? err.message : 'Failed to cancel')
     } finally {
       setCancelling(false)
@@ -158,7 +162,7 @@ export default function RentalDetailPage() {
           <span className="number-value">{rental.phone_number}</span>
           <button
             className="copy-btn"
-            onClick={() => { navigator.clipboard.writeText(rental.phone_number); setCopiedNum(true); setTimeout(() => setCopiedNum(false), 2000) }}
+            onClick={() => { navigator.clipboard.writeText(rental.phone_number); setCopiedNum(true); setTimeout(() => setCopiedNum(false), 2000); toastSuccess('Number copied') }}
             id="copy-number-btn"
           >
             <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -261,7 +265,7 @@ export default function RentalDetailPage() {
                 {msg.code && (
                   <button
                     className="copy-code-btn"
-                    onClick={() => { navigator.clipboard.writeText(msg.code!); setCopiedCodeId(msg.id); setTimeout(() => setCopiedCodeId(null), 2000) }}
+                    onClick={() => { navigator.clipboard.writeText(msg.code!); setCopiedCodeId(msg.id); setTimeout(() => setCopiedCodeId(null), 2000); toastSuccess('Code copied') }}
                     id={`copy-code-${msg.id}`}
                   >
                     {copiedCodeId === msg.id ? '✓ Copied' : (

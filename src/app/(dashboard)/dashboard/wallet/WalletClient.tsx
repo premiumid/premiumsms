@@ -82,6 +82,10 @@ export default function WalletClient({ initialBalance, initialTransactions, user
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('waiting')
   const [copied, setCopied] = useState<'address' | 'amount' | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [allTransactions, setAllTransactions] = useState<Transaction[]>(initialTransactions)
+  const [txPage, setTxPage] = useState(1)
+  const [txLoading, setTxLoading] = useState(false)
+  const [txHasMore, setTxHasMore] = useState(initialTransactions.length >= 20)
 
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const modalRef = useRef<HTMLDivElement | null>(null)
@@ -234,6 +238,26 @@ export default function WalletClient({ initialBalance, initialTransactions, user
     return 'var(--danger)'
   }
 
+  const loadMoreTransactions = async () => {
+    setTxLoading(true)
+    try {
+      const nextPage = txPage + 1
+      const res = await fetch(`/api/wallet/transactions?page=${nextPage}&limit=20`)
+      const data = await res.json()
+      if (data.transactions?.length > 0) {
+        setAllTransactions(prev => [...prev, ...data.transactions])
+        setTxPage(nextPage)
+        setTxHasMore(data.transactions.length >= 20)
+      } else {
+        setTxHasMore(false)
+      }
+    } catch {
+      toastError('Failed to load more transactions')
+    } finally {
+      setTxLoading(false)
+    }
+  }
+
   const statusCfg = STATUS_CONFIG[paymentStatus] || STATUS_CONFIG.waiting
 
   return (
@@ -310,7 +334,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
       {/* Transaction History */}
       <div className="tx-section glass-panel">
         <h2 className="tx-title">Transaction History</h2>
-        {loading ? (
+        {loading && allTransactions.length === 0 ? (
           <div className="tx-list">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="tx-row" style={{ opacity: 0.4 }}>
@@ -326,7 +350,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
               </div>
             ))}
           </div>
-        ) : initialTransactions.length === 0 ? (
+        ) : allTransactions.length === 0 ? (
           <EmptyState
             icon={<svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>}
             title="No transactions yet"
@@ -334,7 +358,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
           />
         ) : (
           <div className="tx-list">
-            {initialTransactions.map((tx) => (
+            {allTransactions.map((tx) => (
               <div key={tx.id} className="tx-row">
                 <div className="tx-icon" style={{ color: txColor(tx.type) }}>
                   {txIcon(tx.type)}
@@ -353,6 +377,13 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                 </div>
               </div>
             ))}
+            {txHasMore && (
+              <div style={{ textAlign: 'center', padding: '1rem' }}>
+                <button className="btn btn-secondary" onClick={loadMoreTransactions} disabled={txLoading} style={{ fontSize: '0.875rem' }}>
+                  {txLoading ? 'Loading…' : 'Load More'}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
