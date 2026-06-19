@@ -34,15 +34,11 @@ export default async function DashboardPage() {
     console.error("Failed to load services", error);
   }
 
-  let activeRentals = 0
-  let balance = 0
   let recentTransactions: TxRecord[] = []
   let recentRentals: RentalRecord[] = []
 
   if (user) {
-    const [rentalRes, walletRes, txRes, rentalsRes] = await Promise.all([
-      supabase.from('rentals').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('status', 'active'),
-      supabase.from('wallets').select('balance').eq('user_id', user.id).single(),
+    const [txRes, rentalsRes] = await Promise.all([
       supabase.from('wallet_transactions')
         .select('id, type, amount, description, created_at')
         .order('created_at', { ascending: false })
@@ -53,8 +49,6 @@ export default async function DashboardPage() {
         .order('created_at', { ascending: false })
         .limit(5),
     ])
-    activeRentals = rentalRes.count ?? 0
-    balance = Number(walletRes.data?.balance ?? 0)
     recentTransactions = (txRes.data as TxRecord[]) || []
     recentRentals = (rentalsRes.data as RentalRecord[]) || []
   }
@@ -63,8 +57,6 @@ export default async function DashboardPage() {
     <DashboardClient 
       initialServices={services} 
       isLoggedIn={!!user} 
-      activeRentals={activeRentals} 
-      balance={balance}
       recentTransactions={recentTransactions}
       recentRentals={recentRentals}
     />

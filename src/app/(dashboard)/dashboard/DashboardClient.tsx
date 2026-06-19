@@ -27,7 +27,7 @@ interface RentalRecord {
   created_at: string
 }
 
-export default function DashboardClient({ initialServices, isLoggedIn, activeRentals, balance, recentTransactions, recentRentals }: { initialServices: Service[]; isLoggedIn: boolean; activeRentals?: number; balance?: number; recentTransactions?: TxRecord[]; recentRentals?: RentalRecord[] }) {
+export default function DashboardClient({ initialServices, isLoggedIn, recentTransactions, recentRentals }: { initialServices: Service[]; isLoggedIn: boolean; recentTransactions?: TxRecord[]; recentRentals?: RentalRecord[] }) {
   const [search, setSearch] = useState('')
   const [selectedApp, setSelectedApp] = useState<string | null>(null)
 
@@ -54,43 +54,6 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
         </div>
       )}
 
-      {/* Stats Cards */}
-      {isLoggedIn && (
-        <div className="stat-cards-row">
-          <Link href="/dashboard/wallet" className="stat-card-large stat-card-gradient-1">
-            <div className="stat-card-header">
-              <div className="stat-card-icon icon-green">
-                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-              </div>
-              <span className="stat-card-title">Balance</span>
-            </div>
-            <div className="stat-card-value">${(balance ?? 0).toFixed(2)}</div>
-            <div className="stat-card-link">Manage Wallet &rarr;</div>
-          </Link>
-
-          <Link href="/dashboard/rentals" className="stat-card-large stat-card-gradient-2">
-            <div className="stat-card-header">
-              <div className="stat-card-icon icon-purple">
-                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              </div>
-              <span className="stat-card-title">Active Rentals</span>
-            </div>
-            <div className="stat-card-value">{activeRentals ?? 0}</div>
-            <div className="stat-card-link">View Rentals &rarr;</div>
-          </Link>
-
-          <Link href="/dashboard/numbers" className="stat-card-large stat-card-gradient-3">
-            <div className="stat-card-header">
-              <div className="stat-card-icon icon-amber">
-                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </div>
-              <span className="stat-card-title">New Number</span>
-            </div>
-            <div className="stat-card-value">Rent</div>
-            <div className="stat-card-link">Browse Catalog &rarr;</div>
-          </Link>
-        </div>
-      )}
 
       {/* Main Catalog 3-Col Layout */}
       <div className="catalog-grid-layout">
