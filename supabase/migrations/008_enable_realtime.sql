@@ -1,13 +1,39 @@
--- Migration 008: Enable Supabase Realtime for core tables
+-- Migration 008: Enable Supabase Realtime for core tables safely
 
--- Drop the tables from publication first if they somehow exist to avoid conflicts (safe migration)
-alter publication supabase_realtime drop table if exists public.rentals;
-alter publication supabase_realtime drop table if exists public.sms_messages;
-alter publication supabase_realtime drop table if exists public.crypto_payments;
-alter publication supabase_realtime drop table if exists public.wallets;
+DO $$
+BEGIN
+  -- Drop tables from publication if they exist in it
+  IF EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'rentals'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime DROP TABLE public.rentals;
+  END IF;
 
--- Add tables to the realtime publication
-alter publication supabase_realtime add table public.rentals;
-alter publication supabase_realtime add table public.sms_messages;
-alter publication supabase_realtime add table public.crypto_payments;
-alter publication supabase_realtime add table public.wallets;
+  IF EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'sms_messages'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime DROP TABLE public.sms_messages;
+  END IF;
+
+  IF EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'crypto_payments'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime DROP TABLE public.crypto_payments;
+  END IF;
+
+  IF EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'wallets'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime DROP TABLE public.wallets;
+  END IF;
+
+  -- Add tables to the realtime publication
+  ALTER PUBLICATION supabase_realtime ADD TABLE public.rentals;
+  ALTER PUBLICATION supabase_realtime ADD TABLE public.sms_messages;
+  ALTER PUBLICATION supabase_realtime ADD TABLE public.crypto_payments;
+  ALTER PUBLICATION supabase_realtime ADD TABLE public.wallets;
+END $$;

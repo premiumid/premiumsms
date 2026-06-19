@@ -38,9 +38,9 @@ export default function RentalDetailPage() {
 
   function playChime() {
     try {
-      const AudioContext = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-      if (!AudioContext) return
-      const ctx = new AudioContext()
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      if (!AudioContextClass) return
+      const ctx = new AudioContextClass()
       const playTone = (freq: number, startTime: number, duration: number) => {
         const osc = ctx.createOscillator()
         const gainNode = ctx.createGain()
