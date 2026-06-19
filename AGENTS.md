@@ -19,7 +19,7 @@ Read the guide in `node_modules/next/dist/docs/` before writing code. Heed all d
 - **Client Architecture:** (`src/lib/supabase/`)
   - `client.ts`: Browser client for `"use client"` components.
   - `server.ts`: Server client with `cookies()` for RSCs.
-  - `middleware.ts`: `updateSession()` for `src/middleware.ts`.
+  - `middleware.ts`: `updateSession()` for `src/proxy.ts` (Next.js 16 deprecated the `middleware.ts` convention — use `proxy.ts` instead).
   - `admin.ts`: **Admin client (`SUPABASE_SERVICE_ROLE_KEY`). Bypasses RLS.**
 
 ## Security & Wallet Mutations
