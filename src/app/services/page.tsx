@@ -1,0 +1,101 @@
+'use client'
+
+import { useEffect } from 'react'
+import Link from 'next/link'
+import ServiceIcon from '../../components/ServiceIcon'
+import MarketingNav from '../../components/MarketingNav'
+
+const services = [
+  { name: 'Telegram', slug: 'telegram', color: '#2AABEE', desc: 'Verify Telegram accounts instantly. Most countries from $0.05.', popular: true },
+  { name: 'WhatsApp', slug: 'whatsapp', color: '#25D366', desc: 'WhatsApp numbers for account creation and re-verification.', popular: true },
+  { name: 'Google', slug: 'google', color: '#EA4335', desc: 'Gmail and Google account verification. High availability.', popular: true },
+  { name: 'Instagram', slug: 'instagram', color: '#E4405F', desc: 'Create or verify Instagram accounts with temp numbers.', popular: true },
+  { name: 'Facebook', slug: 'facebook', color: '#1877F2', desc: 'Facebook registration and account recovery.', popular: true },
+  { name: 'Twitter / X', slug: 'x', color: '#000000', desc: 'X (Twitter) account sign-up verification.', popular: false },
+  { name: 'TikTok', slug: 'tiktok', color: '#000000', desc: 'TikTok account creation across multiple regions.', popular: false },
+  { name: 'Snapchat', slug: 'snapchat', color: '#FFFC00', desc: 'Snapchat number verification for new accounts.', popular: false },
+  { name: 'Amazon', slug: 'amazon', color: '#FF9900', desc: 'Amazon account verification and 2FA.', popular: false },
+  { name: 'Microsoft', slug: 'microsoft', color: '#00A4EF', desc: 'Outlook and Microsoft account sign-up.', popular: false },
+  { name: 'Uber', slug: 'uber', color: '#000000', desc: 'Uber rider and driver registration.', popular: false },
+  { name: 'PayPal', slug: 'paypal', color: '#00457C', desc: 'PayPal account creation and phone verification.', popular: false },
+  { name: 'Steam', slug: 'steam', color: '#000000', desc: 'Steam account and game verification.', popular: false },
+  { name: 'Discord', slug: 'discord', color: '#5865F2', desc: 'Discord phone verification for new accounts.', popular: false },
+  { name: 'LinkedIn', slug: 'linkedin', color: '#0A66C2', desc: 'LinkedIn profile creation and sign-in verification.', popular: false },
+  { name: 'Airbnb', slug: 'airbnb', color: '#FF5A5F', desc: 'Airbnb account sign-up verification.', popular: false },
+  { name: 'Tinder', slug: 'tinder', color: '#FF6B6B', desc: 'Tinder account verification.', popular: false },
+  { name: 'OkCupid', slug: 'okcupid', color: '#ED1965', desc: 'OkCupid account sign-up and verification.', popular: false },
+  { name: 'Binance', slug: 'binance', color: '#F0B90B', desc: 'Binance exchange KYC phone step.', popular: false },
+  { name: '2500+ more', slug: '', color: '#8b5cf6', desc: 'Browse the full catalog after signing up. New services added weekly.', popular: false },
+]
+
+export default function ServicesPage() {
+  useEffect(() => { document.title = 'Services — PremiumID' }, [])
+
+  const popular = services.filter(s => s.popular)
+  const rest = services.filter(s => !s.popular)
+
+  return (
+    <div>
+      <MarketingNav />
+
+      {/* Hero */}
+      <section className="hero-wrapper" style={{ paddingBottom: '6rem', textAlign: 'center' }}>
+        <div className="container">
+          <div className="hero-badge" style={{ margin: '0 auto 1.5rem' }}>2,500+ Services</div>
+          <h1 className="hero-title">Every verification.<br /><span className="text-gradient">Every platform.</span></h1>
+          <p className="hero-desc" style={{ margin: '0 auto' }}>
+            Real numbers for every major app across 145+ countries. Live stock, instant delivery, auto-refund guaranteed.
+          </p>
+        </div>
+      </section>
+
+      {/* Popular Services */}
+      <section className="container" style={{ padding: '5rem 1.5rem 2rem', marginTop: '-3rem' }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.25rem' }}>Most Popular</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+          {popular.map(s => (
+            <div key={s.name} style={{ background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <ServiceIcon slug={s.slug} color={s.color} name={s.name} />
+              <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{s.name}</h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', flexGrow: 1 }}>{s.desc}</p>
+              <Link href="/register" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%' }}>Get a Number</Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* All Services */}
+      <section className="container" style={{ padding: '2rem 1.5rem 6rem' }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.25rem' }}>All Services</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+          {rest.map(s => (
+            <div key={s.name} style={{ background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <ServiceIcon slug={s.slug} color={s.color} name={s.name} />
+              <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{s.name}</h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', flexGrow: 1 }}>{s.desc}</p>
+              <Link href="/register" className="btn btn-secondary" style={{ marginTop: '0.5rem', width: '100%' }}>Get a Number</Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ background: 'linear-gradient(135deg, #4c1d95, #2e1065)', color: 'white', padding: '5rem 1.5rem', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem' }}>Don&apos;t see your service?</h2>
+        <p style={{ color: '#cbd5e1', marginBottom: '2rem' }}>We support 2,500+ services. Browse the full live catalog after signing up.</p>
+        <Link href="/register" className="btn" style={{ background: 'white', color: 'var(--accent-primary)', padding: '0.875rem 2rem', fontSize: '1rem' }}>
+          Browse Full Catalog
+        </Link>
+      </section>
+
+      {/* Footer */}
+      <footer style={{ borderTop: '1px solid var(--border-color)', padding: '2rem 1.5rem', textAlign: 'center' }}>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+          &copy; {new Date().getFullYear()} PremiumID. All rights reserved. &nbsp;|&nbsp;{' '}
+          <Link href="/privacy" style={{ color: 'var(--text-secondary)' }}>Privacy</Link> &nbsp;|&nbsp;{' '}
+          <Link href="/terms" style={{ color: 'var(--text-secondary)' }}>Terms</Link>
+        </p>
+      </footer>
+    </div>
+  )
+}
