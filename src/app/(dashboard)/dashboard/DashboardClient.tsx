@@ -45,52 +45,52 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
   return (
     <>
       {isLoggedIn && (
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-          <Link href="/dashboard/wallet" style={{ flex: 1, minWidth: 160, background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1rem', boxShadow: 'var(--shadow-sm)', textDecoration: 'none', color: 'inherit' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.375rem' }}>Balance</div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--success)' }}>${(balance ?? 0).toFixed(2)}</div>
+        <div className="stats-grid">
+          <Link href="/dashboard/wallet" className="stats-card">
+            <span className="stats-card-label">Balance</span>
+            <span className="stats-card-value" style={{ color: 'var(--success)' }}>${(balance ?? 0).toFixed(2)}</span>
           </Link>
-          <Link href="/dashboard/rentals" style={{ flex: 1, minWidth: 160, background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1rem', boxShadow: 'var(--shadow-sm)', textDecoration: 'none', color: 'inherit' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.375rem' }}>Active Rentals</div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-primary)' }}>{activeRentals ?? 0}</div>
+          <Link href="/dashboard/rentals" className="stats-card">
+            <span className="stats-card-label">Active Rentals</span>
+            <span className="stats-card-value" style={{ color: 'var(--accent-primary)' }}>{activeRentals ?? 0}</span>
           </Link>
-          <Link href="/dashboard/numbers" style={{ flex: 1, minWidth: 160, background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1rem', boxShadow: 'var(--shadow-sm)', textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <Link href="/dashboard/numbers" className="stats-card stats-card-cta">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             Rent a Number
           </Link>
         </div>
       )}
-      {isLoggedIn && (recentTransactions && recentTransactions.length > 0) && (
+      {isLoggedIn && recentTransactions && recentTransactions.length > 0 && (
         <div className="glass-panel" style={{ marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.25rem', borderBottom: '1px solid var(--border-color)' }}>
+          <div className="activity-header">
             <h3 style={{ fontSize: '0.875rem', fontWeight: 700 }}>Recent Activity</h3>
-            <Link href="/dashboard/wallet" style={{ fontSize: '0.8125rem', color: 'var(--accent-primary)', fontWeight: 600 }}>View all</Link>
+            <Link href="/dashboard/wallet" style={{ fontSize: '0.8125rem', color: 'var(--accent-primary)', fontWeight: 600, textDecoration: 'none' }}>View all</Link>
           </div>
           <div style={{ padding: '0.5rem 1.25rem' }}>
             {recentRentals && recentRentals.length > 0 && (
               <div style={{ marginBottom: '0.75rem' }}>
-                <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Rentals</p>
-                {recentRentals.map(r => (
-                  <Link key={r.id} href={`/dashboard/rentals/${r.id}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', textDecoration: 'none', color: 'inherit', borderBottom: '1px solid var(--border-color)', fontSize: '0.875rem' }}>
+                <p className="activity-section-label">Rentals</p>
+                {recentRentals.slice(0, 3).map(r => (
+                  <Link key={r.id} href={`/dashboard/rentals/${r.id}`} className="activity-row">
                     <span>
-                      <span style={{ fontWeight: 500 }}>{r.phone_number || 'Processing…'}</span>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginLeft: '0.5rem' }}>{formatDate(r.created_at)}</span>
+                      <span className="activity-row-primary">{r.phone_number || 'Processing…'}</span>
+                      <span className="activity-row-date">{formatDate(r.created_at)}</span>
                     </span>
-                    <span style={{ fontWeight: 600, color: r.status === 'active' ? 'var(--success)' : 'var(--text-tertiary)' }}>${Number(r.price).toFixed(2)}</span>
+                    <span style={{ fontWeight: 600, color: r.status === 'active' ? 'var(--success)' : 'var(--text-tertiary)', fontSize: '0.875rem' }}>${Number(r.price).toFixed(2)}</span>
                   </Link>
                 ))}
               </div>
             )}
             {recentTransactions && recentTransactions.length > 0 && (
               <div>
-                <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Transactions</p>
+                <p className="activity-section-label">Transactions</p>
                 {recentTransactions.slice(0, 3).map(tx => (
-                  <div key={tx.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid var(--border-color)', fontSize: '0.875rem' }}>
+                  <div key={tx.id} className="activity-row">
                     <span>
-                      <span style={{ fontWeight: 500 }}>{tx.description}</span>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginLeft: '0.5rem' }}>{formatDate(tx.created_at)}</span>
+                      <span className="activity-row-primary">{tx.description}</span>
+                      <span className="activity-row-date">{formatDate(tx.created_at)}</span>
                     </span>
-                    <span style={{ fontWeight: 600, color: tx.type === 'debit' ? 'var(--danger)' : 'var(--success)' }}>
+                    <span style={{ fontWeight: 600, color: tx.type === 'debit' ? 'var(--danger)' : 'var(--success)', fontSize: '0.875rem' }}>
                       {tx.type === 'debit' ? '-' : '+'}${Number(tx.amount).toFixed(2)}
                     </span>
                   </div>
@@ -113,19 +113,17 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
         </div>
         <div className="catalog-sidebar-list">
           {filteredApps.map(app => (
-            <div
+            <Link
               key={app.slug}
-              className={`catalog-sidebar-item ${selectedApp === app.slug ? 'active' : ''}`}
-              onClick={() => setSelectedApp(app.slug)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedApp(app.slug) }}
+              href={isLoggedIn ? `/dashboard/numbers?service=${app.slug}` : '/register'}
+              className={`catalog-sidebar-item${selectedApp === app.slug ? ' active' : ''}`}
+              onClick={(e) => { if (!isLoggedIn) e.preventDefault(); setSelectedApp(app.slug) }}
             >
               <div className="catalog-sidebar-item-left">
                 <ServiceIcon slug={app.slug} name={app.name} size={24} />
                 {app.name}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </aside>
@@ -139,25 +137,21 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
 
         <div className="catalog-apps-grid">
           {filteredApps.slice(0, 24).map(app => (
-            <div
+            <Link
               key={app.slug}
-              className={`catalog-app-card ${selectedApp === app.slug ? 'active' : ''}`}
-              onClick={() => setSelectedApp(app.slug)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedApp(app.slug) }}
+              href={isLoggedIn ? `/dashboard/numbers?service=${app.slug}` : '/register'}
+              className={`catalog-app-card${selectedApp === app.slug ? ' active' : ''}`}
+              onClick={(e) => { if (!isLoggedIn) e.preventDefault(); setSelectedApp(app.slug) }}
             >
               <ServiceIcon slug={app.slug} name={app.name} size={48} />
               <div className="catalog-app-name">{app.name}</div>
-            </div>
+            </Link>
           ))}
         </div>
 
-        <div style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '2rem' }}>
+        <div className="catalog-stats-bar">
           <span style={{ color: 'var(--success)' }}>● {initialServices.length} services</span>
-          &nbsp; · &nbsp;
           <span style={{ color: 'var(--accent-primary)' }}>● 145+ countries</span>
-          &nbsp; · &nbsp;
           <span style={{ color: 'var(--accent-primary)' }}>● From $0.05</span>
         </div>
 
@@ -169,7 +163,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
               <span>{activeApp?.name || 'From list'}</span>
             </div>
           </div>
-          <div style={{ width: '40px', height: '1px', background: 'var(--border-color)' }}></div>
+          <div className="step-connector" />
           <div className="step-indicator-item">
             <div className="step-indicator-num">2</div>
             <div className="step-indicator-text">
@@ -177,7 +171,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
               <span>See prices</span>
             </div>
           </div>
-          <div style={{ width: '40px', height: '1px', background: 'var(--border-color)' }}></div>
+          <div className="step-connector" />
           <div className="step-indicator-item">
             <div className="step-indicator-num">3</div>
             <div className="step-indicator-text">
@@ -190,27 +184,27 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
 
       {/* Right Sidebar */}
       <aside className="catalog-right">
-        <div style={{ textAlign: 'center', marginBottom: '2rem', marginTop: '1rem' }}>
-          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
+        <div className="catalog-right-hero">
+          <div className="catalog-right-icon">
             <svg aria-hidden="true" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           </div>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Buy Real SMS Numbers</h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+          <h2 className="catalog-right-title">Buy Real SMS Numbers</h2>
+          <p className="catalog-right-desc">
             Browse live prices, then create a free account when you&apos;re ready to buy.
           </p>
         </div>
 
-        <div className="order-summary-box" style={{ background: 'white', border: 'none', padding: 0 }}>
+        <div className="order-summary-box">
           <ul className="order-summary-features">
-            <li style={{ border: '1px solid var(--border-color)', padding: '0.75rem', borderRadius: '9999px', justifyContent: 'center' }}>
+            <li>
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: 6 }}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
               Real SIM Cards
             </li>
-            <li style={{ border: '1px solid var(--border-color)', padding: '0.75rem', borderRadius: '9999px', justifyContent: 'center' }}>
+            <li>
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: 6 }}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               145+ Countries
             </li>
-            <li style={{ border: '1px solid var(--border-color)', padding: '0.75rem', borderRadius: '9999px', justifyContent: 'center' }}>
+            <li>
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: 6 }}><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
               Auto-Refund
             </li>
@@ -219,25 +213,24 @@ export default function DashboardClient({ initialServices, isLoggedIn, activeRen
           <Link href={isLoggedIn ? '/dashboard/numbers' : '/register'} className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem' }}>
             {isLoggedIn ? 'Rent a Number →' : 'Create Free Account →'}
           </Link>
-          {!isLoggedIn && <>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginBottom: '1rem' }}>No credit card required</div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
-              <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>OR</span>
-              <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
-            </div>
-          </>}
+          {!isLoggedIn && (
+            <>
+              <p className="catalog-right-note">No credit card required</p>
+              <div className="catalog-right-divider">
+                <span className="catalog-right-or">OR</span>
+              </div>
+            </>
+          )}
 
           <Link
             href={activeApp ? `/dashboard/numbers?service=${activeApp.slug}` : '/dashboard/numbers'}
-            className="btn"
-            style={{ width: '100%', background: 'white', border: '1px solid var(--border-color)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+            className="btn catalog-right-cta"
           >
             {(activeApp || initialServices[0]) ? (
               <ServiceIcon slug={(activeApp || initialServices[0]).slug} name={(activeApp || initialServices[0]).name} size={20} />
             ) : (
-              <span style={{ width: 20, height: 20, borderRadius: 4, background: '#0f172a' }} />
+              <span className="catalog-right-cta-placeholder" />
             )}
             Continue with {activeApp ? activeApp.name : 'Telegram'}
           </Link>

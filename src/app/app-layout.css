@@ -204,6 +204,49 @@
   margin-bottom: 3rem;
 }
 
+/* Stats cards */
+.stats-card {
+  flex: 1;
+  min-width: 160px;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stats-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.stats-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stats-card-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stats-card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
 .catalog-app-card {
   display: flex;
   flex-direction: column;
@@ -215,11 +258,14 @@
   border-radius: var(--radius-lg);
   border: 2px solid transparent;
   transition: all 0.2s;
+  text-decoration: none;
+  color: inherit;
 }
 
 .catalog-app-card:hover {
   background: white;
   box-shadow: var(--shadow-sm);
+  border-color: var(--border-color);
 }
 
 .catalog-app-card.active {
@@ -355,6 +401,163 @@
   content: "✓";
   color: var(--success);
   font-weight: bold;
+}
+
+.order-summary-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem;
+  border-radius: 9999px;
+  justify-content: center;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Activity widget */
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.activity-section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.activity-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.875rem;
+}
+
+.activity-row:last-child {
+  border-bottom: none;
+}
+
+.activity-row:hover {
+  opacity: 0.8;
+}
+
+.activity-row-primary {
+  font-weight: 500;
+}
+
+.activity-row-date {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-left: 0.5rem;
+}
+
+/* Catalog stats bar */
+.catalog-stats-bar {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Step connector */
+.step-connector {
+  width: 40px;
+  height: 1px;
+  background: var(--border-color);
+}
+
+/* Right sidebar */
+.catalog-right-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+.catalog-right-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.catalog-right-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.catalog-right-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.catalog-right-note {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-bottom: 1rem;
+}
+
+.catalog-right-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.catalog-right-divider::before,
+.catalog-right-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.catalog-right-or {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+.catalog-right-cta {
+  width: 100%;
+  background: white;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.catalog-right-cta:hover {
+  background: var(--bg-tertiary);
+}
+
+.catalog-right-cta-placeholder {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: #0f172a;
 }
 
 /* Hamburger menu */
