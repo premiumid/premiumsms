@@ -42,13 +42,19 @@ interface ServiceIconProps {
 }
 
 export default function ServiceIcon({ slug, name, size = 48, iconSize = 28, rounded = true }: ServiceIconProps) {
-  const [failed, setFailed] = useState(!slug)
+  const [failed, setFailed] = useState(() => {
+    if (!slug) return true
+    return !BG_COLORS[slug.toLowerCase()]
+  })
   const imgRef = useRef<HTMLImageElement>(null)
   const color = getServiceColor(slug)
 
-  // Robust hydration check to see if image failed to load before JS hydrated
+  // Reset state if slug changes or dynamically check if image fails
   useEffect(() => {
-    if (imgRef.current) {
+    const isUnknown = !slug || !BG_COLORS[slug.toLowerCase()]
+    setFailed(isUnknown)
+    
+    if (!isUnknown && imgRef.current) {
       if (imgRef.current.complete && imgRef.current.naturalWidth === 0) {
         setFailed(true)
       }
