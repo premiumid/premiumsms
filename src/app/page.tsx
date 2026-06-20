@@ -231,7 +231,7 @@ export default function Home() {
             <div className="vs-header">
               <div className="text-uppercase-label-accent">THE MODERN STANDARD</div>
               <div className="vs-title text-accent-primary">PHYSICAL SIMS</div>
-              <div className="vs-subtitle text-accent-primary">VirtualSMS</div>
+              <div className="vs-subtitle text-accent-primary">PremiumID</div>
             </div>
             <ul className="vs-list">
               <li className="vs-item good">Better acceptance</li>
@@ -356,7 +356,7 @@ export default function Home() {
               </div>
               <div className="ai-stat">
                 <div className="ai-stat-value">x402</div>
-                <div className="ai-stat-label">USOC DEPOSITS</div>
+                <div className="ai-stat-label">USDT DEPOSITS</div>
               </div>
             </div>
           </div>
@@ -450,7 +450,7 @@ export default function Home() {
               <details open>
                 <summary className="faq-question">Are these real SIM cards or VoIP numbers?</summary>
                 <div className="faq-answer">
-                  VirtualSMS uses real carrier SIM numbers, not VoIP numbers from providers like Twilio or Google Voice. Real SIM routes are useful because apps such as WhatsApp, Telegram, Tinder, Google, and Instagram often reject virtual or reused VoIP numbers.
+                  PremiumID uses real carrier SIM numbers, not VoIP numbers from providers like Twilio or Google Voice. Real SIM routes are useful because apps such as WhatsApp, Telegram, Tinder, Google, and Instagram often reject virtual or reused VoIP numbers.
                 </div>
               </details>
             </div>
@@ -485,7 +485,7 @@ export default function Home() {
       {/* Bottom CTA */}
       <section className="bottom-cta">
         <h2>Start Getting Verified Today</h2>
-        <p>Join thousands of users who trust VirtualSMS for reliable, instant SMS verification.</p>
+        <p>Join thousands of users who trust PremiumID for reliable, instant SMS verification.</p>
         <div className="flex-center-gap-4">
           <Link href="/register" className="btn btn-white text-accent-primary">
             Create Free Account &rarr;
