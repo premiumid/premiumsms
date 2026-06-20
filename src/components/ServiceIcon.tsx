@@ -117,17 +117,7 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
 
   return (
     <div
-      style={{
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: rounded ? '12px' : `${size / 6}px`,
-        background: color,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        flexShrink: 0,
-      }}
+      className={`flex items-center justify-center overflow-hidden shrink-0 ${rounded ? 'rounded-xl' : `rounded-[${size / 6}px]`} w-[${size}px] h-[${size}px] bg-[${color}]`}
     >
       {!failed && (
         /* eslint-disable-next-line @next/next/no-img-element */
@@ -138,16 +128,11 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
           width={iconSize}
           height={iconSize}
           onError={() => setFailed(true)}
-          style={{ 
-            maxWidth: '100%', 
-            maxHeight: '100%', 
-            display: 'block',
-            filter: iconUrl ? undefined : 'brightness(0) invert(1)' // Turn colored SVGs white
-          }}
+          className={`max-w-full max-h-full block ${!iconUrl ? 'brightness-0 invert' : ''}`}
         />
       )}
       {failed && (
-        <span style={{ color: 'white', fontWeight: 'bold', fontSize, lineHeight: 1 }}>
+        <span className={`text-white font-bold leading-none text-[${fontSize}]`}>
           {initial}
         </span>
       )}

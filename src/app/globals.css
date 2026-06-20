@@ -1182,8 +1182,8 @@ details[open] .faq-question::after {
   display: flex;
   align-items: center;
   gap: 12px;
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .phone-avatar {
@@ -1245,8 +1245,8 @@ details[open] .faq-question::after {
   padding: 12px 14px;
   color: white;
   font-size: 0.75rem;
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(0);
   transition: all 0.3s ease;
@@ -1301,8 +1301,8 @@ details[open] .faq-question::after {
   display: flex;
   align-items: center;
   gap: 16px;
-  backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   box-shadow: 
     0 20px 25px -5px rgba(0, 0, 0, 0.5),
     0 10px 10px -5px rgba(0, 0, 0, 0.4),

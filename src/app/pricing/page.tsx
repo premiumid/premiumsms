@@ -64,12 +64,12 @@ export default function PricingPage() {
       <MarketingNav />
 
       {/* Hero */}
-      <section className="hero-wrapper" style={{ paddingBottom: '6rem' }}>
-        <div className="container hero-container" style={{ justifyContent: 'center', textAlign: 'center' }}>
-          <div className="hero-content" style={{ maxWidth: '640px', margin: '0 auto' }}>
+      <section className="hero-wrapper pb-24">
+        <div className="container hero-container justify-center text-center">
+          <div className="hero-content max-w-[640px] mx-auto">
             <div className="hero-badge">Transparent Pricing</div>
             <h1 className="hero-title">Pay only for what you use</h1>
-            <p className="hero-desc" style={{ margin: '0 auto 2rem' }}>
+            <p className="hero-desc mx-auto mb-8">
               No subscriptions. No hidden fees. Top up your wallet and spend as you go.
               Prices start from $0.05 per verification.
             </p>
@@ -78,32 +78,25 @@ export default function PricingPage() {
       </section>
 
       {/* Plans */}
-      <section className="container" style={{ padding: '5rem 1.5rem', marginTop: '-3rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', maxWidth: '800px', margin: '0 auto' }}>
+      <section className="container py-20 px-6 -mt-12">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 max-w-[800px] mx-auto">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              style={{
-                background: plan.highlight ? 'linear-gradient(135deg, #4c1d95, #2e1065)' : 'white',
-                color: plan.highlight ? 'white' : 'var(--text-primary)',
-                border: plan.highlight ? 'none' : '1px solid var(--border-color)',
-                borderRadius: 'var(--radius-xl)',
-                padding: '2rem',
-                boxShadow: plan.highlight ? '0 20px 40px rgba(139,92,246,0.3)' : 'var(--shadow-md)',
-              }}
+              className={`rounded-xl p-8 ${plan.highlight ? 'bg-gradient-to-br from-violet-900 to-violet-950 text-white shadow-[0_20px_40px_rgba(139,92,246,0.3)]' : 'bg-white text-primary border border-border shadow-md'}`}
             >
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem', color: plan.highlight ? 'white' : undefined }}>{plan.name}</h3>
-              <div style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.25rem', color: plan.highlight ? 'white' : 'var(--accent-primary)' }}>{plan.price}</div>
-              <div style={{ fontSize: '0.75rem', marginBottom: '1rem', opacity: 0.7 }}>{plan.per}</div>
-              <p style={{ fontSize: '0.875rem', marginBottom: '1.5rem', opacity: 0.85 }}>{plan.description}</p>
-              <ul style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <h3 className={`text-lg font-bold mb-2 ${plan.highlight ? 'text-white' : ''}`}>{plan.name}</h3>
+              <div className={`text-3xl font-extrabold mb-1 ${plan.highlight ? 'text-white' : 'text-accent'}`}>{plan.price}</div>
+              <div className="text-xs mb-4 opacity-70">{plan.per}</div>
+              <p className="text-sm mb-6 opacity-85">{plan.description}</p>
+              <ul className="mb-8 flex flex-col gap-2">
                 {plan.features.map((f) => (
-                  <li key={f} style={{ fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ color: plan.highlight ? '#a78bfa' : 'var(--success)', fontWeight: 700 }}>✓</span> {f}
+                  <li key={f} className="text-sm flex items-center gap-2">
+                    <span className={`font-bold ${plan.highlight ? 'text-violet-400' : 'text-success'}`}>✓</span> {f}
                   </li>
                 ))}
               </ul>
-              <Link href={plan.href} className="btn" style={{ width: '100%', background: plan.highlight ? 'white' : 'var(--accent-primary)', color: plan.highlight ? 'var(--accent-primary)' : 'white' }}>
+              <Link href={plan.href} className={`btn w-full ${plan.highlight ? 'bg-white text-accent' : 'bg-accent text-white'}`}>
                 {plan.cta}
               </Link>
             </div>
@@ -112,65 +105,65 @@ export default function PricingPage() {
       </section>
 
       {/* Price Table */}
-      <section className="container" style={{ padding: '0 1.5rem 6rem' }}>
-        <div className="section-header-center" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 700 }}>Example Prices by Service</h2>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Prices vary by country. Browse full catalog after signing up.</p>
+      <section className="container px-6 pb-24">
+        <div className="section-header-center text-center mb-8">
+          <h2 className="text-3xl font-bold">Example Prices by Service</h2>
+          <p className="text-secondary mt-2">Prices vary by country. Browse full catalog after signing up.</p>
         </div>
-        <div style={{ maxWidth: '700px', margin: '0 auto', background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div className="max-w-[700px] mx-auto bg-white border border-border rounded-lg overflow-hidden shadow-md">
+          <table className="w-full border-collapse">
             <thead>
-              <tr style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
-                <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Service</th>
-                <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Starting Price</th>
-                <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Countries</th>
+              <tr className="bg-tertiary border-b border-border">
+                <th className="py-3.5 px-5 text-left text-xs font-semibold text-secondary uppercase tracking-widest">Service</th>
+                <th className="py-3.5 px-5 text-left text-xs font-semibold text-secondary uppercase tracking-widest">Starting Price</th>
+                <th className="py-3.5 px-5 text-left text-xs font-semibold text-secondary uppercase tracking-widest">Countries</th>
               </tr>
             </thead>
             <tbody>
               {tiers.map((tier, i) => (
-                <tr key={tier.label} style={{ borderBottom: i < tiers.length - 1 ? '1px solid var(--border-color)' : 'none' }}>
-                  <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.875rem', fontWeight: 600 }}>{tier.label}</td>
-                  <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.875rem', color: 'var(--accent-primary)', fontWeight: 700 }}>{tier.price}</td>
-                  <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{tier.countries}</td>
+                <tr key={tier.label} className={i < tiers.length - 1 ? 'border-b border-border' : ''}>
+                  <td className="py-3.5 px-5 text-sm font-semibold">{tier.label}</td>
+                  <td className="py-3.5 px-5 text-sm text-accent font-bold">{tier.price}</td>
+                  <td className="py-3.5 px-5 text-sm text-secondary">{tier.countries}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+        <p className="text-center mt-6 text-sm text-secondary">
           * Live prices from the provider. Exact amounts shown before you confirm.
         </p>
       </section>
 
       {/* FAQ snippet */}
-      <section style={{ background: 'var(--bg-tertiary)', padding: '5rem 1.5rem' }}>
-        <div className="container" style={{ maxWidth: '700px' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '2rem', textAlign: 'center' }}>Pricing FAQ</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <section className="bg-tertiary py-20 px-6">
+        <div className="container max-w-[700px]">
+          <h2 className="text-2xl font-bold mb-8 text-center">Pricing FAQ</h2>
+          <div className="flex flex-col gap-4">
             {[
               { q: 'Does my balance expire?', a: 'No. Your wallet balance never expires.' },
               { q: 'What if no code arrives?', a: 'You are automatically refunded to your wallet within seconds.' },
               { q: 'Can I use crypto to top up?', a: 'Yes — we accept USDT (TRC-20) via NOWPayments.' },
               { q: 'Is there a minimum top-up?', a: 'The minimum is ~$12 USD due to USDT (TRC-20) network minimums.' },
             ].map(({ q, a }) => (
-              <details key={q} style={{ background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1rem 1.25rem' }}>
-                <summary style={{ fontWeight: 600, cursor: 'pointer', fontSize: '0.9375rem' }}>{q}</summary>
-                <p style={{ marginTop: '0.75rem', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{a}</p>
+              <details key={q} className="bg-white border border-border rounded-md py-4 px-5">
+                <summary className="font-semibold cursor-pointer text-[15px]">{q}</summary>
+                <p className="mt-3 text-secondary text-sm">{a}</p>
               </details>
             ))}
           </div>
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <div className="text-center mt-8">
             <Link href="/faq" className="btn btn-secondary">View all FAQs</Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border-color)', padding: '2rem 1.5rem', textAlign: 'center' }}>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+      <footer className="border-t border-border py-8 px-6 text-center">
+        <p className="text-sm text-secondary">
           &copy; {new Date().getFullYear()} PremiumID. All rights reserved. &nbsp;|&nbsp;{' '}
-          <Link href="/privacy" style={{ color: 'var(--text-secondary)' }}>Privacy</Link> &nbsp;|&nbsp;{' '}
-          <Link href="/terms" style={{ color: 'var(--text-secondary)' }}>Terms</Link>
+          <Link href="/privacy" className="text-secondary">Privacy</Link> &nbsp;|&nbsp;{' '}
+          <Link href="/terms" className="text-secondary">Terms</Link>
         </p>
       </footer>
     </div>

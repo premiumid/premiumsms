@@ -34,14 +34,14 @@ interface WalletClientProps {
 type PaymentStep = 'select' | 'awaiting' | 'success'
 type PaymentStatus = 'waiting' | 'confirming' | 'confirmed' | 'finished' | 'failed' | 'expired' | 'partially_paid'
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; icon: 'waiting' | 'confirming' | 'confirmed' | 'partial' | 'failed' | 'expired' }> = {
-  waiting:       { label: 'Awaiting your transfer…',            color: '#f59e0b', icon: 'waiting' },
-  confirming:    { label: 'Detected! Awaiting confirmations…',  color: '#3b82f6', icon: 'confirming' },
-  confirmed:     { label: 'Confirmed! Crediting wallet…',       color: '#10b981', icon: 'confirmed' },
-  finished:      { label: 'Payment complete!',                  color: '#10b981', icon: 'confirmed' },
-  partially_paid:{ label: 'Partial payment received…',          color: '#f59e0b', icon: 'partial' },
-  failed:        { label: 'Payment failed',                     color: '#ef4444', icon: 'failed' },
-  expired:       { label: 'Payment expired',                    color: '#6b7280', icon: 'expired' },
+const STATUS_CONFIG: Record<string, { label: string; borderClass: string; textClass: string; bgClass: string; icon: 'waiting' | 'confirming' | 'confirmed' | 'partial' | 'failed' | 'expired' }> = {
+  waiting:       { label: 'Awaiting your transfer…',            borderClass: 'border-amber-500', textClass: 'text-amber-500', bgClass: 'bg-amber-500', icon: 'waiting' },
+  confirming:    { label: 'Detected! Awaiting confirmations…',  borderClass: 'border-blue-500', textClass: 'text-blue-500', bgClass: 'bg-blue-500', icon: 'confirming' },
+  confirmed:     { label: 'Confirmed! Crediting wallet…',       borderClass: 'border-emerald-500', textClass: 'text-emerald-500', bgClass: 'bg-emerald-500', icon: 'confirmed' },
+  finished:      { label: 'Payment complete!',                  borderClass: 'border-emerald-500', textClass: 'text-emerald-500', bgClass: 'bg-emerald-500', icon: 'confirmed' },
+  partially_paid:{ label: 'Partial payment received…',          borderClass: 'border-amber-500', textClass: 'text-amber-500', bgClass: 'bg-amber-500', icon: 'partial' },
+  failed:        { label: 'Payment failed',                     borderClass: 'border-red-500', textClass: 'text-red-500', bgClass: 'bg-red-500', icon: 'failed' },
+  expired:       { label: 'Payment expired',                    borderClass: 'border-gray-500', textClass: 'text-gray-500', bgClass: 'bg-gray-500', icon: 'expired' },
 }
 
 function StatusIcon({ type }: { type: string }) {
@@ -343,15 +343,15 @@ export default function WalletClient({ initialBalance, initialTransactions, user
         {loading && allTransactions.length === 0 ? (
           <div className="tx-list">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="tx-row" style={{ opacity: 0.4 }}>
+              <div key={i} className="tx-row opacity-40">
                 <div className="skeleton-circle" />
                 <div className="tx-info">
-                  <div className="skeleton-line" style={{ width: '60%', height: 14, marginBottom: 6 }} />
-                  <div className="skeleton-line" style={{ width: '40%', height: 12 }} />
+                  <div className="skeleton-line w-[60%] h-3.5 mb-1.5" />
+                  <div className="skeleton-line w-[40%] h-3" />
                 </div>
                 <div className="tx-amounts">
-                  <div className="skeleton-line" style={{ width: 70, height: 16, marginBottom: 4, marginLeft: 'auto' }} />
-                  <div className="skeleton-line" style={{ width: 90, height: 12, marginLeft: 'auto' }} />
+                  <div className="skeleton-line w-[70px] h-4 mb-1 ml-auto" />
+                  <div className="skeleton-line w-[90px] h-3 ml-auto" />
                 </div>
               </div>
             ))}
@@ -366,7 +366,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
           <div className="tx-list">
             {allTransactions.map((tx) => (
               <div key={tx.id} className="tx-row">
-                <div className="tx-icon" style={{ color: txColor(tx.type) }}>
+                <div className={`tx-icon ${tx.type === 'topup' || tx.type === 'admin_credit' ? 'text-success' : 'text-danger'}`}>
                   {txIcon(tx.type)}
                 </div>
                 <div className="tx-info">
@@ -376,7 +376,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                   </p>
                 </div>
                 <div className="tx-amounts">
-                  <p className="tx-amount" style={{ color: txColor(tx.type) }}>
+                  <p className={`tx-amount ${tx.type === 'topup' || tx.type === 'admin_credit' ? 'text-success' : 'text-danger'}`}>
                     {tx.type === 'debit' ? '-' : '+'}${tx.amount.toFixed(2)}
                   </p>
                   <p className="tx-balance">Balance: ${tx.balance_after.toFixed(2)}</p>
@@ -418,12 +418,11 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                   </button>
                 </div>
 
-                {/* Live status badge */}
-                <div className="payment-status-badge" style={{ borderColor: statusCfg.color }}>
+                <div className={`payment-status-badge ${statusCfg.borderClass}`}>
                   <StatusIcon type={statusCfg.icon} />
-                  <span style={{ color: statusCfg.color }}>{statusCfg.label}</span>
+                  <span className={statusCfg.textClass}>{statusCfg.label}</span>
                   {(paymentStatus === 'waiting' || paymentStatus === 'confirming') && (
-                    <span className="status-pulse" style={{ background: statusCfg.color }} />
+                    <span className={`status-pulse ${statusCfg.bgClass}`} />
                   )}
                 </div>
 

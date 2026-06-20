@@ -270,7 +270,7 @@ export default function RentalDetailPage() {
       {/* SMS Inbox */}
       <div className="section-header section-header-spaced">
         <h2 className="section-title">Messages</h2>
-        <div className="flex items-center" style={{ gap: '0.5rem' }}>
+        <div className="flex items-center gap-2">
           {messages.length > 0 && (
             <button className="btn btn-secondary btn-small" onClick={() => {
               const blob = new Blob([JSON.stringify({ phone_number: rental?.phone_number, service: rental?.service_slug, messages }, null, 2)], { type: 'application/json' })
@@ -278,7 +278,7 @@ export default function RentalDetailPage() {
               const a = document.createElement('a'); a.href = url; a.download = `sms-${rental?.phone_number || 'export'}.json`; a.click()
               URL.revokeObjectURL(url)
             }}>
-              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 4 }}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Export JSON
             </button>
           )}

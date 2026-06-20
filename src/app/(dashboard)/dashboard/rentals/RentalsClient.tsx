@@ -25,7 +25,7 @@ function CountryFlag({ code, name }: { code: string; name: string }) {
       alt={name}
       width={20}
       height={15}
-      style={{ borderRadius: 2, flexShrink: 0 }}
+      className="rounded-[2px] shrink-0"
       onError={(e) => {
         const el = e.currentTarget as HTMLImageElement
         el.style.display = 'none'

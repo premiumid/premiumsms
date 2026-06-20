@@ -688,6 +688,7 @@
     inset: 0;
     z-index: 99;
     background: rgba(0, 0, 0, 0.5);
+    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
   }
 }

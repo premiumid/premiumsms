@@ -357,10 +357,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                         strokeWidth="2" 
                         strokeLinecap="round" 
                         strokeLinejoin="round" 
-                        style={{ 
-                          transition: 'transform 0.2s', 
-                          transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' 
-                        }}
+                        className={`transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
                       >
                         <polyline points="6 9 12 15 18 9"></polyline>
                       </svg>
@@ -467,8 +464,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
             ) : (
               <button
                 disabled
-                className="catalog-right-cta"
-                style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                className="catalog-right-cta opacity-50 cursor-not-allowed"
               >
                 Select a Service
               </button>
