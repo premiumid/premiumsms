@@ -52,6 +52,13 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
   const [priceLoading, setPriceLoading] = useState(false)
   const [renting, setRenting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [countrySearch, setCountrySearch] = useState('')
+
+  const filteredCountries = countries.filter(c =>
+    c.name.toLowerCase().includes(countrySearch.toLowerCase())
+  )
+  const activeCountry = countries.find(c => c.code === selectedCountry)
 
   const activeAppSlug = activeApp?.slug
 
@@ -64,6 +71,8 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
     setSelectedCountry('')
     setPrice(null)
     setError(null)
+    setIsDropdownOpen(false)
+    setCountrySearch('')
 
     fetch(`/api/countries?service=${activeAppSlug}`)
       .then(r => r.json())
@@ -159,7 +168,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                 className={`catalog-sidebar-item flex items-center gap-3 w-full text-left${selectedApp === app.slug || (!selectedApp && initialServices[0]?.slug === app.slug) ? ' active' : ''}`}
                 onClick={() => setSelectedApp(app.slug)}
               >
-                <ServiceIcon slug={app.slug} name={app.name} size={20} />
+                <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={20} />
                 <span className="text-sm font-semibold text-primary">{app.name}</span>
               </button>
             ))}
@@ -180,7 +189,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                 className={`catalog-app-card w-full text-left${selectedApp === app.slug || (!selectedApp && initialServices[0]?.slug === app.slug) ? ' active' : ''}`}
                 onClick={() => setSelectedApp(app.slug)}
               >
-                <ServiceIcon slug={app.slug} name={app.name} size={48} />
+                <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={48} />
                 <div className="catalog-app-name">{app.name}</div>
               </button>
             ))}
@@ -234,7 +243,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
           <div className="catalog-right-hero-dynamic mt-4 sm:mt-0">
             <div className="dynamic-hero-icon">
               {activeApp ? (
-                <ServiceIcon slug={activeApp.slug} name={activeApp.name} size={64} />
+                <ServiceIcon slug={activeApp.slug} name={activeApp.name} iconUrl={activeApp.icon_url} size={64} />
               ) : (
                 <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/20">
                   <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -256,20 +265,101 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                 {countriesLoading ? (
                   <div className="text-sm text-secondary animate-pulse py-2">Loading countries…</div>
                 ) : (
-                  <select
-                    id="dashboard-country-select"
-                    value={selectedCountry}
-                    onChange={e => setSelectedCountry(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent-primary"
-                    style={{ colorScheme: 'dark' }}
-                  >
-                    <option value="" disabled className="bg-neutral-900 text-secondary">-- Choose a country --</option>
-                    {countries.map(c => (
-                      <option key={c.code} value={c.code} className="bg-neutral-900 text-white">
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="premium-dropdown-container">
+                    {/* Dropdown Trigger Button */}
+                    <button
+                      type="button"
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      className="premium-dropdown-trigger"
+                      id="dashboard-country-select-btn"
+                    >
+                      <span className="premium-dropdown-trigger-content">
+                        {activeCountry ? (
+                          <>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={`https://flagcdn.com/16x12/${activeCountry.code.toLowerCase()}.png`}
+                              alt=""
+                              className="country-flag-icon"
+                            />
+                            {activeCountry.name}
+                          </>
+                        ) : (
+                          <span className="text-secondary">-- Choose a country --</span>
+                        )}
+                      </span>
+                      <svg 
+                        width="16" 
+                        height="16" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        style={{ 
+                          transition: 'transform 0.2s', 
+                          transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' 
+                        }}
+                      >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+
+                    {/* Dropdown Menu Overlay & Overlay backdrop */}
+                    {isDropdownOpen && (
+                      <>
+                        <div 
+                          className="premium-dropdown-overlay" 
+                          onClick={() => setIsDropdownOpen(false)} 
+                        />
+                        <div className="premium-dropdown-menu">
+                          {/* Search bar inside dropdown */}
+                          <div className="premium-dropdown-search-wrap">
+                            <div className="premium-dropdown-search-icon">
+                              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            </div>
+                            <input
+                              type="text"
+                              placeholder="Search countries..."
+                              value={countrySearch}
+                              onChange={e => setCountrySearch(e.target.value)}
+                              className="premium-dropdown-search-input"
+                              autoFocus
+                            />
+                          </div>
+                          {/* Country List items */}
+                          <div className="premium-dropdown-list">
+                            {filteredCountries.map(c => (
+                              <button
+                                key={c.code}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedCountry(c.code)
+                                  setIsDropdownOpen(false)
+                                  setCountrySearch('')
+                                }}
+                                className={`premium-dropdown-item${selectedCountry === c.code ? ' active' : ''}`}
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={`https://flagcdn.com/16x12/${c.code.toLowerCase()}.png`}
+                                  alt=""
+                                  className="country-flag-icon"
+                                />
+                                <span>{c.name}</span>
+                              </button>
+                            ))}
+                            {filteredCountries.length === 0 && (
+                              <div className="premium-dropdown-empty">
+                                No countries found
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 )}
               </div>
             )}

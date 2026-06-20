@@ -36,13 +36,15 @@ export function getServiceColor(slug: string): string {
 interface ServiceIconProps {
   slug: string
   name: string
+  iconUrl?: string
   size?: number
   iconSize?: number
   rounded?: boolean
 }
 
-export default function ServiceIcon({ slug, name, size = 48, iconSize = 28, rounded = true }: ServiceIconProps) {
+export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize = 28, rounded = true }: ServiceIconProps) {
   const [failed, setFailed] = useState(() => {
+    if (iconUrl) return false
     if (!slug) return true
     return !BG_COLORS[slug.toLowerCase()]
   })
