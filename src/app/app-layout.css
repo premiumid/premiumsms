@@ -50,7 +50,12 @@
   overflow-x: auto;
   white-space: nowrap;
   -ms-overflow-style: none;
-  scrollbar-width: none;
+}
+
+@supports (-moz-appearance: none) {
+  .app-tabs {
+    scrollbar-width: none;
+  }
 }
 
 .app-tabs::-webkit-scrollbar {

@@ -1520,9 +1520,14 @@
   display: flex;
   gap: 0.5rem;
   overflow-x: auto;
-  scrollbar-width: none;
   -ms-overflow-style: none;
   padding-bottom: 4px;
+}
+
+@supports (-moz-appearance: none) {
+  .rentals-filter-pills {
+    scrollbar-width: none;
+  }
 }
 
 .rentals-filter-pills::-webkit-scrollbar {
