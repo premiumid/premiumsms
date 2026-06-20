@@ -115,9 +115,16 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
   const initial = name ? name.charAt(0).toUpperCase() : '?'
   const fontSize = size <= 24 ? '11px' : `${Math.round(size * 0.38)}px`
 
+  // eslint-disable-next-line react/forbid-dom-props
   return (
     <div
-      className={`flex items-center justify-center overflow-hidden shrink-0 ${rounded ? 'rounded-xl' : `rounded-[${size / 6}px]`} w-[${size}px] h-[${size}px] bg-[${color}]`}
+      className={`flex items-center justify-center overflow-hidden shrink-0 ${rounded ? 'rounded-xl' : ''}`}
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: color,
+        ...(!rounded ? { borderRadius: size / 6 } : {})
+      }}
     >
       {!failed && (
         /* eslint-disable-next-line @next/next/no-img-element */
@@ -132,7 +139,7 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
         />
       )}
       {failed && (
-        <span className={`text-white font-bold leading-none text-[${fontSize}]`}>
+        <span className="text-white font-bold leading-none" style={{ fontSize }}>
           {initial}
         </span>
       )}
