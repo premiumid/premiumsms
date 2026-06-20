@@ -19,6 +19,53 @@ const FALLBACK_PALETTE = [
   '#d6336c', '#f03e3e', '#f59f00', '#37b24d'
 ]
 
+export function getSimpleIconSlug(slug: string, name: string): string {
+  const nameLower = name.toLowerCase().trim()
+  
+  // Specific mappings for known services where name doesn't match Simple Icons slug directly
+  const nameMapping: Record<string, string> = {
+    'whatsapp': 'whatsapp',
+    'telegram': 'telegram',
+    'instagram': 'instagram',
+    'facebook': 'facebook',
+    'tiktok': 'tiktok',
+    'google': 'google',
+    'twitter': 'twitter',
+    'x (twitter)': 'twitter',
+    'discord': 'discord',
+    'microsoft': 'microsoft',
+    'amazon': 'amazon',
+    'netflix': 'netflix',
+    'spotify': 'spotify',
+    'uber': 'uber',
+    'paypal': 'paypal',
+    'linkedin': 'linkedin',
+    'snapchat': 'snapchat',
+    'twitch': 'twitch',
+    'steam': 'steam',
+    'apple': 'apple',
+    'binance': 'binance',
+    'coinbase': 'coinbase',
+    'tinder': 'tinder',
+    'signal': 'signal',
+    'wechat': 'wechat',
+    'viber': 'viber',
+    'line': 'line',
+  }
+
+  if (nameMapping[nameLower]) {
+    return nameMapping[nameLower]
+  }
+
+  // Fallback to a normalized version of name
+  // Simple Icons uses lowercase with hyphens for spaces
+  const cleanName = nameLower
+    .replace(/[^a-z0-9\s-]/g, '') // remove special chars
+    .replace(/\s+/g, '-')          // replace spaces with hyphens
+
+  return cleanName || slug.toLowerCase()
+}
+
 export function getServiceColor(slug: string): string {
   const normalized = slug.toLowerCase()
   if (BG_COLORS[normalized]) {
@@ -43,17 +90,18 @@ interface ServiceIconProps {
 }
 
 export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize = 28, rounded = true }: ServiceIconProps) {
+  const cleanSlug = getSimpleIconSlug(slug, name)
   const [failed, setFailed] = useState(() => {
     if (iconUrl) return false
-    if (!slug) return true
+    if (!cleanSlug) return true
     return false
   })
   const imgRef = useRef<HTMLImageElement>(null)
-  const color = getServiceColor(slug)
+  const color = getServiceColor(cleanSlug)
 
   // Reset state if slug changes or dynamically check if image fails
   useEffect(() => {
-    const isUnknown = !slug
+    const isUnknown = !cleanSlug
     setFailed(isUnknown)
     
     if (!isUnknown && imgRef.current) {
@@ -61,7 +109,7 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
         setFailed(true)
       }
     }
-  }, [slug])
+  }, [cleanSlug])
 
   // Get Initials: first letter uppercase
   const initial = name ? name.charAt(0).toUpperCase() : '?'
@@ -85,7 +133,7 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
           ref={imgRef}
-          src={iconUrl || `https://cdn.simpleicons.org/${slug}/ffffff`}
+          src={iconUrl || `https://cdn.simpleicons.org/${cleanSlug}/ffffff`}
           alt="" // Keep alt empty so browser doesn't render ugly clipped text on failure
           width={iconSize}
           height={iconSize}
