@@ -68,7 +68,7 @@ function RentalRow({ rental }: { rental: Rental }) {
     <tr className="hover:bg-white/[0.02] border-b border-white/5 transition-colors">
       <td className="py-4 px-6">
         <div className="flex items-center gap-3">
-          <ServiceIcon slug={rental.service_slug} name={rental.service_slug} size={28} />
+          <ServiceIcon slug={rental.service_slug} name={displayService(rental.service_slug)} size={28} />
           <span className="font-semibold text-white">{displayService(rental.service_slug)}</span>
         </div>
       </td>

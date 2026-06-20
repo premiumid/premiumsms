@@ -60,7 +60,18 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
   const [search, setSearch] = useState('')
   const [selectedApp, setSelectedApp] = useState<string | null>(null)
 
-  const filteredApps = initialServices.filter(app =>
+  const sortedServices = [...initialServices].sort((a, b) => {
+    const aIndex = POPULAR_SERVICES.findIndex(p => p.slug.toLowerCase() === a.slug.toLowerCase() || p.name.toLowerCase() === a.name.toLowerCase())
+    const bIndex = POPULAR_SERVICES.findIndex(p => p.slug.toLowerCase() === b.slug.toLowerCase() || p.name.toLowerCase() === b.name.toLowerCase())
+    
+    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex
+    if (aIndex !== -1) return -1
+    if (bIndex !== -1) return 1
+    
+    return a.name.localeCompare(b.name)
+  })
+
+  const filteredApps = sortedServices.filter(app =>
     app.name.toLowerCase().includes(search.toLowerCase())
   )
 

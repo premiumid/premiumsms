@@ -11,7 +11,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { hostname: 'pub-95c2092167d04db7b77824f71f6c6512.r2.dev' },
       { hostname: 'flagcdn.com' },
-      { hostname: 'cdn.simpleicons.org' }
+      { hostname: 'cdn.simpleicons.org' },
+      { hostname: 'cdn.jsdelivr.net' }
     ]
   },
   async headers() {
@@ -23,7 +24,7 @@ const nextConfig: NextConfig = {
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-          { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://pub-95c2092167d04db7b77824f71f6c6512.r2.dev https://flagcdn.com https://cdn.simpleicons.org; font-src 'self' data: https://fonts.gstatic.com https://fonts.googleapis.com; connect-src 'self' https://*.supabase.co https://api.nowpayments.io https://ipn.nowpayments.io; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" },
+          { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://pub-95c2092167d04db7b77824f71f6c6512.r2.dev https://flagcdn.com https://cdn.simpleicons.org https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://fonts.googleapis.com; connect-src 'self' https://*.supabase.co https://api.nowpayments.io https://ipn.nowpayments.io; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" },
         ],
       },
     ]

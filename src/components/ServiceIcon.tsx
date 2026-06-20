@@ -30,8 +30,8 @@ export function getSimpleIconSlug(slug: string, name: string): string {
     'facebook': 'facebook',
     'tiktok': 'tiktok',
     'google': 'google',
-    'twitter': 'twitter',
-    'x (twitter)': 'twitter',
+    'twitter': 'x',
+    'x (twitter)': 'x',
     'discord': 'discord',
     'microsoft': 'microsoft',
     'amazon': 'amazon',
@@ -133,12 +133,17 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
           ref={imgRef}
-          src={iconUrl || `https://cdn.simpleicons.org/${cleanSlug}/ffffff`}
+          src={iconUrl || `https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/${cleanSlug}.svg`}
           alt="" // Keep alt empty so browser doesn't render ugly clipped text on failure
           width={iconSize}
           height={iconSize}
           onError={() => setFailed(true)}
-          style={{ maxWidth: '100%', maxHeight: '100%', display: 'block' }}
+          style={{ 
+            maxWidth: '100%', 
+            maxHeight: '100%', 
+            display: 'block',
+            filter: iconUrl ? undefined : 'brightness(0) invert(1)' // Turn colored SVGs white
+          }}
         />
       )}
       {failed && (
