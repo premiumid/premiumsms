@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import ServicesGrid from "./ServicesGrid";
 import MarketingNav from "../components/MarketingNav";
 import type { Metadata } from "next";
@@ -9,6 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const t = useTranslations('HomePage');
+
   return (
     <div>
       <MarketingNav />
@@ -23,25 +26,25 @@ export default function Home() {
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
-              Works where VoIP Numbers don&apos;t
+              {t('heroBadge')}
             </div>
             <h1 className="hero-title">
-              Skip the retry loop.<br />
-              <span className="text-gradient">Get the code.</span>
+              {t('heroTitle1')}<br />
+              <span className="text-gradient">{t('heroTitle2')}</span>
             </h1>
             <p className="hero-desc">
-              Temporary numbers for WhatsApp, Telegram, Google, Instagram, and 2,500+ platforms across 145+ countries.
+              {t('heroDesc')}
             </p>
             <div className="hero-actions">
               <Link href="/register" className="btn btn-primary">
-                Find a Number &rarr;
+                {t('btnPrimary')} &rarr;
               </Link>
               <Link href="/services" className="btn btn-secondary">
-                How It Works
+                {t('btnSecondary')}
               </Link>
             </div>
             <div className="hero-footnote">
-              Live prices &bull; No signup to browse &bull; Crypto payments
+              {t('heroFootnote')}
             </div>
           </div>
           <div className="hero-image">

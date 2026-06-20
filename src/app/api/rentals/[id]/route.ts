@@ -25,6 +25,12 @@ export async function GET(request: Request, { params }: Params) {
       .eq('user_id', auth.user.id)
       .single()
 
+    const { data: profile } = await admin
+      .from('profiles')
+      .select('webhook_url')
+      .eq('id', auth.user.id)
+      .single()
+
     if (!rental) return errorResponse(404, 'Rental not found')
 
     const providerOrder = await getOrder(rental.provider_order_id)
@@ -36,6 +42,10 @@ export async function GET(request: Request, { params }: Params) {
         .update({ status: newStatus, updated_at: new Date().toISOString() })
         .eq('id', id)
     }
+
+    const parts = (rental.provider_name || '').split('|')
+    const service_slug = parts[1] || 'unknown'
+    const country_code = parts[2] || 'unknown'
 
     const messages = await getMessages(rental.provider_order_id)
 
@@ -50,19 +60,33 @@ export async function GET(request: Request, { params }: Params) {
           .maybeSingle()
 
         if (!existing) {
+          const received_at = msg.received_at ?? new Date().toISOString()
           await admin.from('sms_messages').insert({
             rental_id: id,
             sender: msg.sender ?? null,
             message_text: msg.text,
-            received_at: msg.received_at ?? new Date().toISOString(),
+            received_at,
           })
+
+          if (profile?.webhook_url) {
+            fetch(profile.webhook_url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                event: 'sms.received',
+                data: {
+                  rental_id: id,
+                  service: service_slug,
+                  sender: msg.sender ?? null,
+                  message: msg.text,
+                  received_at
+                }
+              })
+            }).catch(e => console.error('Webhook delivery failed:', e))
+          }
         }
       }
     }
-
-    const parts = (rental.provider_name || '').split('|')
-    const service_slug = parts[1] || 'unknown'
-    const country_code = parts[2] || 'unknown'
 
     return Response.json({
       messages,

@@ -220,3 +220,31 @@ export async function getWalletBalance(userId: string): Promise<number> {
     .single()
   return Number(data?.balance ?? 0)
 }
+
+/**
+ * Fetch aggregated stats for the admin dashboard.
+ */
+export async function getAdminStats() {
+  const admin = createAdminClient()
+  
+  const [
+    { count: totalUsers },
+    { count: activeRentals },
+    { count: totalSmsReceived },
+    { data: topups }
+  ] = await Promise.all([
+    admin.from('profiles').select('*', { count: 'exact', head: true }),
+    admin.from('rentals').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+    admin.from('sms_messages').select('*', { count: 'exact', head: true }),
+    admin.from('wallet_transactions').select('amount').eq('type', 'topup')
+  ])
+
+  const totalRevenue = topups?.reduce((sum, tx) => sum + Number(tx.amount), 0) ?? 0
+
+  return {
+    totalUsers: totalUsers ?? 0,
+    activeRentals: activeRentals ?? 0,
+    totalSmsReceived: totalSmsReceived ?? 0,
+    totalRevenue
+  }
+}

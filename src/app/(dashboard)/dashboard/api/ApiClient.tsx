@@ -16,14 +16,18 @@ interface ApiKey {
 
 interface ApiClientProps {
   initialKeys: ApiKey[]
+  initialWebhookUrl: string | null
 }
 
 type TabType = 'curl' | 'javascript' | 'python'
 
-export default function ApiClient({ initialKeys }: ApiClientProps) {
+export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientProps) {
   const router = useRouter()
   const { error: toastError } = useToast()
   const [keys, setKeys] = useState<ApiKey[]>(initialKeys)
+  const [webhookUrl, setWebhookUrl] = useState(initialWebhookUrl || '')
+  const [isSavingWebhook, setIsSavingWebhook] = useState(false)
+  const [webhookSaved, setWebhookSaved] = useState(false)
   const [newKeyName, setNewKeyName] = useState('')
   const [generatedKey, setGeneratedKey] = useState<string | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -78,6 +82,32 @@ export default function ApiClient({ initialKeys }: ApiClientProps) {
       router.refresh()
     } catch (err: unknown) {
       toastError(err instanceof Error ? err.message : 'Failed to revoke key')
+    }
+  }
+
+  const handleSaveWebhook = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSavingWebhook(true)
+    setError(null)
+    setWebhookSaved(false)
+
+    try {
+      const res = await fetch('/api/developer/webhook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: webhookUrl })
+      })
+
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to save webhook')
+
+      setWebhookSaved(true)
+      setTimeout(() => setWebhookSaved(false), 3000)
+      router.refresh()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to save webhook')
+    } finally {
+      setIsSavingWebhook(false)
     }
   }
 
@@ -230,6 +260,27 @@ export default function ApiClient({ initialKeys }: ApiClientProps) {
                 ))}
               </div>
             )}
+          </div>
+
+          <div className="webhook-section mt-8 pt-8 border-t border-[var(--border-color)]">
+            <h3 className="section-title mt-0 text-lg">Webhook Configuration</h3>
+            <p className="text-sm text-secondary mb-4">Receive HTTP POST requests whenever a new SMS arrives for your active rentals.</p>
+            <form onSubmit={handleSaveWebhook} className="webhook-form">
+              <label htmlFor="webhook-url-input" className="input-label">Endpoint URL</label>
+              <div className="input-group">
+                <input
+                  type="url"
+                  id="webhook-url-input"
+                  className="input-field"
+                  placeholder="https://your-server.com/webhooks/sms"
+                  value={webhookUrl}
+                  onChange={e => setWebhookUrl(e.target.value)}
+                />
+                <button type="submit" className="btn btn-secondary" disabled={isSavingWebhook}>
+                  {isSavingWebhook ? 'Saving...' : webhookSaved ? 'Saved!' : 'Save URL'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 

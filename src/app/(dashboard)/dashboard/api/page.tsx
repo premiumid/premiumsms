@@ -14,11 +14,16 @@ export default async function ApiDocsPage() {
     redirect('/login')
   }
 
-  // Fetch active API keys for the user
   const { data: keys, error } = await supabase
     .from('api_keys')
     .select('id, name, prefix, is_active, last_used_at, created_at')
     .order('created_at', { ascending: false })
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('webhook_url')
+    .eq('id', user.id)
+    .single()
 
   if (error) {
     console.error('Failed to load API keys in dashboard:', error)
@@ -31,7 +36,7 @@ export default async function ApiDocsPage() {
         <p className="page-subtitle">Manage your API credentials and explore the integration docs</p>
       </div>
 
-      <ApiClient initialKeys={keys || []} />
+      <ApiClient initialKeys={keys || []} initialWebhookUrl={profile?.webhook_url || null} />
     </div>
   )
 }
