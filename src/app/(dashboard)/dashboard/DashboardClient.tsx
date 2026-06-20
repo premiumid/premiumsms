@@ -229,7 +229,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                   className={`catalog-app-card w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
                   onClick={() => setSelectedApp(app.slug)}
                 >
-                  <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={48} />
+                  <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={64} />
                   <div className="catalog-app-name">{app.name}</div>
                 </button>
               ))
@@ -240,7 +240,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                   className={`catalog-app-card w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
                   onClick={() => setSelectedApp(app.slug)}
                 >
-                  <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={48} />
+                  <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={64} />
                   <div className="catalog-app-name">{app.name}</div>
                 </button>
               ))
@@ -316,7 +316,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
             </p>
           </div>
 
-          <div className="order-summary-box-redesigned">
+          <div className="order-summary-box">
             {activeApp ? (
               <div className="mb-6">
                 <label htmlFor="dashboard-country-select" className="block text-xs font-bold text-tertiary uppercase tracking-wider mb-2">
@@ -434,25 +434,10 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
               </div>
             )}
 
-            <ul className="flex flex-col gap-4 mb-6">
-              <li className="flex items-center gap-3 text-sm text-secondary font-medium">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 text-success">
-                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                </div>
-                Real SIM Cards
-              </li>
-              <li className="flex items-center gap-3 text-sm text-secondary font-medium">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent/20 text-accent">
-                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                </div>
-                145+ Countries
-              </li>
-              <li className="flex items-center gap-3 text-sm text-secondary font-medium">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent/20 text-accent">
-                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                </div>
-                Auto-Refund on failure
-              </li>
+            <ul className="order-summary-features">
+              <li>Real SIM Cards</li>
+              <li>145+ Countries</li>
+              <li>Auto-Refund on failure</li>
             </ul>
 
             {activeApp ? (
@@ -482,13 +467,8 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
             ) : (
               <button
                 disabled
-                className="btn w-full py-3 flex items-center justify-center gap-2"
-                style={{ 
-                  background: 'rgba(255,255,255,0.03)', 
-                  border: '1px solid rgba(255,255,255,0.05)', 
-                  color: 'rgba(255,255,255,0.3)',
-                  cursor: 'not-allowed'
-                }}
+                className="catalog-right-cta"
+                style={{ opacity: 0.5, cursor: 'not-allowed' }}
               >
                 Select a Service
               </button>
