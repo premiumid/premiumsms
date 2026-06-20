@@ -1295,3 +1295,42 @@
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
+
+/* Premium Custom Country Dropdown */
+.order-summary-box-redesigned select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' height='16' width='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px !important;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.order-summary-box-redesigned select:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.order-summary-box-redesigned select:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Fix cursor and background for custom buttons to ensure transparent defaults */
+.catalog-sidebar-item {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.catalog-app-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}

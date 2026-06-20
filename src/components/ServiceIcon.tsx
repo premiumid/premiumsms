@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const BG_COLORS: Record<string, string> = {
   telegram: '#2AABEE', whatsapp: '#25D366', instagram: '#E4405F',
@@ -13,8 +13,24 @@ const BG_COLORS: Record<string, string> = {
   snapchat: '#FFFC00', microsoft: '#00A4EF', apple: '#A2AAAD',
 }
 
+const FALLBACK_PALETTE = [
+  '#4f46e5', '#2563eb', '#099268', '#0c8599', 
+  '#1864ab', '#5c7cfa', '#7048e8', '#ae3ec9', 
+  '#d6336c', '#f03e3e', '#f59f00', '#37b24d'
+]
+
 export function getServiceColor(slug: string): string {
-  return BG_COLORS[slug.toLowerCase()] || '#0f172a'
+  const normalized = slug.toLowerCase()
+  if (BG_COLORS[normalized]) {
+    return BG_COLORS[normalized]
+  }
+  // Deterministic hash based on slug
+  let hash = 0
+  for (let i = 0; i < normalized.length; i++) {
+    hash = normalized.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  const index = Math.abs(hash) % FALLBACK_PALETTE.length
+  return FALLBACK_PALETTE[index]
 }
 
 interface ServiceIconProps {
@@ -27,7 +43,21 @@ interface ServiceIconProps {
 
 export default function ServiceIcon({ slug, name, size = 48, iconSize = 28, rounded = true }: ServiceIconProps) {
   const [failed, setFailed] = useState(!slug)
+  const imgRef = useRef<HTMLImageElement>(null)
   const color = getServiceColor(slug)
+
+  // Robust hydration check to see if image failed to load before JS hydrated
+  useEffect(() => {
+    if (imgRef.current) {
+      if (imgRef.current.complete && imgRef.current.naturalWidth === 0) {
+        setFailed(true)
+      }
+    }
+  }, [slug])
+
+  // Get Initials: first letter uppercase
+  const initial = name ? name.charAt(0).toUpperCase() : '?'
+  const fontSize = size <= 24 ? '11px' : `${Math.round(size * 0.38)}px`
 
   return (
     <div
@@ -46,19 +76,21 @@ export default function ServiceIcon({ slug, name, size = 48, iconSize = 28, roun
       {!failed && (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
+          ref={imgRef}
           src={`https://cdn.simpleicons.org/${slug}/ffffff`}
-          alt={name}
+          alt="" // Keep alt empty so browser doesn't render ugly clipped text on failure
           width={iconSize}
           height={iconSize}
           onError={() => setFailed(true)}
-          style={{ maxWidth: '100%', maxHeight: '100%' }}
+          style={{ maxWidth: '100%', maxHeight: '100%', display: 'block' }}
         />
       )}
       {failed && (
-        <span style={{ color: 'white', fontWeight: 'bold', fontSize: `${Math.round(size * 0.375)}px`, lineHeight: 1 }}>
-          {name[0]}
+        <span style={{ color: 'white', fontWeight: 'bold', fontSize, lineHeight: 1 }}>
+          {initial}
         </span>
       )}
     </div>
   )
 }
+

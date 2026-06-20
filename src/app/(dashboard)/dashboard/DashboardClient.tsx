@@ -158,7 +158,6 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                 key={app.slug}
                 className={`catalog-sidebar-item flex items-center gap-3 w-full text-left${selectedApp === app.slug || (!selectedApp && initialServices[0]?.slug === app.slug) ? ' active' : ''}`}
                 onClick={() => setSelectedApp(app.slug)}
-                style={{ background: 'none', border: 'none' }}
               >
                 <ServiceIcon slug={app.slug} name={app.name} size={20} />
                 <span className="text-sm font-semibold text-primary">{app.name}</span>
@@ -180,7 +179,6 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                 key={app.slug}
                 className={`catalog-app-card w-full text-left${selectedApp === app.slug || (!selectedApp && initialServices[0]?.slug === app.slug) ? ' active' : ''}`}
                 onClick={() => setSelectedApp(app.slug)}
-                style={{ background: 'none', border: 'none' }}
               >
                 <ServiceIcon slug={app.slug} name={app.name} size={48} />
                 <div className="catalog-app-name">{app.name}</div>
