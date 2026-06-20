@@ -92,7 +92,7 @@
 .data-table th {
   text-align: left;
   padding: 1rem 1.5rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
   font-weight: 600;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   background: rgba(0, 0, 0, 0.2);
@@ -260,8 +260,9 @@
 .font-bold { font-weight: 700; }
 .text-xs { font-size: 0.75rem; }
 .text-sm { font-size: 0.875rem; }
-.text-secondary { color: rgba(255, 255, 255, 0.6); }
-.text-tertiary { color: rgba(255, 255, 255, 0.4); }
+.text-secondary { color: var(--text-muted); }
+.text-tertiary { color: var(--text-faint); }
+/* Intentionally keep old alias names for backward compat */
 
 .gap-1 { gap: 0.25rem; }
 .gap-2 { gap: 0.5rem; }
@@ -1490,7 +1491,7 @@
 }
 
 .rentals-subtitle {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -1585,7 +1586,7 @@
 }
 
 .rentals-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-faint);
 }
 
 .rentals-search-input:focus {
@@ -1599,7 +1600,7 @@
   left: 0.875rem;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-faint);
   display: flex;
   pointer-events: none;
 }
