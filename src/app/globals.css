@@ -1101,12 +1101,272 @@ details[open] .faq-question::after {
   50% { opacity: 0.3; }
 }
 /* Inline Style Replacements */
-.hero-iphone-mockup { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 10; }
-.hero-bubbles-container { position: absolute; top: 15%; left: 10%; width: 80%; display: flex; flex-direction: column; gap: 1rem; z-index: 20; }
-.hero-bubble { background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; color: white; font-size: 0.875rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+/* CSS Phone Mockup & Floating Cards */
+.phone-container {
+  width: 310px;
+  height: 620px;
+  position: relative;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+.phone-frame {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 44px;
+  padding: 11px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.7),
+    0 0 0 3px #1e293b,
+    0 0 0 10px #0f172a,
+    0 20px 40px rgba(139, 92, 246, 0.15);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s ease;
+  transform: rotateY(-8deg) rotateX(4deg);
+}
+
+.phone-frame:hover {
+  transform: rotateY(0deg) rotateX(0deg);
+}
+
+.phone-dynamic-island {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85px;
+  height: 24px;
+  background: #000;
+  border-radius: 12px;
+  z-index: 100;
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+}
+
+.phone-screen {
+  flex: 1;
+  background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #03001e 100%);
+  border-radius: 34px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.phone-status-bar {
+  height: 38px;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  z-index: 90;
+}
+
+.phone-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.phone-app-header {
+  padding: 14px 18px;
+  background: rgba(15, 23, 42, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.phone-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.phone-chat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-chat-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.phone-chat-status {
+  color: #10b981;
+  font-size: 0.6rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.phone-chat-status::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: #10b981;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.phone-messages {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.phone-messages .hero-bubble {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 12px 14px;
+  color: white;
+  font-size: 0.75rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+.phone-messages .hero-bubble:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.bubble-service {
+  font-weight: 700;
+  color: #c084fc;
+  margin-bottom: 2px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bubble-text {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
+}
+
+.bubble-text strong {
+  color: #22d3ee;
+  font-weight: 700;
+}
+
+.phone-home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  z-index: 100;
+}
+
+/* Floating Netflix Card */
+.hero-floating-card {
+  position: absolute;
+  bottom: 40px;
+  right: -50px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.5),
+    0 10px 10px -5px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(139, 92, 246, 0.2);
+  z-index: 110;
+  animation: float-up-card 5s ease-in-out infinite alternate;
+  width: 240px;
+}
+
+.floating-card-icon {
+  width: 40px;
+  height: 40px;
+  background: #e50914;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+}
+
+.netflix-n {
+  color: white;
+  font-weight: 900;
+  font-size: 1.5rem;
+  font-family: 'Arial Black', sans-serif;
+  line-height: 1;
+}
+
+.floating-card-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.floating-card-title {
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.floating-card-status {
+  color: #10b981;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.floating-card-price {
+  color: #22d3ee;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.animate-float {
+  animation: float-up 6s ease-in-out infinite;
+}
+
 .anim-delay-1 { animation: fade-in-up 0.5s ease-out 0.2s both; }
 .anim-delay-2 { animation: fade-in-up 0.5s ease-out 0.6s both; }
 .anim-delay-3 { animation: fade-in-up 0.5s ease-out 1s both; }
+
+@keyframes float-up-card {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
 
 .section-padding { padding: 6rem 1.5rem; }
 .section-padding-lg { padding: 4rem 1.5rem 6rem 1.5rem; }
@@ -1163,5 +1423,5 @@ details[open] .faq-question::after {
 .btn-telegram { display: inline-flex; align-items: center; gap: 0.5rem; background: #eff6ff; color: #3b82f6 !important; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; }
 
 .flex-center-gap-4 { display: flex; justify-content: center; gap: 1rem; }
-.hero-mockup-wrapper { width: 320px; height: 640px; position: relative; }
+/* replaced */
 .mb-2 { margin-bottom: 0.5rem; }

@@ -48,19 +48,70 @@ export default function Home() {
             </div>
           </div>
           <div className="hero-image">
-            <div className="animate-float hero-mockup-wrapper">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/iphone-mockup.png" alt="iPhone Mockup" className="hero-iphone-mockup" />
-              <div className="hero-bubbles-container">
-                <div className="hero-bubble anim-delay-1">
-                  <strong>Snapchat</strong><br/>Your Snapchat code is 88412
+            <div className="animate-float phone-container">
+              <div className="phone-frame">
+                <div className="phone-dynamic-island"></div>
+                <div className="phone-screen">
+                  {/* Status Bar */}
+                  <div className="phone-status-bar">
+                    <span className="phone-time">9:41</span>
+                    <div className="phone-status-icons">
+                      <svg width="15" height="11" viewBox="0 0 17 11" fill="currentColor">
+                        <path d="M2 10h1v1H2v-1zm3-2h1v3H5V8zm3-3h1v6H8V5zm3-3h1v9h-1V2zm3-2h1v11h-1V0z" />
+                      </svg>
+                      <svg width="15" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                        <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                        <line x1="12" y1="20" x2="12.01" y2="20" />
+                      </svg>
+                      <svg width="20" height="11" viewBox="0 0 22 11" fill="currentColor">
+                        <rect x="0.5" y="0.5" width="18" height="10" rx="2.5" fill="none" stroke="currentColor" />
+                        <rect x="2" y="2" width="11" height="7" rx="1.5" />
+                        <path d="M20 3.5h1v4h-1z" />
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  {/* App Header */}
+                  <div className="phone-app-header">
+                    <div className="phone-avatar">P</div>
+                    <div className="phone-chat-info">
+                      <span className="phone-chat-name">PremiumID</span>
+                      <span className="phone-chat-status">online</span>
+                    </div>
+                  </div>
+
+                  {/* Messages Area */}
+                  <div className="phone-messages">
+                    <div className="hero-bubble anim-delay-1">
+                      <div className="bubble-service">Snapchat</div>
+                      <div className="bubble-text">Your Snapchat code is <strong>88412</strong></div>
+                    </div>
+                    <div className="hero-bubble anim-delay-2">
+                      <div className="bubble-service">Telegram</div>
+                      <div className="bubble-text">Your Telegram code is <strong>94726</strong>. Do not share this.</div>
+                    </div>
+                    <div className="hero-bubble anim-delay-3">
+                      <div className="bubble-service">WhatsApp</div>
+                      <div className="bubble-text">Your WhatsApp verification code is <strong>228-714</strong></div>
+                    </div>
+                  </div>
+
+                  <div className="phone-home-indicator"></div>
                 </div>
-                <div className="hero-bubble anim-delay-2">
-                  <strong>Telegram</strong><br/>Your Telegram code is 94726. Do not share this.
+              </div>
+
+              {/* Floating Netflix Card */}
+              <div className="hero-floating-card">
+                <div className="floating-card-icon">
+                  <span className="netflix-n">N</span>
                 </div>
-                <div className="hero-bubble anim-delay-3">
-                  <strong>WhatsApp</strong><br/>Your WhatsApp verification code is 228-714
+                <div className="floating-card-details">
+                  <div className="floating-card-title">Netflix</div>
+                  <div className="floating-card-status">SMS Received</div>
                 </div>
+                <div className="floating-card-price">$0.15</div>
               </div>
             </div>
           </div>
