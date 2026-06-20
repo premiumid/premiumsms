@@ -133,7 +133,7 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
           ref={imgRef}
-          src={iconUrl || `https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/${cleanSlug}.svg`}
+          src={(iconUrl && iconUrl.startsWith('/')) ? `https://virtualsms.io${iconUrl}` : (iconUrl || `https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/${cleanSlug}.svg`)}
           alt="" // Keep alt empty so browser doesn't render ugly clipped text on failure
           width={iconSize}
           height={iconSize}
