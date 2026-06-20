@@ -46,14 +46,14 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
   const [failed, setFailed] = useState(() => {
     if (iconUrl) return false
     if (!slug) return true
-    return !BG_COLORS[slug.toLowerCase()]
+    return false
   })
   const imgRef = useRef<HTMLImageElement>(null)
   const color = getServiceColor(slug)
 
   // Reset state if slug changes or dynamically check if image fails
   useEffect(() => {
-    const isUnknown = !slug || !BG_COLORS[slug.toLowerCase()]
+    const isUnknown = !slug
     setFailed(isUnknown)
     
     if (!isUnknown && imgRef.current) {
@@ -85,7 +85,7 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
           ref={imgRef}
-          src={`https://cdn.simpleicons.org/${slug}/ffffff`}
+          src={iconUrl || `https://cdn.simpleicons.org/${slug}/ffffff`}
           alt="" // Keep alt empty so browser doesn't render ugly clipped text on failure
           width={iconSize}
           height={iconSize}

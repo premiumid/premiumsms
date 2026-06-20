@@ -34,6 +34,27 @@ interface RentalRecord {
   created_at: string
 }
 
+const POPULAR_SERVICES: Service[] = [
+  { slug: 'telegram', name: 'Telegram' },
+  { slug: 'whatsapp', name: 'WhatsApp' },
+  { slug: 'instagram', name: 'Instagram' },
+  { slug: 'facebook', name: 'Facebook' },
+  { slug: 'tiktok', name: 'TikTok' },
+  { slug: 'google', name: 'Google' },
+  { slug: 'twitter', name: 'Twitter' },
+  { slug: 'discord', name: 'Discord' },
+  { slug: 'microsoft', name: 'Microsoft' },
+  { slug: 'amazon', name: 'Amazon' },
+  { slug: 'netflix', name: 'Netflix' },
+  { slug: 'spotify', name: 'Spotify' },
+  { slug: 'uber', name: 'Uber' },
+  { slug: 'paypal', name: 'PayPal' },
+  { slug: 'linkedin', name: 'LinkedIn' },
+  { slug: 'snapchat', name: 'Snapchat' },
+  { slug: 'twitch', name: 'Twitch' },
+  { slug: 'steam', name: 'Steam' }
+]
+
 export default function DashboardClient({ initialServices, isLoggedIn, recentTransactions, recentRentals }: { initialServices: Service[]; isLoggedIn: boolean; recentTransactions?: TxRecord[]; recentRentals?: RentalRecord[] }) {
   const router = useRouter()
   const [search, setSearch] = useState('')
@@ -43,7 +64,12 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
     app.name.toLowerCase().includes(search.toLowerCase())
   )
 
-  const activeApp = initialServices.find(s => s.slug === selectedApp) || initialServices[0] || null
+  const popularApps = POPULAR_SERVICES.map(p => {
+    const found = initialServices.find(s => s.slug.toLowerCase() === p.slug.toLowerCase() || s.name.toLowerCase() === p.name.toLowerCase())
+    return found || p
+  })
+
+  const activeApp = selectedApp ? (initialServices.find(s => s.slug === selectedApp) || null) : null
 
   const [countries, setCountries] = useState<Country[]>([])
   const [countriesLoading, setCountriesLoading] = useState(false)
@@ -165,10 +191,10 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
             {filteredApps.map(app => (
               <button
                 key={app.slug}
-                className={`catalog-sidebar-item flex items-center gap-3 w-full text-left${selectedApp === app.slug || (!selectedApp && initialServices[0]?.slug === app.slug) ? ' active' : ''}`}
+                className={`catalog-sidebar-item flex items-center gap-3 w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
                 onClick={() => setSelectedApp(app.slug)}
               >
-                <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={20} />
+                <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={24} iconSize={14} />
                 <span className="text-sm font-semibold text-primary">{app.name}</span>
               </button>
             ))}
@@ -179,21 +205,44 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
         <main className="catalog-main p-4">
           <div className="catalog-header mb-8 text-center sm:text-left">
             <h2 className="text-2xl font-bold mb-2">Pick a service to get started</h2>
-            <p className="text-secondary">Browse {initialServices.length} supported apps across 145+ countries.</p>
+            <p className="text-secondary">
+              {search ? `Browse search results` : 'Choose a popular app below, or search the full catalog on the left.'}
+            </p>
           </div>
 
           <div className="catalog-apps-grid">
-            {filteredApps.slice(0, 24).map(app => (
-              <button
-                key={app.slug}
-                className={`catalog-app-card w-full text-left${selectedApp === app.slug || (!selectedApp && initialServices[0]?.slug === app.slug) ? ' active' : ''}`}
-                onClick={() => setSelectedApp(app.slug)}
-              >
-                <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={48} />
-                <div className="catalog-app-name">{app.name}</div>
-              </button>
-            ))}
+            {search ? (
+              filteredApps.slice(0, 24).map(app => (
+                <button
+                  key={app.slug}
+                  className={`catalog-app-card w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
+                  onClick={() => setSelectedApp(app.slug)}
+                >
+                  <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={48} />
+                  <div className="catalog-app-name">{app.name}</div>
+                </button>
+              ))
+            ) : (
+              popularApps.map(app => (
+                <button
+                  key={app.slug}
+                  className={`catalog-app-card w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
+                  onClick={() => setSelectedApp(app.slug)}
+                >
+                  <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={48} />
+                  <div className="catalog-app-name">{app.name}</div>
+                </button>
+              ))
+            )}
           </div>
+
+          {!search && (
+            <div className="catalog-stats-bar mt-8 flex justify-center gap-6 text-sm text-secondary font-medium">
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#10b981] inline-block"></span> 2500+ services</span>
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#3b82f6] inline-block"></span> 145+ countries</span>
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#8b5cf6] inline-block"></span> From $0.05</span>
+            </div>
+          )}
           
           {/* Recent Activity */}
           {isLoggedIn && recentTransactions && recentTransactions.length > 0 && (
@@ -252,12 +301,12 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
             </div>
             <h2 className="dynamic-hero-title">{activeApp ? activeApp.name : 'Real SMS Numbers'}</h2>
             <p className="dynamic-hero-price">
-              {priceLoading ? 'Fetching price…' : price !== null ? `$${price.toFixed(2)}` : 'Select a country'}
+              {priceLoading ? 'Fetching price…' : price !== null ? `$${price.toFixed(2)}` : activeApp ? 'Select a country' : 'Instant Activation'}
             </p>
           </div>
 
           <div className="order-summary-box-redesigned">
-            {activeApp && (
+            {activeApp ? (
               <div className="mb-6">
                 <label htmlFor="dashboard-country-select" className="block text-xs font-bold text-tertiary uppercase tracking-wider mb-2">
                   Select Country
@@ -362,6 +411,10 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                   </div>
                 )}
               </div>
+            ) : (
+              <p className="text-sm text-secondary mb-6 text-center">
+                Please select a service from the catalog or popular list to choose a country and get your virtual phone number.
+              </p>
             )}
 
             {error && (
@@ -391,28 +444,43 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
               </li>
             </ul>
 
-            {isLoggedIn ? (
-              <button
-                onClick={handleRent}
-                disabled={renting || !selectedCountry || price === null}
-                className="btn btn-primary w-full py-3 shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
-                id="dashboard-checkout-btn"
-              >
-                {renting ? (
-                  <>
-                    <span className="spinner-sm animate-spin" /> Renting…
-                  </>
-                ) : (
-                  <>Rent Number Now &rarr;</>
-                )}
-              </button>
+            {activeApp ? (
+              isLoggedIn ? (
+                <button
+                  onClick={handleRent}
+                  disabled={renting || !selectedCountry || price === null}
+                  className="btn btn-primary w-full py-3 shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
+                  id="dashboard-checkout-btn"
+                >
+                  {renting ? (
+                    <>
+                      <span className="spinner-sm animate-spin" /> Renting…
+                    </>
+                  ) : (
+                    <>Rent Number Now &rarr;</>
+                  )}
+                </button>
+              ) : (
+                <Link
+                  href="/register"
+                  className="btn btn-primary w-full py-3 shadow-lg shadow-accent/20 block text-center"
+                >
+                  Create Free Account &rarr;
+                </Link>
+              )
             ) : (
-              <Link
-                href="/register"
-                className="btn btn-primary w-full py-3 shadow-lg shadow-accent/20 block text-center"
+              <button
+                disabled
+                className="btn w-full py-3 flex items-center justify-center gap-2"
+                style={{ 
+                  background: 'rgba(255,255,255,0.03)', 
+                  border: '1px solid rgba(255,255,255,0.05)', 
+                  color: 'rgba(255,255,255,0.3)',
+                  cursor: 'not-allowed'
+                }}
               >
-                Create Free Account &rarr;
-              </Link>
+                Select a Service
+              </button>
             )}
           </div>
         </aside>

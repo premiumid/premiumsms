@@ -170,8 +170,9 @@
 .catalog-sidebar-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 500;
@@ -179,11 +180,19 @@
   cursor: pointer;
   margin-bottom: 0.25rem;
   transition: all 0.2s;
+  border-left: 3px solid transparent;
 }
 
-.catalog-sidebar-item:hover, .catalog-sidebar-item.active {
-  background: rgba(255, 255, 255, 0.05);
+.catalog-sidebar-item:hover {
+  background: rgba(255, 255, 255, 0.04);
   color: white;
+}
+
+.catalog-sidebar-item.active {
+  background: rgba(139, 92, 246, 0.12);
+  color: white;
+  border-left-color: var(--accent-primary);
+  padding-left: calc(0.875rem - 3px);
 }
 
 .catalog-sidebar-item-left {
@@ -277,31 +286,28 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   cursor: pointer;
-  padding: 1.25rem 1rem;
+  padding: 1.25rem 0.75rem;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  background: transparent;
+  transition: all 0.2s ease-in-out;
   text-decoration: none;
   color: inherit;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
 }
 
 .catalog-app-card:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(139, 92, 246, 0.5);
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
 }
 
 .catalog-app-card.active {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(139, 92, 246, 0.08);
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 1px var(--accent-primary), 0 10px 25px -5px rgba(139, 92, 246, 0.3);
   transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
 }
 
 .catalog-app-icon {
@@ -506,14 +512,15 @@
 
 /* Catalog stats bar */
 .catalog-stats-bar {
-  text-align: center;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.875rem;
-  margin-bottom: 2rem;
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 2rem;
   flex-wrap: wrap;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 /* Step connector */
