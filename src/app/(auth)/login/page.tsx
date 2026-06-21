@@ -53,7 +53,7 @@ export default function LoginPage() {
 
           <div className="input-group">
             <label htmlFor="password" className="input-label">Password</label>
-            <div style={{ position: 'relative' }}>
+            <div className="input-password-wrap">
             <input 
               type={showPassword ? 'text' : 'password'}
               id="password" 
@@ -66,7 +66,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(o => !o)}
-              style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--text-tertiary)', display: 'flex' }}
+              className="password-toggle"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? (
@@ -78,8 +78,8 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div style={{ textAlign: 'right', marginTop: '-0.75rem' }}>
-            <Link href="/forgot-password" style={{ fontSize: '0.8rem', color: 'var(--accent-primary)' }}>Forgot password?</Link>
+          <div className="forgot-link">
+            <Link href="/forgot-password">Forgot password?</Link>
           </div>
 
           <button type="submit" className="btn btn-primary auth-btn-container" disabled={loading}>

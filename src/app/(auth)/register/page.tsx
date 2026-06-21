@@ -20,10 +20,10 @@ export default function RegisterPage() {
     if (/\d/.test(pw)) score++
     if (/[^a-zA-Z0-9]/.test(pw)) score++
     const map = [
-      { label: 'Weak', color: '#b91c1c' },
-      { label: 'Fair', color: '#f59e0b' },
-      { label: 'Good', color: '#10b981' },
-      { label: 'Strong', color: '#059669' },
+      { label: 'Weak', color: 'var(--danger)' },
+      { label: 'Fair', color: 'var(--warning)' },
+      { label: 'Good', color: 'var(--success)' },
+      { label: 'Strong', color: 'var(--success)' },
       { label: 'Very Strong', color: '#047857' },
     ]
     return { score, ...map[Math.min(score, 4)] }
@@ -85,7 +85,7 @@ export default function RegisterPage() {
 
           <div className="input-group">
             <label htmlFor="password" className="input-label">Password</label>
-            <div style={{ position: 'relative' }}>
+            <div className="input-password-wrap">
             <input 
               type={showPassword ? 'text' : 'password'}
               id="password" 
@@ -101,7 +101,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setShowPassword(o => !o)}
-              style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--text-tertiary)', display: 'flex' }}
+              className="password-toggle"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? (
@@ -112,11 +112,11 @@ export default function RegisterPage() {
             </button>
             </div>
             {passwordValue && (
-              <div style={{ marginTop: '0.5rem' }}>
-                <div style={{ height: 4, borderRadius: 2, background: 'var(--bg-tertiary)', overflow: 'hidden' }}>
-                  <div style={{ width: `${(strength.score / 5) * 100}%`, height: '100%', background: strength.color, borderRadius: 2, transition: 'all 0.2s ease' }} />
+              <div className="password-strength">
+                <div className="password-strength-bar">
+                  <div className="password-strength-fill" style={{ width: `${(strength.score / 5) * 100}%`, background: strength.color }} />
                 </div>
-                <p style={{ fontSize: '0.75rem', color: strength.color, marginTop: '0.25rem', fontWeight: 500 }}>{strength.label}</p>
+                <p className="password-strength-label" style={{ color: strength.color }}>{strength.label}</p>
               </div>
             )}
           </div>
@@ -129,23 +129,22 @@ export default function RegisterPage() {
               className="input-field"
               placeholder="••••••••"
               required
-              style={{ borderColor: confirmValue && !passwordsMatch ? '#dc2626' : undefined }}
+              style={{ borderColor: confirmValue && !passwordsMatch ? 'var(--danger)' : undefined }}
               value={confirmValue}
               onChange={e => setConfirmValue(e.target.value)}
             />
             {confirmValue && !passwordsMatch && (
-              <p style={{ fontSize: '0.75rem', color: '#b91c1c', marginTop: '0.25rem' }}>Passwords do not match</p>
+              <p className="input-error">Passwords do not match</p>
             )}
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+          <label className="terms-checkbox">
             <input
               type="checkbox"
               checked={termsAccepted}
               onChange={e => setTermsAccepted(e.target.checked)}
-              style={{ accentColor: 'var(--accent-primary)', width: 16, height: 16 }}
             />
-            I accept the <Link href="/terms" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>Terms of Service</Link> and <Link href="/privacy" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>Privacy Policy</Link>
+            I accept the <Link href="/terms" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Terms of Service</Link> and <Link href="/privacy" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>
           </label>
 
           <button type="submit" className="btn btn-primary auth-btn-container" disabled={loading || !termsAccepted}>

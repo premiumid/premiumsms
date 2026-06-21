@@ -239,11 +239,6 @@ export default function WalletClient({ initialBalance, initialTransactions, user
     if (type === 'topup' || type === 'admin_credit') return '↓'
     return '↑'
   }
-  const txColor = (type: Transaction['type']) => {
-    if (type === 'topup' || type === 'admin_credit') return 'var(--success)'
-    return 'var(--danger)'
-  }
-
   const loadMoreTransactions = async () => {
     setTxLoading(true)
     try {
@@ -274,7 +269,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
         <div className="balance-card glass-panel card-glow">
           <div className="balance-card-header">
             <span className="balance-card-icon">
-              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </span>
             <p className="balance-card-label">Current Balance</p>
           </div>
@@ -330,7 +325,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
 
           {/* Coming soon: Card payments */}
           <div className="payment-coming-soon">
-            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             <span>Credit / Debit Card</span>
             <span className="badge-soon">Coming Soon</span>
           </div>
@@ -346,12 +341,12 @@ export default function WalletClient({ initialBalance, initialTransactions, user
               <div key={i} className="tx-row opacity-40">
                 <div className="skeleton-circle" />
                 <div className="tx-info">
-                  <div className="skeleton-line w-[60%] h-3.5 mb-1.5" />
-                  <div className="skeleton-line w-[40%] h-3" />
+                  <div className="skeleton-line" style={{ width: '60%', height: '14px', marginBottom: '6px' }} />
+                  <div className="skeleton-line" style={{ width: '40%', height: '12px' }} />
                 </div>
                 <div className="tx-amounts">
-                  <div className="skeleton-line w-[70px] h-4 mb-1 ml-auto" />
-                  <div className="skeleton-line w-[90px] h-3 ml-auto" />
+                  <div className="skeleton-line" style={{ width: '70px', height: '16px', marginBottom: '4px', marginLeft: 'auto' }} />
+                  <div className="skeleton-line" style={{ width: '90px', height: '12px', marginLeft: 'auto' }} />
                 </div>
               </div>
             ))}
@@ -384,8 +379,8 @@ export default function WalletClient({ initialBalance, initialTransactions, user
               </div>
             ))}
             {txHasMore && (
-              <div className="text-center p-4">
-                <button className="btn btn-secondary text-sm" onClick={loadMoreTransactions} disabled={txLoading}>
+              <div style={{ textAlign: 'center', padding: '1rem' }}>
+                <button className="btn btn-secondary" style={{ fontSize: '0.875rem' }} onClick={loadMoreTransactions} disabled={txLoading}>
                   {txLoading ? 'Loading…' : 'Load More'}
                 </button>
               </div>
@@ -426,16 +421,16 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                   )}
                 </div>
 
-                <div className="flex flex-col items-center justify-center my-4 bg-white/5 p-4 rounded-xl border border-white/10">
+                <div className="qr-section">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(paymentData.payAddress)}&color=ffffff&bgcolor=1a1a1a`}
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(paymentData.payAddress)}&color=4f46e5&bgcolor=f8fafc`}
                     alt="USDT TRC-20 Deposit QR"
                     width={150}
                     height={150}
-                    className="rounded-lg shadow-lg border border-white/10"
+                    className="rounded-lg shadow-sm"
                   />
-                  <span className="text-[10px] text-tertiary mt-2 uppercase tracking-widest font-semibold">Scan to Deposit</span>
+                  <span className="qr-label">Scan to Deposit</span>
                 </div>
 
                 <div className="payment-info-box">
@@ -467,13 +462,13 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                 </div>
 
                 <div className="payment-warning">
-                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-warning, #f59e0b)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                   Send <strong>only USDT on the TRC-20 (Tron) network</strong>. Other networks or
                   coins will result in permanent loss of funds.
                 </div>
 
                 <p className="payment-tracking">
-                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   Monitoring blockchain in real-time · Payment ID: <code>{paymentData.paymentId}</code>
                 </p>
 
@@ -485,7 +480,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
             {paymentStep === 'success' && (
               <div className="modal-success">
                 <div className="success-icon">
-                  <svg aria-hidden="true" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <svg aria-hidden="true" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
                 <h3>Payment Confirmed!</h3>
                 <p>

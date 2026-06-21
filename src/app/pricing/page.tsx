@@ -83,20 +83,27 @@ export default function PricingPage() {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`rounded-xl p-8 ${plan.highlight ? 'bg-gradient-to-br from-violet-900 to-violet-950 text-white shadow-[0_20px_40px_rgba(139,92,246,0.3)]' : 'bg-white text-primary border border-border shadow-md'}`}
+              style={{
+                borderRadius: 'var(--radius-xl)',
+                padding: '2rem',
+                ...(plan.highlight
+                  ? { background: 'linear-gradient(135deg, #3730a3, #312e81)', color: 'white', boxShadow: '0 20px 40px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.3)' }
+                   : { background: 'var(--bg-card)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }
+                )
+              }}
             >
-              <h3 className={`text-lg font-bold mb-2 ${plan.highlight ? 'text-white' : ''}`}>{plan.name}</h3>
-              <div className={`text-3xl font-extrabold mb-1 ${plan.highlight ? 'text-white' : 'text-accent'}`}>{plan.price}</div>
-              <div className="text-xs mb-4 opacity-70">{plan.per}</div>
-              <p className="text-sm mb-6 opacity-85">{plan.description}</p>
-              <ul className="mb-8 flex flex-col gap-2">
+              <h3 style={{ fontWeight: 700, marginBottom: '0.5rem', color: plan.highlight ? 'white' : undefined }}>{plan.name}</h3>
+              <div style={{ fontSize: '1.875rem', fontWeight: 800, marginBottom: '0.25rem', color: plan.highlight ? 'white' : 'var(--accent)' }}>{plan.price}</div>
+              <div style={{ fontSize: '0.75rem', marginBottom: '1rem', opacity: 0.7 }}>{plan.per}</div>
+              <p style={{ fontSize: '0.875rem', marginBottom: '1.5rem', opacity: 0.85 }}>{plan.description}</p>
+              <ul style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {plan.features.map((f) => (
-                  <li key={f} className="text-sm flex items-center gap-2">
-                    <span className={`font-bold ${plan.highlight ? 'text-violet-400' : 'text-success'}`}>✓</span> {f}
+                  <li key={f} style={{ fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontWeight: 700, color: plan.highlight ? 'var(--accent-muted)' : 'var(--success)' }}>✓</span> {f}
                   </li>
                 ))}
               </ul>
-              <Link href={plan.href} className={`btn w-full ${plan.highlight ? 'bg-white text-accent' : 'bg-accent text-white'}`}>
+              <Link href={plan.href} className="btn" style={{ width: '100%', background: plan.highlight ? 'white' : 'var(--accent)', color: plan.highlight ? 'var(--accent)' : 'white' }}>
                 {plan.cta}
               </Link>
             </div>
@@ -110,10 +117,10 @@ export default function PricingPage() {
           <h2 className="text-3xl font-bold">Example Prices by Service</h2>
           <p className="text-secondary mt-2">Prices vary by country. Browse full catalog after signing up.</p>
         </div>
-        <div className="max-w-[700px] mx-auto bg-white border border-border rounded-lg overflow-hidden shadow-md">
+        <div style={{ maxWidth: '700px', margin: '0 auto', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-tertiary border-b border-border">
+              <tr style={{ background: 'var(--bg-muted)', borderBottom: '1px solid var(--border)' }}>
                 <th className="py-3.5 px-5 text-left text-xs font-semibold text-secondary uppercase tracking-widest">Service</th>
                 <th className="py-3.5 px-5 text-left text-xs font-semibold text-secondary uppercase tracking-widest">Starting Price</th>
                 <th className="py-3.5 px-5 text-left text-xs font-semibold text-secondary uppercase tracking-widest">Countries</th>
@@ -146,7 +153,7 @@ export default function PricingPage() {
               { q: 'Can I use crypto to top up?', a: 'Yes — we accept USDT (TRC-20) via NOWPayments.' },
               { q: 'Is there a minimum top-up?', a: 'The minimum is ~$12 USD due to USDT (TRC-20) network minimums.' },
             ].map(({ q, a }) => (
-              <details key={q} className="bg-white border border-border rounded-md py-4 px-5">
+              <details key={q} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '1rem 1.25rem' }}>
                 <summary className="font-semibold cursor-pointer text-[15px]">{q}</summary>
                 <p className="mt-3 text-secondary text-sm">{a}</p>
               </details>

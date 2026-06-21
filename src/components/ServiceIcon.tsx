@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 
-const BG_COLORS: Record<string, string> = {
+const BRAND_COLORS: Record<string, string> = {
   telegram: '#2AABEE', whatsapp: '#25D366', instagram: '#E4405F',
   facebook: '#1877F2', tiktok: '#000000', google: '#EA4335',
   twitter: '#000000', discord: '#5865F2', netflix: '#E50914',
@@ -22,7 +22,6 @@ const FALLBACK_PALETTE = [
 export function getSimpleIconSlug(slug: string, name: string): string {
   const nameLower = name.toLowerCase().trim()
   
-  // Specific mappings for known services where name doesn't match Simple Icons slug directly
   const nameMapping: Record<string, string> = {
     'whatsapp': 'whatsapp',
     'telegram': 'telegram',
@@ -31,6 +30,7 @@ export function getSimpleIconSlug(slug: string, name: string): string {
     'tiktok': 'tiktok',
     'google': 'google',
     'twitter': 'x',
+    'twitter/x': 'x',
     'x (twitter)': 'x',
     'discord': 'discord',
     'microsoft': 'microsoft',
@@ -57,21 +57,18 @@ export function getSimpleIconSlug(slug: string, name: string): string {
     return nameMapping[nameLower]
   }
 
-  // Fallback to a normalized version of name
-  // Simple Icons uses lowercase with hyphens for spaces
   const cleanName = nameLower
-    .replace(/[^a-z0-9\s-]/g, '') // remove special chars
-    .replace(/\s+/g, '-')          // replace spaces with hyphens
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
 
   return cleanName || slug.toLowerCase()
 }
 
-export function getServiceColor(slug: string): string {
+function getBrandColor(slug: string): string {
   const normalized = slug.toLowerCase()
-  if (BG_COLORS[normalized]) {
-    return BG_COLORS[normalized]
+  if (BRAND_COLORS[normalized]) {
+    return BRAND_COLORS[normalized]
   }
-  // Deterministic hash based on slug
   let hash = 0
   for (let i = 0; i < normalized.length; i++) {
     hash = normalized.charCodeAt(i) + ((hash << 5) - hash)
@@ -86,61 +83,44 @@ interface ServiceIconProps {
   iconUrl?: string
   size?: number
   iconSize?: number
-  rounded?: boolean
 }
 
-export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize = 28, rounded = true }: ServiceIconProps) {
+export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize = 28 }: ServiceIconProps) {
   const cleanSlug = getSimpleIconSlug(slug, name)
-  const [failed, setFailed] = useState(() => {
-    if (iconUrl) return false
-    if (!cleanSlug) return true
-    return false
-  })
+  const isUnknown = !cleanSlug
+  const [imageFailed, setImageFailed] = useState(false)
   const imgRef = useRef<HTMLImageElement>(null)
-  const color = getServiceColor(cleanSlug)
+  const color = getBrandColor(cleanSlug)
+  const failed = isUnknown || imageFailed
 
-  // Reset state if slug changes or dynamically check if image fails
   useEffect(() => {
-    const isUnknown = !cleanSlug
-    setFailed(isUnknown)
-    
     if (!isUnknown && imgRef.current) {
       if (imgRef.current.complete && imgRef.current.naturalWidth === 0) {
-        setFailed(true)
+        setImageFailed(true)
       }
     }
-  }, [cleanSlug])
+  }, [cleanSlug, isUnknown])
 
-  // Get Initials: first letter uppercase
-  const initial = name ? name.charAt(0).toUpperCase() : '?'
-  const fontSize = size <= 24 ? '11px' : `${Math.round(size * 0.38)}px`
-
-  // eslint-disable-next-line react/forbid-dom-props
   return (
     <div
-      className={`flex items-center justify-center overflow-hidden shrink-0 ${rounded ? 'rounded-xl' : ''}`}
-      style={{
-        width: size,
-        height: size,
-        backgroundColor: color,
-        ...(!rounded ? { borderRadius: size / 6 } : {})
-      }}
+      className="flex items-center justify-center overflow-hidden shrink-0"
+      style={{ width: size, height: size }}
     >
       {!failed && (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
           ref={imgRef}
           src={(iconUrl && iconUrl.startsWith('/')) ? `https://virtualsms.io${iconUrl}` : (iconUrl || `https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/${cleanSlug}.svg`)}
-          alt="" // Keep alt empty so browser doesn't render ugly clipped text on failure
+          alt=""
           width={iconSize}
           height={iconSize}
-          onError={() => setFailed(true)}
-          className={`max-w-full max-h-full block ${!iconUrl ? 'brightness-0 invert' : ''}`}
+          onError={() => setImageFailed(true)}
+          className="max-w-full max-h-full block"
         />
       )}
       {failed && (
-        <span className="text-white font-bold leading-none" style={{ fontSize }}>
-          {initial}
+        <span className="font-bold leading-none" style={{ fontSize: `${Math.round(size * 0.38)}px`, color }}>
+          {name ? name.charAt(0).toUpperCase() : '?'}
         </span>
       )}
     </div>

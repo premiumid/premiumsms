@@ -10,7 +10,7 @@ const SERVICES = [
   { name: 'Google', slug: 'google', price: '$0.05', color: '#EA4335' },
   { name: 'Facebook', slug: 'facebook', price: '$0.09', color: '#1877F2' },
   { name: 'Instagram', slug: 'instagram', price: '$0.06', color: '#E4405F' },
-  { name: 'Twitter/X', slug: 'x', price: '$0.05', color: '#000000' },
+  { name: 'Twitter/X', slug: 'twitter', price: '$0.05', color: '#000000' },
   { name: 'TikTok', slug: 'tiktok', price: '$0.05', color: '#000000' },
   { name: 'Discord', slug: 'discord', price: '$0.05', color: '#5865F2' },
   { name: 'Netflix', slug: 'netflix', price: '$0.09', color: '#E50914' },
@@ -44,9 +44,9 @@ export default function ServicesGrid() {
             width: '100%',
             padding: '1rem 1.5rem',
             borderRadius: '9999px',
-            border: '1px solid #e2e8f0',
+            border: '1px solid var(--border)',
             outline: 'none',
-            boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+            boxShadow: 'var(--shadow-sm)',
           }}
         />
       </div>
@@ -60,8 +60,8 @@ export default function ServicesGrid() {
         ))}
       </div>
       {filtered.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-tertiary)' }}>
-          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '0.5rem' }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-faint)' }}>
+          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '0.5rem' }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <p>No services match your search. Try a different term.</p>
         </div>
       )}

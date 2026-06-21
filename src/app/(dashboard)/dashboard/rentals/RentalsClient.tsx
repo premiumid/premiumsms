@@ -6,7 +6,7 @@ import ServiceIcon from '@/components/ServiceIcon'
 import { createClient } from '@/lib/supabase/client'
 import FormattedDate from '@/components/FormattedDate'
 
-interface Rental {
+export interface Rental {
   id: string
   phone_number: string
   service_slug: string
@@ -65,21 +65,21 @@ function RentalRow({ rental }: { rental: Rental }) {
   const seconds = timeLeft % 60
 
   return (
-    <tr className="hover:bg-white/[0.02] border-b border-white/5 transition-colors">
+    <tr className="hover:bg-muted border-b border-border transition-colors">
       <td className="py-4 px-6">
         <div className="flex items-center gap-3">
           <ServiceIcon slug={rental.service_slug} name={displayService(rental.service_slug)} size={28} />
-          <span className="font-semibold text-white">{displayService(rental.service_slug)}</span>
+          <span className="font-semibold">{displayService(rental.service_slug)}</span>
         </div>
       </td>
-      <td className="py-4 px-6 font-mono text-white select-all">{rental.phone_number || 'Processing…'}</td>
+      <td className="py-4 px-6 font-mono select-all" style={{ color: 'var(--text)' }}>{rental.phone_number || 'Processing…'}</td>
       <td className="py-4 px-6">
         <div className="flex items-center gap-2">
           <CountryFlag code={rental.country_code} name={rental.country_code.toUpperCase()} />
           <span className="text-secondary">{rental.country_code.toUpperCase()}</span>
         </div>
       </td>
-      <td className="py-4 px-6 text-white font-semibold">${Number(rental.price).toFixed(2)}</td>
+      <td className="py-4 px-6 font-semibold" style={{ color: 'var(--text)' }}>${Number(rental.price).toFixed(2)}</td>
       <td className="py-4 px-6">
         <span className={`status-badge status-${rental.status}`}>{rental.status}</span>
       </td>
@@ -196,7 +196,7 @@ export default function RentalsClient({
     <div className="dashboard-content max-w-6xl mx-auto px-4 py-8">
       <div className="page-header mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="page-title text-3xl font-extrabold text-white tracking-tight">My Rentals</h1>
+          <h1 className="page-title" style={{ fontSize: '1.875rem', fontWeight: 800, letterSpacing: '-0.025em' }}>My Rentals</h1>
           <p className="page-subtitle text-secondary mt-1">Manage active numbers and view your receipt/inbox history.</p>
         </div>
         <Link href="/dashboard" className="btn btn-primary no-underline text-center">
@@ -205,17 +205,13 @@ export default function RentalsClient({
       </div>
 
       {/* Filters & Search */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+      <div className="rentals-filter-bar">
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
           {['all', 'active', 'received', 'expired', 'canceled'].map((st) => (
             <button
               key={st}
               onClick={() => { setStatusFilter(st); setPage(1) }}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold capitalize transition-all ${
-                statusFilter === st
-                  ? 'bg-accent text-white shadow-md shadow-accent/20'
-                  : 'bg-white/5 text-secondary hover:bg-white/10 hover:text-white'
-              }`}
+              className={`rentals-filter-pill ${statusFilter === st ? 'active' : ''}`}
             >
               {st}
             </button>
@@ -227,20 +223,20 @@ export default function RentalsClient({
             placeholder="Search by phone number…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder-secondary focus:outline-none focus:border-accent"
+            className="rentals-search-input"
           />
-          <span className="absolute left-3 top-3.5 text-secondary">
+          <span className="rentals-search-icon">
             <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </span>
         </div>
       </div>
 
       {/* Rentals Table */}
-      <div className="glass-panel overflow-hidden border border-white/5 rounded-xl shadow-xl">
+      <div className="glass-panel overflow-hidden rounded-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/[0.02] border-b border-white/5 text-xs font-bold text-tertiary uppercase tracking-wider">
+              <tr className="border-b text-xs font-bold text-tertiary uppercase tracking-wider" style={{ borderColor: 'var(--border)', background: 'var(--bg-muted)' }}>
                 <th className="py-4 px-6">Service</th>
                 <th className="py-4 px-6">Phone Number</th>
                 <th className="py-4 px-6">Country</th>
@@ -266,7 +262,7 @@ export default function RentalsClient({
                     <div className="flex flex-col items-center justify-center gap-3">
                       <svg width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="text-tertiary"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
                       <div>
-                        <p className="font-bold text-white">No rentals found</p>
+                        <p className="font-bold" style={{ color: 'var(--text)' }}>No rentals found</p>
                         <p className="text-sm mt-1 text-tertiary">Select a service on the dashboard to rent a number.</p>
                       </div>
                     </div>
@@ -281,22 +277,22 @@ export default function RentalsClient({
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-white/5 px-6 py-4 bg-white/[0.01]">
-            <div className="text-sm text-secondary">
-              Showing page <span className="text-white font-semibold">{page}</span> of <span className="text-white font-semibold">{totalPages}</span> ({total} total)
+          <div className="flex items-center justify-between border-t px-6 py-4" style={{ borderColor: 'var(--border)', background: 'var(--bg-muted)' }}>
+            <div className="text-sm" style={{ color: 'var(--text-muted)' }}>
+              Showing page <span className="font-semibold" style={{ color: 'var(--text)' }}>{page}</span> of <span className="font-semibold" style={{ color: 'var(--text)' }}>{totalPages}</span> ({total} total)
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-3 py-1.5 rounded bg-white/5 border border-white/10 text-sm font-semibold text-white hover:bg-white/10 disabled:opacity-50 disabled:hover:bg-white/5 transition-all"
+                className="pagination-btn"
               >
                 Previous
               </button>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="px-3 py-1.5 rounded bg-white/5 border border-white/10 text-sm font-semibold text-white hover:bg-white/10 disabled:opacity-50 disabled:hover:bg-white/5 transition-all"
+                className="pagination-btn"
               >
                 Next
               </button>

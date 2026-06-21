@@ -25,7 +25,7 @@ export default function ResendVerificationPage() {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', padding: '2rem', textAlign: 'center' }}>
       <div className="glass-panel" style={{ maxWidth: 420, width: '100%', padding: '2.5rem' }}>
         <h1 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>Verify Your Email</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
           {sent
             ? 'Verification email sent! Check your inbox and spam folder.'
             : 'Click the button below to receive a new verification email.'}

@@ -16,7 +16,7 @@ export default function DashboardError({
         <div style={{ textAlign: 'center', maxWidth: 400 }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚠️</div>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>Something went wrong</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
             {error.message || 'An unexpected error occurred.'}
           </p>
           <button onClick={reset} className="btn btn-primary">

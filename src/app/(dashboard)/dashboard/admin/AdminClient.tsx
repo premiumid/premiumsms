@@ -94,11 +94,11 @@ function SVGChart({
         <h3 className="chart-card-title">{title}</h3>
         {secondValueKey && (
           <div className="chart-legend-row">
-            <span className="chart-legend-item" style={{ color: 'var(--accent-tertiary)' }}>
-              <span className="chart-legend-dot" style={{ background: 'var(--accent-primary)' }} /> Rentals
+            <span className="chart-legend-item" style={{ color: 'var(--accent-muted)' }}>
+              <span className="chart-legend-dot" style={{ background: 'var(--accent)' }} /> Rentals
             </span>
             <span className="chart-legend-item" style={{ color: 'var(--warning)' }}>
-              <span className="chart-legend-dot" style={{ background: '#f59e0b' }} /> Signups
+              <span className="chart-legend-dot" style={{ background: 'var(--warning)' }} /> Signups
             </span>
           </div>
         )}
@@ -108,8 +108,8 @@ function SVGChart({
         <svg aria-hidden="true" viewBox={`0 0 ${width} ${height}`} className="w-full overflow-visible">
           <defs>
             <linearGradient id={`chart-gradient-${valueKey}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--accent-primary)" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="var(--accent-primary)" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.0" />
             </linearGradient>
           </defs>
           
@@ -123,7 +123,7 @@ function SVGChart({
                 y1={y} 
                 x2={width - paddingX} 
                 y2={y} 
-                stroke="var(--border-color)" 
+                stroke="var(--border)" 
                 strokeDasharray="4 4" 
                 strokeWidth="1" 
               />
@@ -134,24 +134,24 @@ function SVGChart({
           {points.length > 0 && (
             <>
               <path d={areaPath} fill={`url(#chart-gradient-${valueKey})`} />
-              <path d={linePath} fill="none" stroke="var(--accent-primary)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              <path d={linePath} fill="none" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
             </>
           )}
           
           {secondValueKey && secondPoints.length > 0 && (
-            <path d={secondLinePath} fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeDasharray="4 4" strokeLinecap="round" strokeLinejoin="round" />
+            <path d={secondLinePath} fill="none" stroke="var(--warning)" strokeWidth="2.5" strokeDasharray="4 4" strokeLinecap="round" strokeLinejoin="round" />
           )}
           
           {/* Main dots */}
           {points.map((p, i) => (
             <g key={`first-${i}`} className="chart-dot-group cursor-pointer">
-              <circle cx={p.x} cy={p.y} r="4.5" fill="var(--bg-secondary)" stroke="var(--accent-primary)" strokeWidth="2.5" className="chart-dot" />
+              <circle cx={p.x} cy={p.y} r="4.5" fill="var(--bg-card)" stroke="var(--accent)" strokeWidth="2.5" className="chart-dot" />
               <text 
                 x={p.x} 
                 y={p.y - 12} 
                 textAnchor="middle" 
                 fontSize="10" 
-                fill="var(--text-primary)" 
+                fill="var(--text)" 
                 fontWeight="600"
                 className="chart-tooltip"
               >
@@ -162,7 +162,7 @@ function SVGChart({
                 y={height - 5} 
                 textAnchor="middle" 
                 fontSize="9" 
-                fill="var(--text-tertiary)"
+                fill="var(--text-faint)"
               >
                 {typeof p.date === 'string' ? p.date.slice(5) : p.date}
               </text>
@@ -172,13 +172,13 @@ function SVGChart({
           {/* Second dots */}
           {secondValueKey && secondPoints.map((p, i) => (
             <g key={`second-${i}`} className="chart-dot-group cursor-pointer">
-              <circle cx={p.x} cy={p.y} r="3.5" fill="var(--bg-secondary)" stroke="#f59e0b" strokeWidth="2" className="chart-dot" />
+              <circle cx={p.x} cy={p.y} r="3.5" fill="var(--bg-card)" stroke="var(--warning)" strokeWidth="2" className="chart-dot" />
               <text 
                 x={p.x} 
                 y={p.y - 12} 
                 textAnchor="middle" 
                 fontSize="10" 
-                fill="#f59e0b" 
+                fill="var(--warning)" 
                 fontWeight="600"
                 className="chart-tooltip"
               >

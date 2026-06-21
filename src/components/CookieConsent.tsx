@@ -37,14 +37,14 @@ export default function CookieConsent() {
           justify-content: space-between;
           gap: 1rem;
           padding: 0.75rem 1.5rem;
-          background: var(--text-primary);
+          background: var(--text);
           color: white;
           font-size: 0.8125rem;
           line-height: 1.4;
-          box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+          box-shadow: var(--shadow-md);
         }
         .cookie-consent a {
-          color: var(--accent-tertiary);
+          color: var(--accent-muted);
           text-decoration: underline;
         }
         .cookie-consent .btn {

@@ -25,7 +25,7 @@ const services = [
   { name: 'Tinder', slug: 'tinder', color: '#FF6B6B', desc: 'Tinder account verification.', popular: false },
   { name: 'OkCupid', slug: 'okcupid', color: '#ED1965', desc: 'OkCupid account sign-up and verification.', popular: false },
   { name: 'Binance', slug: 'binance', color: '#F0B90B', desc: 'Binance exchange KYC phone step.', popular: false },
-  { name: '2500+ more', slug: '', color: '#8b5cf6', desc: 'Browse the full catalog after signing up. New services added weekly.', popular: false },
+  { name: '2500+ more', slug: '', color: '#4f46e5', desc: 'Browse the full catalog after signing up. New services added weekly.', popular: false },
 ]
 
 export default function ServicesPage() {
@@ -54,10 +54,10 @@ export default function ServicesPage() {
         <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.25rem' }}>Most Popular</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
           {popular.map(s => (
-            <div key={s.name} style={{ background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div key={s.name} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <ServiceIcon slug={s.slug} name={s.name} />
               <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{s.name}</h3>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', flexGrow: 1 }}>{s.desc}</p>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', flexGrow: 1 }}>{s.desc}</p>
               <Link href="/register" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%' }}>Get a Number</Link>
             </div>
           ))}
@@ -69,10 +69,10 @@ export default function ServicesPage() {
         <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.25rem' }}>All Services</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
           {rest.map(s => (
-            <div key={s.name} style={{ background: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div key={s.name} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <ServiceIcon slug={s.slug} name={s.name} />
               <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{s.name}</h3>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', flexGrow: 1 }}>{s.desc}</p>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', flexGrow: 1 }}>{s.desc}</p>
               <Link href="/register" className="btn btn-secondary" style={{ marginTop: '0.5rem', width: '100%' }}>Get a Number</Link>
             </div>
           ))}
@@ -80,20 +80,20 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA */}
-      <section style={{ background: 'linear-gradient(135deg, #4c1d95, #2e1065)', color: 'white', padding: '5rem 1.5rem', textAlign: 'center' }}>
+      <section className="hero-wrapper" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
         <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem' }}>Don&apos;t see your service?</h2>
-        <p style={{ color: '#cbd5e1', marginBottom: '2rem' }}>We support 2,500+ services. Browse the full live catalog after signing up.</p>
-        <Link href="/register" className="btn" style={{ background: 'white', color: 'var(--accent-primary)', padding: '0.875rem 2rem', fontSize: '1rem' }}>
+        <p style={{ color: 'var(--text-faint)', marginBottom: '2rem' }}>We support 2,500+ services. Browse the full live catalog after signing up.</p>
+        <Link href="/register" className="btn" style={{ background: 'var(--bg-card)', color: 'var(--accent)', padding: '0.875rem 2rem', fontSize: '1rem' }}>
           Browse Full Catalog
         </Link>
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border-color)', padding: '2rem 1.5rem', textAlign: 'center' }}>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+      <footer style={{ borderTop: '1px solid var(--border)', padding: '2rem 1.5rem', textAlign: 'center' }}>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
           &copy; {new Date().getFullYear()} PremiumID. All rights reserved. &nbsp;|&nbsp;{' '}
-          <Link href="/privacy" style={{ color: 'var(--text-secondary)' }}>Privacy</Link> &nbsp;|&nbsp;{' '}
-          <Link href="/terms" style={{ color: 'var(--text-secondary)' }}>Terms</Link>
+          <Link href="/privacy" style={{ color: 'var(--text-muted)' }}>Privacy</Link> &nbsp;|&nbsp;{' '}
+          <Link href="/terms" style={{ color: 'var(--text-muted)' }}>Terms</Link>
         </p>
       </footer>
     </div>

@@ -85,15 +85,15 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           padding: 0.625rem 1rem;
           border-radius: 0.5rem;
           font-size: 0.875rem;
-          color: #fff;
+          color: white;
           cursor: pointer;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+          box-shadow: var(--shadow-lg);
           animation: toast-slide-in 0.25s ease-out;
           max-width: 24rem;
         }
-        .toast-success { background: #059669; }
-        .toast-error { background: #dc2626; }
-        .toast-info { background: #2563eb; }
+        .toast-success { background: var(--success); }
+        .toast-error { background: var(--danger); }
+        .toast-info { background: var(--accent); }
         .toast-icon { display: flex; flex-shrink: 0; }
         @keyframes toast-slide-in {
           from { transform: translateX(100%); opacity: 0; }

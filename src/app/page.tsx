@@ -165,21 +165,21 @@ export default function Home() {
         <div className="steps-grid">
           <div className="step-card">
             <div className="step-number">
-              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
             </div>
             <h3>Choose App & Country</h3>
             <p>Live stock and prices ready. Pick the cheapest route that works for you.</p>
           </div>
           <div className="step-card">
             <div className="step-number">
-              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </div>
             <h3>Add Funds to Buy</h3>
             <p>Pay with crypto only when you&apos;re ready. No subscription.</p>
           </div>
           <div className="step-card">
             <div className="step-number">
-              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             </div>
             <h3>Receive Your Code</h3>
             <p>Codes arrive in seconds. No SMS? Your balance is refunded automatically.</p>
@@ -229,28 +229,28 @@ export default function Home() {
           </div>
           <div className="features-grid">
             <div className="feature-box">
-            <div className="feature-box-icon bg-red-50">
+            <div className="feature-box-icon" style={{ background: 'var(--danger-bg)' }}>
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
             </div>
             <h4>Real non-VoIP SIMs</h4>
             <p>Our numbers originate from real mobile carrier SIMs. Ensure seamless registration and high deliverability rates across global platforms.</p>
           </div>
           <div className="feature-box">
-            <div className="feature-box-icon bg-blue-50">
+            <div className="feature-box-icon" style={{ background: 'var(--accent-subtle)' }}>
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             </div>
             <h4>145+ global regions</h4>
             <p>Access local numbers from top-tier carriers worldwide. Ideal for regional account unlocking and localized market testing.</p>
           </div>
           <div className="feature-box">
-            <div className="feature-box-icon bg-green-50">
+            <div className="feature-box-icon" style={{ background: 'var(--success-bg)' }}>
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </div>
             <h4>Pay as you go</h4>
             <p>No hidden subscriptions. Browse live stock and prices freely, top up via crypto or SBP, and pay only for the numbers you actually use.</p>
           </div>
           <div className="feature-box">
-            <div className="feature-box-icon bg-yellow-50">
+            <div className="feature-box-icon" style={{ background: 'var(--warning-bg)' }}>
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             </div>
               <h4>Instant auto-refunds</h4>
@@ -299,7 +299,7 @@ export default function Home() {
       </section>
 
       {/* Popular Countries */}
-      <section className="container section-padding-lg bg-slate-50">
+      <section className="container section-padding-lg" style={{ background: 'var(--bg-muted)' }}>
         <div className="section-header-center">
           <h2 className="section-title">Popular Countries</h2>
           <p className="section-subtitle">Real SIM cards sourced from 145+ countries worldwide</p>
@@ -339,7 +339,7 @@ export default function Home() {
           <div className="pricing-card border-top-yellow">
             <div className="pricing-header">
               <div className="flex-row-center-gap-2 mb-2">
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 <h3 className="pricing-title mb-0">Verifications</h3>
               </div>
               <p className="text-sm-muted">One-time verification code</p>

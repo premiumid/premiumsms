@@ -249,9 +249,9 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
 
           {!search && (
             <div className="catalog-stats-bar mt-8 flex justify-center gap-6 text-sm text-secondary font-medium">
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#10b981] inline-block"></span> 2500+ services</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#3b82f6] inline-block"></span> 145+ countries</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#8b5cf6] inline-block"></span> From $0.05</span>
+                <span className="flex items-center gap-1.5"><span className="stat-dot" style={{ background: 'var(--success)' }}></span> 2500+ services</span>
+              <span className="flex items-center gap-1.5"><span className="stat-dot" style={{ background: 'var(--accent)' }}></span> 145+ countries</span>
+              <span className="flex items-center gap-1.5"><span className="stat-dot" style={{ background: 'var(--accent-muted)' }}></span> From $0.05</span>
             </div>
           )}
           
@@ -260,16 +260,16 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
             <div className="recent-activity-section">
               <div className="activity-header flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold">Recent Activity</h3>
-                <Link href="/dashboard/wallet" className="text-sm font-semibold text-accent no-underline hover:text-white transition-colors">View all</Link>
+                <Link href="/dashboard/wallet" className="text-sm font-semibold text-accent no-underline hover-link transition-colors">View all</Link>
               </div>
               <div className="glass-panel p-5">
                 {recentRentals && recentRentals.length > 0 && (
                   <div className="mb-6">
                     <p className="text-xs font-bold text-tertiary uppercase tracking-wider mb-3">Rentals</p>
                     {recentRentals.slice(0, 3).map(r => (
-                      <Link key={r.id} href={`/dashboard/rentals/${r.id}`} className="flex justify-between items-center p-3 rounded-md hover:bg-white/5 transition-colors no-underline">
+                      <Link key={r.id} href={`/dashboard/rentals/${r.id}`} className="flex justify-between items-center p-3 rounded-md hover-bg-muted transition-colors no-underline">
                         <span className="flex flex-col gap-1">
-                          <span className="font-semibold text-white">{r.phone_number || 'Processing…'}</span>
+                          <span className="font-semibold" style={{ color: 'var(--text)' }}>{r.phone_number || 'Processing…'}</span>
                           <span className="text-xs text-tertiary">{formatDate(r.created_at)}</span>
                         </span>
                         <span className={`text-sm font-bold ${r.status === 'active' ? 'text-success' : 'text-tertiary'}`}>${Number(r.price).toFixed(2)}</span>
@@ -283,7 +283,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                     {recentTransactions.slice(0, 3).map(tx => (
                       <div key={tx.id} className="flex justify-between items-center p-3 rounded-md">
                         <span className="flex flex-col gap-1">
-                          <span className="font-semibold text-white">{tx.description}</span>
+                          <span className="font-semibold" style={{ color: 'var(--text)' }}>{tx.description}</span>
                           <span className="text-xs text-tertiary">{formatDate(tx.created_at)}</span>
                         </span>
                         <span className={`text-sm font-bold ${tx.type === 'debit' ? 'text-danger' : 'text-success'}`}>
@@ -306,7 +306,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                 <ServiceIcon slug={activeApp.slug} name={activeApp.name} iconUrl={activeApp.icon_url} size={64} />
               ) : (
                 <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/20">
-                  <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 </div>
               )}
             </div>

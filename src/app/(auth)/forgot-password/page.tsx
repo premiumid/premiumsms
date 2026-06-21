@@ -32,14 +32,12 @@ export default function ForgotPasswordPage() {
         </div>
 
         {sent ? (
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+          <div className="success-state">
+            <div className="success-icon-circle">
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-              If an account with that email exists, you&apos;ll receive a password reset link shortly.
-            </p>
-            <Link href="/login" className="btn btn-primary" style={{ textDecoration: 'none', display: 'inline-block' }}>
+            <p className="success-desc">If an account with that email exists, you&apos;ll receive a password reset link shortly.</p>
+            <Link href="/login" className="btn btn-primary btn-centered">
               Back to Login
             </Link>
           </div>

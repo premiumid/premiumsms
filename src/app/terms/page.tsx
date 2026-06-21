@@ -13,7 +13,7 @@ export default function TermsPage() {
 
       <main className="container" style={{ padding: '6rem 1.5rem 6rem', maxWidth: '780px' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>Terms of Service</h1>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '3rem', fontSize: '0.875rem' }}>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '3rem', fontSize: '0.875rem' }}>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
 
         {[
           {
@@ -80,17 +80,17 @@ We reserve the right to suspend or ban accounts that violate these terms, withou
         ].map(section => (
           <section key={section.title} style={{ marginBottom: '2.5rem' }}>
             <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.75rem' }}>{section.title}</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: 1.75, whiteSpace: 'pre-line' }}>{section.body}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', lineHeight: 1.75, whiteSpace: 'pre-line' }}>{section.body}</p>
           </section>
         ))}
       </main>
 
       {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border-color)', padding: '2rem 1.5rem', textAlign: 'center' }}>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+      <footer style={{ borderTop: '1px solid var(--border)', padding: '2rem 1.5rem', textAlign: 'center' }}>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
           &copy; {new Date().getFullYear()} PremiumID. &nbsp;|&nbsp;{' '}
-          <Link href="/privacy" style={{ color: 'var(--text-secondary)' }}>Privacy</Link> &nbsp;|&nbsp;{' '}
-          <Link href="/contact" style={{ color: 'var(--text-secondary)' }}>Contact</Link>
+          <Link href="/privacy" style={{ color: 'var(--text-muted)' }}>Privacy</Link> &nbsp;|&nbsp;{' '}
+          <Link href="/contact" style={{ color: 'var(--text-muted)' }}>Contact</Link>
         </p>
       </footer>
     </div>

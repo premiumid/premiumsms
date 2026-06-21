@@ -12,7 +12,7 @@
   width: 100%;
   max-width: 400px;
   background: white;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 2rem;
   box-shadow: var(--shadow-sm);
@@ -29,7 +29,7 @@
 }
 
 .auth-subtitle {
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .auth-btn-container {
@@ -41,7 +41,7 @@
   margin-top: 1.5rem;
   text-align: center;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .auth-error {
@@ -64,26 +64,118 @@
 .input-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .input-field {
   width: 100%;
   padding: 0.75rem 1rem;
   background: var(--bg-color);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  color: var(--text-primary);
+  color: var(--text);
   font-size: 0.875rem;
   outline: none;
   transition: all 0.2s;
 }
 
 .input-field:focus {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
 }
 
 .grid {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Password field */
+.input-password-wrap {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--text-faint);
+  display: flex;
+  border-radius: 6px;
+  transition: color 0.15s ease;
+}
+
+.password-toggle:hover {
+  color: var(--text-muted);
+}
+
+.forgot-link {
+  text-align: right;
+  margin-top: -0.5rem;
+}
+
+.forgot-link a {
+  font-size: 0.8rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-link a:hover {
+  text-decoration: underline;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.terms-checkbox input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+}
+
+.input-error {
+  font-size: 0.75rem;
+  color: var(--danger);
+  margin-top: 0.25rem;
+}
+
+/* Success state (forgot password) */
+.success-state {
+  text-align: center;
+}
+
+.success-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.success-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.btn-centered {
+  text-decoration: none;
+  display: inline-block;
 }

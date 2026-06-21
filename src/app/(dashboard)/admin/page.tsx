@@ -16,20 +16,20 @@ export default async function AdminPage() {
 
       <div className="admin-stats-grid">
         <div className="glass-panel p-6 text-center">
-          <div className="text-sm text-secondary mb-2 font-semibold uppercase tracking-wider">Total Revenue</div>
-          <div className="text-3xl font-bold text-accent-primary">${stats.totalRevenue.toFixed(2)}</div>
+          <div className="text-sm text-secondary mb-2 font-semibold uppercase" style={{ letterSpacing: '0.05em' }}>Total Revenue</div>
+          <div style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--accent)' }}>${stats.totalRevenue.toFixed(2)}</div>
         </div>
         <div className="glass-panel p-6 text-center">
-          <div className="text-sm text-secondary mb-2 font-semibold uppercase tracking-wider">Total Users</div>
-          <div className="text-3xl font-bold">{stats.totalUsers}</div>
+          <div className="text-sm text-secondary mb-2 font-semibold uppercase" style={{ letterSpacing: '0.05em' }}>Total Users</div>
+          <div style={{ fontSize: '1.875rem', fontWeight: 700 }}>{stats.totalUsers}</div>
         </div>
         <div className="glass-panel p-6 text-center">
-          <div className="text-sm text-secondary mb-2 font-semibold uppercase tracking-wider">Active Rentals</div>
-          <div className="text-3xl font-bold">{stats.activeRentals}</div>
+          <div className="text-sm text-secondary mb-2 font-semibold uppercase" style={{ letterSpacing: '0.05em' }}>Active Rentals</div>
+          <div style={{ fontSize: '1.875rem', fontWeight: 700 }}>{stats.activeRentals}</div>
         </div>
         <div className="glass-panel p-6 text-center">
-          <div className="text-sm text-secondary mb-2 font-semibold uppercase tracking-wider">SMS Received</div>
-          <div className="text-3xl font-bold">{stats.totalSmsReceived}</div>
+          <div className="text-sm text-secondary mb-2 font-semibold uppercase" style={{ letterSpacing: '0.05em' }}>SMS Received</div>
+          <div style={{ fontSize: '1.875rem', fontWeight: 700 }}>{stats.totalSmsReceived}</div>
         </div>
       </div>
     </div>

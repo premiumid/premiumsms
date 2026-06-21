@@ -1,3 +1,4 @@
+import type { Rental } from './RentalsClient';
 import RentalsClient from './RentalsClient';
 import { createClient } from '@/lib/supabase/server';
 
@@ -9,8 +10,7 @@ export default async function RentalsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let initialRentals: any[] = []
+  let initialRentals: Rental[] = []
   let totalCount = 0
 
   if (user) {

@@ -75,7 +75,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Danger Zone */}
-      <div className="glass-panel p-6 max-w-[560px] border-danger/30">
+      <div className="glass-panel p-6 max-w-[560px]" style={{ borderColor: 'rgba(var(--danger-r), var(--danger-g), var(--danger-b), 0.2)' }}>
         <h2 className="font-bold mb-2 text-lg text-danger">
           Delete Account
         </h2>
@@ -87,7 +87,8 @@ export default function SettingsPage() {
 
         {!confirming ? (
           <button
-            className="btn bg-danger text-white hover:bg-danger/80"
+            className="btn"
+            style={{ background: 'var(--danger)', color: 'white' }}
             onClick={() => setConfirming(true)}
           >
             Delete Account
@@ -109,7 +110,8 @@ export default function SettingsPage() {
             )}
             <div className="flex gap-3">
               <button
-                className="btn bg-danger text-white hover:bg-danger/80"
+                className="btn"
+                style={{ background: 'var(--danger)', color: 'white' }}
                 disabled={confirmText !== 'DELETE' || deleting}
                 onClick={handleDelete}
               >
