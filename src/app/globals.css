@@ -113,6 +113,18 @@ ul {
 }
 
 /* Utilities */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 .container {
   width: 100%;
   max-width: 1200px;
@@ -176,6 +188,59 @@ ul {
 .btn-ghost:hover {
   color: var(--text) !important;
   background: var(--bg-muted);
+}
+
+/* ── Focus-visible (accessibility) ── */
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-ghost:focus-visible,
+.nav-link:focus-visible,
+.app-tab:focus-visible,
+.hamburger:focus-visible,
+.catalog-sidebar-item:focus-visible,
+.catalog-app-card:focus-visible,
+.rentals-filter-pill:focus-visible,
+.premium-dropdown-trigger:focus-visible,
+.premium-dropdown-item:focus-visible,
+.catalog-right-cta:focus-visible,
+.wallet-topup-preset:focus-visible,
+.wallet-topup-option:focus-visible,
+.admin-refresh-btn:focus-visible,
+.admin-sidebar-item:focus-visible,
+.settings-sidebar-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+/* Remove default outline for mouse users while keeping it for keyboard */
+.btn:focus:not(:focus-visible),
+.btn-primary:focus:not(:focus-visible),
+.btn-secondary:focus:not(:focus-visible),
+.btn-ghost:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Responsive hero */
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 2.25rem;
+  }
+  .hero-desc {
+    font-size: 1rem;
+  }
+  .hero-actions {
+    flex-direction: column;
+  }
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-wrapper {
+    padding: 6rem 0 3rem 0;
+  }
+  .trust-features {
+    justify-content: center;
+  }
 }
 
 .nav-user-email {

@@ -185,12 +185,14 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
         {/* Left Sidebar */}
         <aside className="catalog-sidebar">
           <div className="p-4">
+            <label htmlFor="catalog-search-input" className="sr-only">Search services</label>
             <div className="catalog-search-input-wrap">
               <div className="catalog-search-icon">
-                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               </div>
               <input
                 type="text"
+                id="catalog-search-input"
                 placeholder="Search services..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -332,6 +334,9 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                       className="premium-dropdown-trigger"
                       id="dashboard-country-select-btn"
+                      aria-haspopup="listbox"
+                      aria-expanded={isDropdownOpen}
+                      aria-label={activeCountry ? `Selected country: ${activeCountry.name}` : 'Choose a country'}
                     >
                       <span className="premium-dropdown-trigger-content">
                         {activeCountry ? (
@@ -358,6 +363,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                         strokeLinecap="round" 
                         strokeLinejoin="round" 
                         className={`transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
+                        aria-hidden="true"
                       >
                         <polyline points="6 9 12 15 18 9"></polyline>
                       </svg>
@@ -370,7 +376,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                           className="premium-dropdown-overlay" 
                           onClick={() => setIsDropdownOpen(false)} 
                         />
-                        <div className="premium-dropdown-menu">
+                        <div className="premium-dropdown-menu" role="listbox" aria-label="Select a country">
                           {/* Search bar inside dropdown */}
                           <div className="premium-dropdown-search-wrap">
                             <div className="premium-dropdown-search-icon">
@@ -383,6 +389,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                               onChange={e => setCountrySearch(e.target.value)}
                               className="premium-dropdown-search-input"
                               autoFocus
+                              aria-label="Search countries"
                             />
                           </div>
                           {/* Country List items */}
@@ -391,6 +398,8 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                               <button
                                 key={c.code}
                                 type="button"
+                                role="option"
+                                aria-selected={selectedCountry === c.code}
                                 onClick={() => {
                                   setSelectedCountry(c.code)
                                   setIsDropdownOpen(false)

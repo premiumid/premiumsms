@@ -22,6 +22,12 @@
   z-index: 40;
 }
 
+@media (max-width: 480px) {
+  .app-navbar {
+    padding: 0 0.75rem;
+  }
+}
+
 .app-brand {
   font-family: var(--font-display);
   font-size: 1.25rem;
@@ -87,6 +93,12 @@
   gap: 1rem;
 }
 
+@media (max-width: 480px) {
+  .app-user {
+    gap: 0.5rem;
+  }
+}
+
 .app-balance {
   font-weight: 700;
   color: var(--text) !important;
@@ -119,9 +131,9 @@
   height: 100%;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .catalog-grid-layout {
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 1fr;
   }
 }
 
@@ -142,12 +154,29 @@
 @media (min-width: 768px) {
   .catalog-sidebar {
     display: flex;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    max-height: 160px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .catalog-sidebar {
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+    max-height: none;
   }
 }
 
 .catalog-sidebar-search {
   padding: 1.25rem 1rem;
   border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .catalog-sidebar-search {
+    display: none;
+  }
 }
 
 .catalog-sidebar-search input {
@@ -173,6 +202,17 @@
   padding: 0.75rem;
 }
 
+@media (min-width: 768px) and (max-width: 1023px) {
+  .catalog-sidebar-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    overflow-y: hidden;
+    overflow-x: auto;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
 .catalog-sidebar-item {
   display: flex;
   align-items: center;
@@ -189,6 +229,14 @@
   border: 1px solid transparent;
   background: transparent;
   width: 100%;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .catalog-sidebar-item {
+    width: auto;
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
 }
 
 .catalog-sidebar-item:hover {
@@ -217,8 +265,20 @@
   flex-direction: column;
 }
 
+@media (max-width: 640px) {
+  .catalog-main {
+    padding: 1.25rem;
+  }
+}
+
 .catalog-header {
   margin-bottom: 3rem;
+}
+
+@media (max-width: 640px) {
+  .catalog-header {
+    margin-bottom: 1.5rem;
+  }
 }
 
 .catalog-header h1 {
@@ -227,6 +287,12 @@
   letter-spacing: -0.025em;
   margin-bottom: 0.5rem;
   color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .catalog-header h1 {
+    font-size: 1.5rem;
+  }
 }
 
 .catalog-header p {
@@ -418,16 +484,23 @@
 
 /* ─────────── Right Sidebar ─────────── */
 .catalog-right {
-  background: var(--bg-muted);
+  background: var(--bg-card);
   border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
   padding: 2rem;
   overflow-y: auto;
   display: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .catalog-right {
     display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .catalog-right {
+    border-top: none;
   }
 }
 

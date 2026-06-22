@@ -77,6 +77,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           gap: 0.5rem;
           pointer-events: none;
         }
+        @media (max-width: 480px) {
+          .toast-container {
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            align-items: stretch;
+          }
+        }
         .toast {
           pointer-events: auto;
           display: flex;
@@ -90,6 +98,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           box-shadow: var(--shadow-lg);
           animation: toast-slide-in 0.25s ease-out;
           max-width: 24rem;
+        }
+        @media (max-width: 480px) {
+          .toast {
+            max-width: 100%;
+            width: 100%;
+          }
         }
         .toast-success { background: var(--success); }
         .toast-error { background: var(--danger); }

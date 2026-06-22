@@ -244,10 +244,12 @@ export default function RentalsClient({
 
       {/* Filters */}
       <div className="rentals-filter-bar">
-        <div className="rentals-filter-pills">
+        <div className="rentals-filter-pills" role="tablist" aria-label="Filter rentals by status">
           {['all', 'active', 'received', 'expired', 'canceled'].map((st) => (
             <button
               key={st}
+              role="tab"
+              aria-selected={statusFilter === st}
               onClick={() => { setStatusFilter(st); setPage(1) }}
               className={`rentals-filter-pill${statusFilter === st ? ' active' : ''}`}
             >
@@ -256,9 +258,11 @@ export default function RentalsClient({
           ))}
         </div>
         <div className="rentals-search-wrap">
+          <label htmlFor="rentals-search-input" className="sr-only">Search rentals by phone number</label>
           <svg className="rentals-search-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input
             type="search"
+            id="rentals-search-input"
             placeholder="Search by phone number…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
