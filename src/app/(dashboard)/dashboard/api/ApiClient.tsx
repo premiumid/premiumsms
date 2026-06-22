@@ -35,7 +35,6 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  // API docs code tab state
   const [activeTab, setActiveTab] = useState<TabType>('curl')
 
   const handleCreateKey = async (e: React.FormEvent) => {
@@ -122,7 +121,6 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
     }
   }
 
-  // Code snippets for each tab
   const getCodeSnippet = (endpoint: string) => {
     if (activeTab === 'curl') {
       switch (endpoint) {
@@ -166,83 +164,70 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
 
   return (
     <div className="api-keys-container">
-      <div className="wallet-grid mb-8">
+      <div className="api-cards">
         {/* Keys management */}
-        <div className="glass-panel card-glow p-6">
-          <h2 className="section-title mt-0">API Key Management</h2>
-          <p className="topup-desc mb-6">Create credentials to interface with the PremiumID API programmatically.</p>
+        <div className="api-card">
+          <div className="api-card-header">
+            <div className="api-card-icon">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            </div>
+            <h2 className="api-card-title">API Keys</h2>
+          </div>
+          <p className="api-card-desc">Create credentials to interface with the PremiumID API programmatically.</p>
 
-          <form onSubmit={handleCreateKey} className="create-key-form mb-6">
-            <div className="topup-custom">
-              <label htmlFor="key-name-input" className="input-label">Key Name</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  id="key-name-input"
-                  className="input-field"
-                  placeholder="e.g. Production Automation"
-                  value={newKeyName}
-                  onChange={e => setNewKeyName(e.target.value)}
-                />
-                <button type="submit" className="btn btn-primary" disabled={isGenerating}>
-                  {isGenerating ? 'Generating...' : (
-                    <>
-                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="align-middle mr-1.5"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-                      Create Key
-                    </>
-                  )}
-                </button>
-              </div>
+          <form onSubmit={handleCreateKey} className="mb-6">
+            <label htmlFor="key-name-input" className="input-label">Key Name</label>
+            <div className="input-group">
+              <input
+                type="text"
+                id="key-name-input"
+                className="input-field"
+                placeholder="e.g. Production Automation"
+                value={newKeyName}
+                onChange={e => setNewKeyName(e.target.value)}
+              />
+              <button type="submit" className="btn btn-primary" disabled={isGenerating}>
+                {isGenerating ? 'Generating...' : 'Create Key'}
+              </button>
             </div>
           </form>
 
-          {error && <div className="alert-error mb-4">
-            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="align-middle mr-1"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-            {error}
-          </div>}
+          {error && (
+            <div className="api-error">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              {error}
+            </div>
+          )}
 
           {generatedKey && (
             <div className="generated-key-banner mb-6">
-              <p className="banner-title text-success font-semibold">
-                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="align-middle mr-1"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <p className="banner-title" style={{ color: 'var(--success)', fontWeight: 700 }}>
+                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 Copy your API Key now!
               </p>
               <p className="banner-desc">For security reasons, this key will not be shown again. Save it somewhere safe.</p>
-              <div className="key-display-box mt-3">
-                <code className="key-display-code font-mono text-sm">{generatedKey}</code>
-                <button
-                  onClick={() => copyToClipboard(generatedKey, 'key')}
-                  className="btn btn-secondary btn-small"
-                >
-                  {copiedKey ? (
-                    <>
-                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="align-middle mr-1"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="align-middle mr-1"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                      Copy
-                    </>
-                  )}
+              <div className="key-display-box">
+                <code className="key-display-code">{generatedKey}</code>
+                <button onClick={() => copyToClipboard(generatedKey, 'key')} className="btn btn-secondary btn-small">
+                  {copiedKey ? 'Copied!' : 'Copy'}
                 </button>
               </div>
             </div>
           )}
 
-          <div className="keys-list mt-6">
+          <div>
             <h3 className="input-label">Your Active API Keys</h3>
             {keys.length === 0 ? (
-              <p className="no-results text-center py-4">No active API keys yet.</p>
+              <p className="no-results" style={{ textAlign: 'center', padding: '1rem 0' }}>No active API keys yet.</p>
             ) : (
               <div className="keys-list-items">
                 {keys.map(k => (
                   <div key={k.id} className="key-item-row">
                     <div className="key-item-info">
-                      <p className="key-item-name font-semibold">{k.name}</p>
-                      <code className="key-item-prefix font-mono text-xs">{k.prefix}</code>
+                      <p className="key-item-name">{k.name}</p>
+                      <code className="key-item-prefix">{k.prefix}...</code>
                     </div>
-                    <div className="key-item-meta text-xs">
+                    <div className="key-item-meta">
                       <span>Created: <FormattedDate date={k.created_at} type="date" /></span>
                       {k.last_used_at ? (
                         <span>Last used: <FormattedDate date={k.last_used_at} type="date" /></span>
@@ -250,10 +235,7 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
                         <span>Never used</span>
                       )}
                     </div>
-                    <button
-                      onClick={() => handleRevokeKey(k.id)}
-                      className="btn btn-secondary btn-small text-danger"
-                    >
+                    <button onClick={() => handleRevokeKey(k.id)} className="btn btn-secondary btn-small" style={{ color: 'var(--danger)' }}>
                       Revoke
                     </button>
                   </div>
@@ -262,10 +244,10 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
             )}
           </div>
 
-          <div className="webhook-section mt-8 pt-8 border-t border-[var(--border)]">
-            <h3 className="section-title mt-0 text-lg">Webhook Configuration</h3>
-            <p className="text-sm text-secondary mb-4">Receive HTTP POST requests whenever a new SMS arrives for your active rentals.</p>
-            <form onSubmit={handleSaveWebhook} className="webhook-form">
+          <div className="api-webhook-section">
+            <h3 className="api-webhook-title">Webhook Configuration</h3>
+            <p className="api-webhook-desc">Receive HTTP POST requests whenever a new SMS arrives for your active rentals.</p>
+            <form onSubmit={handleSaveWebhook}>
               <label htmlFor="webhook-url-input" className="input-label">Endpoint URL</label>
               <div className="input-group">
                 <input
@@ -277,7 +259,7 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
                   onChange={e => setWebhookUrl(e.target.value)}
                 />
                 <button type="submit" className="btn btn-secondary" disabled={isSavingWebhook}>
-                  {isSavingWebhook ? 'Saving...' : webhookSaved ? 'Saved!' : 'Save URL'}
+                  {isSavingWebhook ? 'Saving...' : webhookSaved ? 'Saved!' : 'Save'}
                 </button>
               </div>
             </form>
@@ -285,22 +267,27 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
         </div>
 
         {/* Quick Docs overview */}
-        <div className="glass-panel p-6">
-          <h2 className="section-title mt-0">Developer Integration</h2>
-          <p className="topup-desc mb-4">Integrate real SMS verifications directly into your codebase or tools.</p>
-          <div className="api-overview-bullets text-sm">
-            <div className="bullet-item">
+        <div className="api-card">
+          <div className="api-card-header">
+            <div className="api-card-icon">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h2 className="api-card-title">Developer Integration</h2>
+          </div>
+          <p className="api-card-desc">Integrate real SMS verifications directly into your codebase or tools.</p>
+          <div className="api-overview-bullets">
+            <div className="bullet-item" style={{ marginTop: 0 }}>
               <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="bullet-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <div>
                 <strong>Authentication</strong>
-                <p className="text-secondary">Attach your API Key to the request header as <code>X-API-Key: your_key_here</code>.</p>
+                <p className="text-secondary" style={{ fontSize: '0.875rem' }}>Attach your API Key to the request header as <code>X-API-Key: your_key_here</code>.</p>
               </div>
             </div>
-            <div className="bullet-item mt-4">
+            <div className="bullet-item">
               <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="bullet-icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
               <div>
                 <strong>Rate Limits & Pricing</strong>
-                <p className="text-secondary">Requests are limited to 60 calls per minute. Standard fees apply per rental order.</p>
+                <p className="text-secondary" style={{ fontSize: '0.875rem' }}>Requests are limited to 60 calls per minute. Standard fees apply per rental order.</p>
               </div>
             </div>
           </div>
@@ -308,33 +295,18 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
       </div>
 
       {/* Full API Documentation */}
-      <div className="section-header">
-        <h2 className="section-title">API Documentation</h2>
+      <div className="api-docs-section">
+        <h2 className="api-docs-title">API Documentation</h2>
       </div>
 
-      <div className="glass-panel p-6 mb-8">
-        <div className="docs-tabs mb-6">
-          <button
-            onClick={() => setActiveTab('curl')}
-            className={`tab-btn ${activeTab === 'curl' ? 'active' : ''}`}
-          >
-            cURL
-          </button>
-          <button
-            onClick={() => setActiveTab('javascript')}
-            className={`tab-btn ${activeTab === 'javascript' ? 'active' : ''}`}
-          >
-            JavaScript
-          </button>
-          <button
-            onClick={() => setActiveTab('python')}
-            className={`tab-btn ${activeTab === 'python' ? 'active' : ''}`}
-          >
-            Python
-          </button>
+      <div className="api-card" style={{ marginBottom: '2rem' }}>
+        <div className="docs-tabs">
+          <button onClick={() => setActiveTab('curl')} className={`tab-btn ${activeTab === 'curl' ? 'active' : ''}`}>cURL</button>
+          <button onClick={() => setActiveTab('javascript')} className={`tab-btn ${activeTab === 'javascript' ? 'active' : ''}`}>JavaScript</button>
+          <button onClick={() => setActiveTab('python')} className={`tab-btn ${activeTab === 'python' ? 'active' : ''}`}>Python</button>
         </div>
 
-        <div className="docs-sections">
+        <div className="docs-sections" style={{ marginTop: '1.5rem' }}>
           {/* Endpoint 1 */}
           <div className="docs-endpoint-section">
             <div className="endpoint-header">
@@ -344,11 +316,9 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
             </div>
             <div className="endpoint-grid">
               <div className="endpoint-details">
-                <p className="text-sm text-secondary mb-4">
-                  Retrieve a list of all supported services and their internal slugs to use during rentals.
-                </p>
+                <p>Retrieve a list of all supported services and their internal slugs to use during rentals.</p>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-secondary mb-2">Response Example</h4>
-                <pre className="response-pre text-xs font-mono p-3 rounded">
+                <pre className="response-pre">
 {`{
   "services": [
     { "slug": "whatsapp", "name": "WhatsApp" },
@@ -360,16 +330,11 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
               <div className="endpoint-code">
                 <div className="code-box-header">
                   <span className="code-box-lang">{activeTab}</span>
-                  <button
-                    onClick={() => copyToClipboard(getCodeSnippet('services')!, 'code')}
-                    className="copy-code-btn"
-                  >
-                    {copiedCode === getCodeSnippet('services') ? 'Copied!' : 'Copy Code'}
+                  <button onClick={() => copyToClipboard(getCodeSnippet('services')!, 'code')} className="copy-code-btn">
+                    {copiedCode === getCodeSnippet('services') ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
-                <pre className="code-box-pre text-xs font-mono p-3">
-                  {getCodeSnippet('services')}
-                </pre>
+                <pre className="code-box-pre">{getCodeSnippet('services')}</pre>
               </div>
             </div>
           </div>
@@ -383,11 +348,9 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
             </div>
             <div className="endpoint-grid">
               <div className="endpoint-details">
-                <p className="text-sm text-secondary mb-4">
-                  Purchase a rental phone number for a specific service and country. Deducts fees directly from your wallet balance.
-                </p>
+                <p>Purchase a rental phone number for a specific service and country. Deducts fees directly from your wallet balance.</p>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-secondary mb-2">Parameters</h4>
-                <table className="params-table text-xs w-full mb-4">
+                <table className="params-table">
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -412,34 +375,27 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
               <div className="endpoint-code">
                 <div className="code-box-header">
                   <span className="code-box-lang">{activeTab}</span>
-                  <button
-                    onClick={() => copyToClipboard(getCodeSnippet('rent')!, 'code')}
-                    className="copy-code-btn"
-                  >
-                    {copiedCode === getCodeSnippet('rent') ? 'Copied!' : 'Copy Code'}
+                  <button onClick={() => copyToClipboard(getCodeSnippet('rent')!, 'code')} className="copy-code-btn">
+                    {copiedCode === getCodeSnippet('rent') ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
-                <pre className="code-box-pre text-xs font-mono p-3">
-                  {getCodeSnippet('rent')}
-                </pre>
+                <pre className="code-box-pre">{getCodeSnippet('rent')}</pre>
               </div>
             </div>
           </div>
 
           {/* Endpoint 3 */}
-          <div className="docs-endpoint-section">
-            <div className="endpoint-header mb-4">
+          <div className="docs-endpoint-section" style={{ marginBottom: 0, paddingBottom: 0, borderBottom: 'none' }}>
+            <div className="endpoint-header">
               <span className="method-badge get">GET</span>
               <code className="endpoint-path">/api/rentals/:id</code>
               <span className="endpoint-desc">Get rental details + received messages</span>
             </div>
             <div className="endpoint-grid">
               <div className="endpoint-details">
-                <p className="text-sm text-secondary mb-4">
-                  Poll this endpoint to retrieve rental details and incoming SMS messages for a specific active rental.
-                </p>
+                <p>Poll this endpoint to retrieve rental details and incoming SMS messages for a specific active rental.</p>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-secondary mb-2">Response Example</h4>
-                <pre className="response-pre text-xs font-mono p-3 rounded">
+                <pre className="response-pre">
 {`{
   "messages": [
     {
@@ -456,16 +412,11 @@ export default function ApiClient({ initialKeys, initialWebhookUrl }: ApiClientP
               <div className="endpoint-code">
                 <div className="code-box-header">
                   <span className="code-box-lang">{activeTab}</span>
-                  <button
-                    onClick={() => copyToClipboard(getCodeSnippet('messages')!, 'code')}
-                    className="copy-code-btn"
-                  >
-                    {copiedCode === getCodeSnippet('messages') ? 'Copied!' : 'Copy Code'}
+                  <button onClick={() => copyToClipboard(getCodeSnippet('messages')!, 'code')} className="copy-code-btn">
+                    {copiedCode === getCodeSnippet('messages') ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
-                <pre className="code-box-pre text-xs font-mono p-3">
-                  {getCodeSnippet('messages')}
-                </pre>
+                <pre className="code-box-pre">{getCodeSnippet('messages')}</pre>
               </div>
             </div>
           </div>

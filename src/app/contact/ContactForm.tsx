@@ -25,12 +25,10 @@ export default function ContactForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
-
       if (!res.ok) {
         const err = await res.json()
         throw new Error(err.error || 'Failed to send message')
       }
-
       success('Message sent! We will respond within 24 hours.')
       form.reset()
     } catch (err) {
@@ -41,18 +39,18 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      <div>
-        <label htmlFor="contact-name" style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.375rem' }}>Name</label>
-        <input id="contact-name" name="name" type="text" placeholder="Your name" required style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', fontSize: '0.875rem', outline: 'none' }} />
+    <form onSubmit={handleSubmit} className="contact-form">
+      <div className="contact-field">
+        <label htmlFor="contact-name" className="contact-label">Name</label>
+        <input id="contact-name" name="name" type="text" placeholder="Your name" required className="input-field" />
       </div>
-      <div>
-        <label htmlFor="contact-email" style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.375rem' }}>Email</label>
-        <input id="contact-email" name="email" type="email" placeholder="you@example.com" required style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', fontSize: '0.875rem', outline: 'none' }} />
+      <div className="contact-field">
+        <label htmlFor="contact-email" className="contact-label">Email</label>
+        <input id="contact-email" name="email" type="email" placeholder="you@example.com" required className="input-field" />
       </div>
-      <div>
-        <label htmlFor="contact-subject" style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.375rem' }}>Subject</label>
-        <select id="contact-subject" name="subject" style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', fontSize: '0.875rem', outline: 'none', background: 'var(--bg-card)' }}>
+      <div className="contact-field">
+        <label htmlFor="contact-subject" className="contact-label">Subject</label>
+        <select id="contact-subject" name="subject" className="input-field">
           <option>General inquiry</option>
           <option>Billing / wallet issue</option>
           <option>Technical support</option>
@@ -61,12 +59,12 @@ export default function ContactForm() {
           <option>Report abuse</option>
         </select>
       </div>
-      <div>
-        <label htmlFor="contact-message" style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.375rem' }}>Message</label>
-        <textarea id="contact-message" name="body" rows={5} placeholder="Describe your issue or question..." required style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', fontSize: '0.875rem', outline: 'none', resize: 'vertical' }} />
+      <div className="contact-field">
+        <label htmlFor="contact-message" className="contact-label">Message</label>
+        <textarea id="contact-message" name="body" rows={5} placeholder="Describe your issue or question..." required className="input-field" style={{ resize: 'vertical' }} />
       </div>
-      <button type="submit" className="btn btn-primary" disabled={sending} style={{ width: '100%', padding: '0.875rem' }}>
-        {sending ? 'Sending…' : 'Send Message'}
+      <button type="submit" className="btn btn-primary contact-submit" disabled={sending}>
+        {sending ? 'Sending\u2026' : 'Send Message'}
       </button>
     </form>
   )

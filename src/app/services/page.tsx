@@ -39,7 +39,7 @@ export default function ServicesPage() {
       <MarketingNav />
 
       {/* Hero */}
-      <section className="hero-wrapper" style={{ paddingBottom: '6rem', textAlign: 'center' }}>
+      <section className="hero-wrapper services-page-hero">
         <div className="container">
           <div className="hero-badge" style={{ margin: '0 auto 1.5rem' }}>2,500+ Services</div>
           <h1 className="hero-title">Every verification.<br /><span className="text-gradient">Every platform.</span></h1>
@@ -50,15 +50,15 @@ export default function ServicesPage() {
       </section>
 
       {/* Popular Services */}
-      <section className="container" style={{ padding: '5rem 1.5rem 2rem', marginTop: '-3rem' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.25rem' }}>Most Popular</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+      <section className="container services-section">
+        <h2 className="services-section-title">Most Popular</h2>
+        <div className="services-grid-lg">
           {popular.map(s => (
-            <div key={s.name} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div key={s.name} className="services-card">
               <ServiceIcon slug={s.slug} name={s.name} />
-              <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{s.name}</h3>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', flexGrow: 1 }}>{s.desc}</p>
-              <Link href="/register" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%' }}>Get a Number</Link>
+              <h3 className="services-card-name">{s.name}</h3>
+              <p className="services-card-desc">{s.desc}</p>
+              <Link href="/register" className="btn btn-primary services-card-btn">Get a Number</Link>
             </div>
           ))}
         </div>
@@ -66,35 +66,33 @@ export default function ServicesPage() {
 
       {/* All Services */}
       <section className="container" style={{ padding: '2rem 1.5rem 6rem' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.25rem' }}>All Services</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+        <h2 className="services-section-title">All Services</h2>
+        <div className="services-grid-lg">
           {rest.map(s => (
-            <div key={s.name} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div key={s.name} className="services-card">
               <ServiceIcon slug={s.slug} name={s.name} />
-              <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{s.name}</h3>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', flexGrow: 1 }}>{s.desc}</p>
-              <Link href="/register" className="btn btn-secondary" style={{ marginTop: '0.5rem', width: '100%' }}>Get a Number</Link>
+              <h3 className="services-card-name">{s.name}</h3>
+              <p className="services-card-desc">{s.desc}</p>
+              <Link href="/register" className="btn btn-secondary services-card-btn">Get a Number</Link>
             </div>
           ))}
         </div>
       </section>
 
       {/* CTA */}
-      <section className="hero-wrapper" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem' }}>Don&apos;t see your service?</h2>
-        <p style={{ color: 'var(--text-faint)', marginBottom: '2rem' }}>We support 2,500+ services. Browse the full live catalog after signing up.</p>
+      <section className="services-cta" style={{ background: 'var(--bg-muted)' }}>
+        <h2 className="services-cta-title">Don&apos;t see your service?</h2>
+        <p className="services-cta-desc">We support 2,500+ services. Browse the full live catalog after signing up.</p>
         <Link href="/register" className="btn" style={{ background: 'var(--bg-card)', color: 'var(--accent)', padding: '0.875rem 2rem', fontSize: '1rem' }}>
           Browse Full Catalog
         </Link>
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '2rem 1.5rem', textAlign: 'center' }}>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-          &copy; {new Date().getFullYear()} PremiumID. All rights reserved. &nbsp;|&nbsp;{' '}
-          <Link href="/privacy" style={{ color: 'var(--text-muted)' }}>Privacy</Link> &nbsp;|&nbsp;{' '}
-          <Link href="/terms" style={{ color: 'var(--text-muted)' }}>Terms</Link>
-        </p>
+      <footer className="services-footer">
+        &copy; {new Date().getFullYear()} PremiumID. All rights reserved. &nbsp;|&nbsp;
+        <Link href="/privacy">Privacy</Link> &nbsp;|&nbsp;
+        <Link href="/terms">Terms</Link>
       </footer>
     </div>
   )
