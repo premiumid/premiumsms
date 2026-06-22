@@ -163,6 +163,38 @@ ul {
   background-color: var(--bg-muted);
 }
 
+.btn-ghost {
+  background: none;
+  color: var(--text-muted) !important;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  border: none;
+}
+
+.btn-ghost:hover {
+  color: var(--text) !important;
+  background: var(--bg-muted);
+}
+
+.nav-user-email {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+@media (max-width: 767px) {
+  .nav-user-email {
+    display: block;
+    max-width: 100%;
+  }
+}
+
 /* Navbar */
 .navbar {
   position: absolute;
