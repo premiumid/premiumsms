@@ -87,7 +87,7 @@ export default function PricingPage() {
                 borderRadius: 'var(--radius-xl)',
                 padding: '2rem',
                 ...(plan.highlight
-                  ? { background: 'linear-gradient(135deg, #3730a3, #312e81)', color: 'white', boxShadow: '0 20px 40px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.3)' }
+                  ? { background: 'var(--accent)', color: 'white', boxShadow: '0 20px 40px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.3)' }
                    : { background: 'var(--bg-card)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }
                 )
               }}
