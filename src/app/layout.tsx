@@ -8,9 +8,9 @@ import "./globals.css";
 import "./app-layout.css";
 import "./auth-layout.css";
 import "./dashboard-pages.css";
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", preload: false });
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", preload: false });
 
 export const metadata: Metadata = {
   title: "PremiumID - Real SIM SMS Verification",
