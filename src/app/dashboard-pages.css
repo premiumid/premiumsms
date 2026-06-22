@@ -2249,14 +2249,6 @@
   color: var(--text-faint);
   max-width: 320px;
 }
-  left: 0.875rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-faint);
-  display: flex;
-  pointer-events: none;
-}
-
 /* Status Badges Overrides */
 .status-badge {
   display: inline-flex;
@@ -3981,6 +3973,197 @@
 /* Keep old admin-container for compatibility */
 .admin-container {
   max-width: 1200px;
+}
+
+/* ─────────────── Settings Page ─────────────── */
+.settings-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 560px;
+}
+
+.settings-card {
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-card--danger {
+  border-color: rgba(var(--danger-r), var(--danger-g), var(--danger-b), 0.25);
+}
+
+.settings-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.settings-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--accent-subtle);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.settings-card-icon--danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.settings-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.settings-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0 0 1.25rem 0;
+}
+
+/* Profile info */
+.settings-profile-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.settings-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.settings-profile-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.settings-profile-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Skeleton */
+.settings-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.settings-skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+  background: var(--bg-muted);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Danger button */
+.settings-danger-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.625rem 1.125rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--danger);
+  color: white;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.settings-danger-btn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.settings-danger-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Confirm flow */
+.settings-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.settings-confirm-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.settings-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.875rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.settings-input:focus {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.settings-error {
+  font-size: 0.8125rem;
+  color: var(--danger);
+  margin: 0;
+}
+
+.settings-confirm-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.settings-cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.625rem 1.125rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.settings-cancel-btn:hover:not(:disabled) {
+  background: var(--bg-muted);
+  color: var(--text);
+}
+
+.settings-cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 

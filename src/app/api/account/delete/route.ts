@@ -2,13 +2,28 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { deleteUserAccount, getWalletBalance } from '@/lib/supabase/admin'
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Not authenticated.' }, { status: 401 })
+    }
+
+    // Re-authenticate with password
+    const { password } = await request.json()
+    if (!password) {
+      return NextResponse.json({ error: 'Password is required.' }, { status: 400 })
+    }
+
+    const { error: reAuthError } = await supabase.auth.signInWithPassword({
+      email: user.email!,
+      password,
+    })
+
+    if (reAuthError) {
+      return NextResponse.json({ error: 'Incorrect password.' }, { status: 403 })
     }
 
     const userId = user.id
