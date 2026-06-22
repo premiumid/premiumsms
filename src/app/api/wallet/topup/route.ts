@@ -42,6 +42,32 @@ export async function POST(request: Request) {
       }, { status: 400 })
     }
 
+    // Reuse existing waiting payment if available — same wallet address and amount
+    {
+      const admin = createAdminClient()
+      const { data: existing } = await admin
+        .from('crypto_payments')
+        .select('nowpayments_id, order_id, amount_usd, pay_amount, pay_currency, pay_address, status')
+        .eq('user_id', auth.user.id)
+        .eq('status', 'waiting')
+        .eq('amount_usd', amountUsd)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (existing) {
+        return Response.json({
+          success: true,
+          paymentId: existing.nowpayments_id,
+          payAddress: existing.pay_address,
+          payAmount: existing.pay_amount,
+          payCurrency: existing.pay_currency,
+          priceAmount: Number(existing.amount_usd),
+          minimumUsd,
+        })
+      }
+    }
+
     const nonce = crypto.randomUUID().slice(0, 8)
     const orderId = `${auth.user.id}_${amountUsd}_${Date.now()}_${nonce}`
 
