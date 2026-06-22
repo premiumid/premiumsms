@@ -3,7 +3,26 @@ import crypto from 'crypto'
 import { createAdminClient, creditWalletBalance } from '@/lib/supabase/admin'
 import { requireEnv } from '@/lib/validate'
 
+function sortObjectKeys(obj: unknown): unknown {
+  if (obj === null || typeof obj !== 'object') return obj
+  if (Array.isArray(obj)) return obj.map(sortObjectKeys)
+  const sorted: Record<string, unknown> = {}
+  for (const key of Object.keys(obj).sort()) {
+    sorted[key] = sortObjectKeys((obj as Record<string, unknown>)[key])
+  }
+  return sorted
+}
 
+function hmacEqual(a: string, b: string): boolean {
+  try {
+    const bufA = Buffer.from(a, 'hex')
+    const bufB = Buffer.from(b, 'hex')
+    if (bufA.length !== bufB.length) return false
+    return crypto.timingSafeEqual(bufA, bufB)
+  } catch {
+    return false
+  }
+}
 
 const VALID_STATUSES = new Set(['waiting', 'confirming', 'confirmed', 'sending', 'partially_paid', 'finished', 'failed', 'refunded', 'expired'])
 
@@ -23,26 +42,32 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // NOWPayments signs the JSON body with keys sorted alphabetically
-    const parsed = JSON.parse(rawBody)
-    const sorted = Object.keys(parsed)
-      .sort()
-      .reduce((acc: Record<string, unknown>, key) => {
-        acc[key] = parsed[key]
-        return acc
-      }, {})
+    // Parse the body inside try/catch so malformed JSON returns 401, not 500
+    let parsed: Record<string, unknown>
+    try {
+      parsed = JSON.parse(rawBody)
+    } catch {
+      console.error('[Webhook] Malformed JSON body')
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // NOWPayments signs the JSON body with keys sorted alphabetically (deep)
+    const sorted = sortObjectKeys(parsed) as Record<string, unknown>
 
     const hmac = crypto.createHmac('sha512', IPN_SECRET)
     hmac.update(JSON.stringify(sorted))
     const calculatedSig = hmac.digest('hex')
 
-    if (calculatedSig !== signature) {
+    if (!hmacEqual(calculatedSig, signature)) {
       console.error('[Webhook] HMAC signature mismatch')
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
     }
 
-    const { payment_id, payment_status, actually_paid, pay_amount } = parsed
-    paymentIdStr = String(payment_id)
+    const payment_id = String(parsed.payment_id ?? '')
+    const payment_status = String(parsed.payment_status ?? '')
+    const actually_paid = Number(parsed.actually_paid ?? 0)
+    const pay_amount = Number(parsed.pay_amount ?? 0)
+    paymentIdStr = payment_id
 
     const safeStatus = VALID_STATUSES.has(payment_status) ? payment_status : 'waiting'
 
@@ -93,7 +118,6 @@ export async function POST(request: Request) {
       .maybeSingle()
 
     if (existingTx) {
-      // Already credited — just update the payment status
       await admin.from('crypto_payments').update({ status: safeStatus, processed: true }).eq('id', record.id)
       return NextResponse.json({ received: true })
     }
@@ -115,7 +139,6 @@ export async function POST(request: Request) {
       .eq('processed', false)
 
     if (markError) {
-      // Credit succeeded but marking failed — on retry, existingTx will be found
       console.error('[Webhook] Failed to mark as processed (credit was issued):', markError)
     }
 
@@ -124,7 +147,6 @@ export async function POST(request: Request) {
 
   } catch (err: unknown) {
     console.error(`[Webhook] Error for payment ${paymentIdStr}:`, err)
-    // Always return 200 so NOWPayments does not retry endlessly
     return NextResponse.json({ received: true })
   }
 }
