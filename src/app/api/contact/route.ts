@@ -20,12 +20,17 @@ export async function POST(request: Request) {
 
     const { createClient } = await import('@/lib/supabase/server')
     const supabase = await createClient()
-    const { data: recent } = await supabase
+    const { data: recent, error: recentError } = await supabase
       .from('rate_limit_buckets')
       .select('request_count')
       .eq('key', rateLimitKey)
       .gte('window_start', new Date(now - windowMs).toISOString())
       .single()
+
+    // PGRST116 = no rows found (expected); any other error is a real DB failure
+    if (recentError && recentError.code !== 'PGRST116') {
+      console.error('[Contact] Rate limit check error:', recentError)
+    }
 
     const count = recent?.request_count ?? 0
     if (count >= 3) {

@@ -84,21 +84,40 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true })
     }
 
-    // Atomically mark as processed BEFORE crediting — prevents double-credit on retries
-    const { error: updateError } = await admin
-      .from('crypto_payments')
-      .update({ status: safeStatus, processed: true })
-      .eq('id', record.id)
-      .eq('processed', false) // Only succeeds if not already processed
+    // Check if already credited (idempotency guard)
+    const refDescription = `Ref: ${paymentIdStr}`
+    const { data: existingTx } = await admin
+      .from('wallet_transactions')
+      .select('id')
+      .ilike('description', `%${refDescription}%`)
+      .maybeSingle()
 
-    if (updateError) {
-      console.error('[Webhook] Failed to mark as processed:', updateError)
+    if (existingTx) {
+      // Already credited — just update the payment status
+      await admin.from('crypto_payments').update({ status: safeStatus, processed: true }).eq('id', record.id)
       return NextResponse.json({ received: true })
     }
 
-    // Credit the user's wallet
-    const description = `Crypto top-up via USDT (TRC-20) — Ref: ${paymentIdStr}`
-    await creditWalletBalance(record.user_id, record.amount_usd, description, 'topup')
+    // Credit the wallet FIRST, then mark as processed.
+    // If credit fails, DO NOT mark as processed — webhook retries will recover.
+    try {
+      await creditWalletBalance(record.user_id, record.amount_usd, `Crypto top-up via USDT (TRC-20) — ${refDescription}`, 'topup')
+    } catch (creditErr) {
+      console.error('[Webhook] Credit failed — payment NOT marked processed, will retry:', creditErr)
+      return NextResponse.json({ received: true })
+    }
+
+    // Only mark processed after successful credit
+    const { error: markError } = await admin
+      .from('crypto_payments')
+      .update({ status: safeStatus, processed: true })
+      .eq('id', record.id)
+      .eq('processed', false)
+
+    if (markError) {
+      // Credit succeeded but marking failed — on retry, existingTx will be found
+      console.error('[Webhook] Failed to mark as processed (credit was issued):', markError)
+    }
 
     console.log(`[Webhook] ✅ Credited $${record.amount_usd} to user ${record.user_id}`)
     return NextResponse.json({ received: true })

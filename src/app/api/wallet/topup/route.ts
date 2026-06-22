@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { authenticateRequest } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireEnv, errorResponse, handleApiError } from '@/lib/validate'
@@ -41,7 +42,8 @@ export async function POST(request: Request) {
       }, { status: 400 })
     }
 
-    const orderId = `${auth.user.id}_${amountUsd}_${Date.now()}`
+    const nonce = crypto.randomUUID().slice(0, 8)
+    const orderId = `${auth.user.id}_${amountUsd}_${Date.now()}_${nonce}`
 
     const npRes = await fetch('https://api.nowpayments.io/v1/payment', {
       method: 'POST',
@@ -87,6 +89,7 @@ export async function POST(request: Request) {
 
     if (dbError) {
       console.error('[NOWPayments] DB insert error:', dbError)
+      return errorResponse(500, 'Failed to create payment. Please try again.')
     }
 
     return Response.json({

@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { authenticateRequest } from '@/lib/auth'
 import { createOrder, getPrice, cancelOrder } from '@/lib/providers/virtualsms'
-import { provisionUser, deductWalletBalance } from '@/lib/supabase/admin'
+import { provisionUser, deductWalletBalance, refundWalletBalance } from '@/lib/supabase/admin'
 import { isValidServiceSlug, isValidCountryCode, errorResponse, handleApiError } from '@/lib/validate'
 
 export async function GET(request: Request) {
@@ -125,7 +125,12 @@ export async function POST(request: Request) {
       .select()
       .single()
 
-    if (rentalError) throw rentalError
+    if (rentalError) {
+      // Rollback: cancel provider order and refund wallet
+      try { await cancelOrder(order.id) } catch { /* best-effort */ }
+      try { await refundWalletBalance(auth.user.id, price, `Refund for failed ${service} rental`) } catch { /* best-effort */ }
+      throw rentalError
+    }
 
     return Response.json({ rental }, { status: 201 })
   } catch (err) {

@@ -133,10 +133,14 @@ export async function POST(request: Request, { params }: Params) {
 
     await refundWalletBalance(auth.user.id, refundAmount, `Refund for cancelled ${service_slug} rental`)
 
-    await admin
+    const { error: statusError } = await admin
       .from('rentals')
       .update({ status: 'cancelled', updated_at: new Date().toISOString() })
       .eq('id', id)
+
+    if (statusError) {
+      console.error('[Cancel] Failed to update rental status:', statusError)
+    }
 
     return Response.json({ success: true })
   } catch (err) {

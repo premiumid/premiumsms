@@ -45,10 +45,14 @@ export async function GET(request: Request) {
 
     const data = await npRes.json()
 
-    await admin
+    const { error: updateError } = await admin
       .from('crypto_payments')
       .update({ status: data.payment_status })
       .eq('nowpayments_id', paymentId)
+
+    if (updateError) {
+      console.error('[Status] DB update error:', updateError)
+    }
 
     return Response.json({
       status: data.payment_status,
