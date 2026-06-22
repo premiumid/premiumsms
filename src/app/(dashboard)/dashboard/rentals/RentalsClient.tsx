@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, startTransition } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import ServiceIcon from '@/components/ServiceIcon'
 import { createClient } from '@/lib/supabase/client'
 import FormattedDate from '@/components/FormattedDate'
@@ -17,21 +18,26 @@ export interface Rental {
   created_at: string
 }
 
-function CountryFlag({ code, name }: { code: string; name: string }) {
+function CountryFlag({ code }: { code: string }) {
   return (
-    /* eslint-disable-next-line @next/next/no-img-element */
-    <img
+    <Image
       src={`https://flagcdn.com/20x15/${code.toLowerCase()}.png`}
-      alt={name}
+      alt={code.toUpperCase()}
       width={20}
       height={15}
-      className="rounded-[2px] shrink-0"
-      onError={(e) => {
-        const el = e.currentTarget as HTMLImageElement
-        el.style.display = 'none'
-      }}
+      className="rentals-flag"
+      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
     />
   )
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  pending: 'Pending',
+  active: 'Active',
+  received: 'Received',
+  expired: 'Expired',
+  canceled: 'Canceled',
+  refunded: 'Refunded',
 }
 
 function displayService(slug: string): string {
@@ -47,59 +53,108 @@ function displayService(slug: string): string {
   return names[slug.toLowerCase()] || slug.charAt(0).toUpperCase() + slug.slice(1)
 }
 
-function RentalRow({ rental }: { rental: Rental }) {
+function RentalCountdown({ expiresAt }: { expiresAt: string }) {
   const [timeLeft, setTimeLeft] = useState(0)
 
   useEffect(() => {
-    if (rental.status !== 'active') return
-    const expiresAt = new Date(rental.expires_at).getTime()
-    const updateTimer = () => {
-      setTimeLeft(Math.max(0, Math.floor((expiresAt - Date.now()) / 1000)))
-    }
+    const expiresAtMs = new Date(expiresAt).getTime()
+    const updateTimer = () => setTimeLeft(Math.max(0, Math.floor((expiresAtMs - Date.now()) / 1000)))
     updateTimer()
     const interval = setInterval(updateTimer, 1000)
     return () => clearInterval(interval)
-  }, [rental])
+  }, [expiresAt])
 
   const minutes = Math.floor(timeLeft / 60)
   const seconds = timeLeft % 60
+  const urgent = timeLeft < 60
 
   return (
-    <tr className="hover:bg-muted border-b border-border transition-colors">
-      <td className="py-4 px-6">
-        <div className="flex items-center gap-3">
+    <span className={`rentals-timer${urgent ? ' rentals-timer--urgent' : ''}`}>
+      <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      {minutes}:{String(seconds).padStart(2, '0')}
+    </span>
+  )
+}
+
+function RentalCard({ rental }: { rental: Rental }) {
+  return (
+    <div className="rentals-card">
+      <div className="rentals-card-top">
+        <div className="rentals-card-service">
           <ServiceIcon slug={rental.service_slug} name={displayService(rental.service_slug)} size={28} />
-          <span className="font-semibold">{displayService(rental.service_slug)}</span>
+          <div className="rentals-card-service-info">
+            <span className="rentals-card-service-name">{displayService(rental.service_slug)}</span>
+            <div className="rentals-card-country">
+              <CountryFlag code={rental.country_code} />
+              <span>{rental.country_code.toUpperCase()}</span>
+            </div>
+          </div>
         </div>
-      </td>
-      <td className="py-4 px-6 font-mono select-all" style={{ color: 'var(--text)' }}>{rental.phone_number || 'Processing…'}</td>
-      <td className="py-4 px-6">
-        <div className="flex items-center gap-2">
-          <CountryFlag code={rental.country_code} name={rental.country_code.toUpperCase()} />
-          <span className="text-secondary">{rental.country_code.toUpperCase()}</span>
+        <span className={`rentals-badge rentals-badge--${rental.status}`}>{STATUS_LABELS[rental.status] || rental.status}</span>
+      </div>
+
+      <div className="rentals-card-number">
+        <span className="rentals-card-number-label">Number</span>
+        <span className="rentals-card-number-value">{rental.phone_number || 'Processing…'}</span>
+      </div>
+
+      <div className="rentals-card-meta">
+        <div className="rentals-card-meta-item">
+          <span className="rentals-card-meta-label">Cost</span>
+          <span className="rentals-card-meta-value">${Number(rental.price).toFixed(2)}</span>
         </div>
-      </td>
-      <td className="py-4 px-6 font-semibold" style={{ color: 'var(--text)' }}>${Number(rental.price).toFixed(2)}</td>
-      <td className="py-4 px-6">
-        <span className={`status-badge status-${rental.status}`}>{rental.status}</span>
-      </td>
-      <td className="py-4 px-6">
-        {rental.status === 'active' ? (
-          <span className={`font-mono font-bold ${timeLeft < 60 ? 'text-danger animate-pulse' : 'text-accent'}`}>
-            {minutes}:{String(seconds).padStart(2, '0')}
-          </span>
-        ) : (
-          <span className="text-xs text-tertiary">
-            <FormattedDate date={rental.created_at} />
-          </span>
+        <div className="rentals-card-meta-item">
+          <span className="rentals-card-meta-label">Created</span>
+          <span className="rentals-card-meta-value"><FormattedDate date={rental.created_at} /></span>
+        </div>
+        {rental.status === 'active' && (
+          <div className="rentals-card-meta-item">
+            <span className="rentals-card-meta-label">Expires in</span>
+            <RentalCountdown expiresAt={rental.expires_at} />
+          </div>
         )}
-      </td>
-      <td className="py-4 px-6 text-right">
-        <Link href={`/dashboard/rentals/${rental.id}`} className="btn btn-secondary btn-small inline-block text-center no-underline text-xs">
-          View Inbox &rarr;
-        </Link>
-      </td>
-    </tr>
+        {(rental.status === 'received' || rental.status === 'expired' || rental.status === 'canceled' || rental.status === 'refunded') && (
+          <div className="rentals-card-meta-item">
+            <span className="rentals-card-meta-label">Status</span>
+            <span className={`rentals-badge rentals-badge--${rental.status}`}>{STATUS_LABELS[rental.status] || rental.status}</span>
+          </div>
+        )}
+      </div>
+
+      <Link href={`/dashboard/rentals/${rental.id}`} className="rentals-card-action">
+        {rental.status === 'active' || rental.status === 'pending' || rental.status === 'received' ? (
+          <>View Inbox <span aria-hidden="true">&rarr;</span></>
+        ) : (
+          <>View Details <span aria-hidden="true">&rarr;</span></>
+        )}
+      </Link>
+    </div>
+  )
+}
+
+function SkeletonCard() {
+  return (
+    <div className="rentals-skeleton">
+      <div className="rentals-skeleton-top">
+        <div className="rentals-skeleton-service">
+          <div className="rentals-skeleton-avatar" />
+          <div className="rentals-skeleton-lines">
+            <div className="rentals-skeleton-line rentals-skeleton-line--name" />
+            <div className="rentals-skeleton-line rentals-skeleton-line--country" />
+          </div>
+        </div>
+        <div className="rentals-skeleton-badge" />
+      </div>
+      <div className="rentals-skeleton-number">
+        <div className="rentals-skeleton-line rentals-skeleton-line--label" />
+        <div className="rentals-skeleton-line rentals-skeleton-line--phone" />
+      </div>
+      <div className="rentals-skeleton-meta">
+        <div className="rentals-skeleton-line rentals-skeleton-line--meta" />
+        <div className="rentals-skeleton-line rentals-skeleton-line--meta" />
+      </div>
+      <div className="rentals-skeleton-action" />
+    </div>
   )
 }
 
@@ -129,95 +184,79 @@ export default function RentalsClient({
       const url = new URL('/api/rentals', window.location.origin)
       url.searchParams.set('page', String(p))
       url.searchParams.set('limit', String(limit))
-      if (filter !== 'all') {
-        url.searchParams.set('status', filter)
-      }
-      if (q) {
-        url.searchParams.set('search', q)
-      }
+      if (filter !== 'all') url.searchParams.set('status', filter)
+      if (q) url.searchParams.set('search', q)
       const res = await fetch(url.toString())
       const data = await res.json()
       if (res.ok) {
-        setRentals(data.rentals || [])
-        setTotal(data.total || 0)
+        startTransition(() => {
+          setRentals(data.rentals || [])
+          setTotal(data.total || 0)
+        })
       }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
+    } catch { /* ignore */ } finally {
+      startTransition(() => setLoading(false))
     }
   }
 
-  // Handle pagination & filter changes
-  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (page === 1 && statusFilter === 'all' && search === '') return
-    fetchRentals(page, statusFilter, search)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, statusFilter])
+    startTransition(() => {
+      fetchRentals(page, statusFilter, search)
+    })
+  }, [page, statusFilter, search])
 
-  // Debounced search
   useEffect(() => {
     if (searchTimeout.current) clearTimeout(searchTimeout.current)
     searchTimeout.current = setTimeout(() => {
-      setPage(1)
-      fetchRentals(1, statusFilter, search)
+      startTransition(() => {
+        setPage(1)
+        fetchRentals(1, statusFilter, search)
+      })
     }, 400)
+    return () => { if (searchTimeout.current) clearTimeout(searchTimeout.current) }
+  }, [search, statusFilter])
 
-    return () => {
-      if (searchTimeout.current) clearTimeout(searchTimeout.current)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search])
-  /* eslint-enable react-hooks/set-state-in-effect */
-
-  // Realtime subscription
   useEffect(() => {
     if (!isLoggedIn) return
     const supabase = createClient()
     const channel = supabase
       .channel('rentals-realtime')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'rentals'
-      }, () => {
-        // Trigger a refresh of the current page when DB updates
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rentals' }, () => {
         fetchRentals(page, statusFilter, search)
       })
       .subscribe()
-
-    return () => {
-      supabase.removeChannel(channel)
-    }
+    return () => { supabase.removeChannel(channel) }
   }, [isLoggedIn, page, statusFilter, search])
 
   return (
-    <div className="dashboard-content max-w-6xl mx-auto px-4 py-8">
-      <div className="page-header mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="rentals-page">
+      {/* Header */}
+      <div className="rentals-page-header">
         <div>
-          <h1 className="page-title" style={{ fontSize: '1.875rem', fontWeight: 800, letterSpacing: '-0.025em' }}>My Rentals</h1>
-          <p className="page-subtitle text-secondary mt-1">Manage active numbers and view your receipt/inbox history.</p>
+          <h1 className="rentals-page-title">My Rentals</h1>
+          <p className="rentals-page-subtitle">Manage your active numbers and view receipt history.</p>
         </div>
-        <Link href="/dashboard" className="btn btn-primary no-underline text-center">
+        <Link href="/dashboard" className="btn btn-primary">
           Rent a Number &rarr;
         </Link>
       </div>
 
-      {/* Filters & Search */}
+      {/* Filters */}
       <div className="rentals-filter-bar">
-        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+        <div className="rentals-filter-pills">
           {['all', 'active', 'received', 'expired', 'canceled'].map((st) => (
             <button
               key={st}
               onClick={() => { setStatusFilter(st); setPage(1) }}
-              className={`rentals-filter-pill ${statusFilter === st ? 'active' : ''}`}
+              className={`rentals-filter-pill${statusFilter === st ? ' active' : ''}`}
             >
-              {st}
+              {st === 'all' ? 'All' : STATUS_LABELS[st] || st}
             </button>
           ))}
         </div>
-        <div className="relative w-full md:w-80">
+        <div className="rentals-search-wrap">
+          <svg className="rentals-search-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input
             type="search"
             placeholder="Search by phone number…"
@@ -225,81 +264,72 @@ export default function RentalsClient({
             onChange={(e) => setSearch(e.target.value)}
             className="rentals-search-input"
           />
-          <span className="rentals-search-icon">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </span>
         </div>
       </div>
 
-      {/* Rentals Table */}
-      <div className="glass-panel overflow-hidden rounded-xl">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b text-xs font-bold text-tertiary uppercase tracking-wider" style={{ borderColor: 'var(--border)', background: 'var(--bg-muted)' }}>
-                <th className="py-4 px-6">Service</th>
-                <th className="py-4 px-6">Phone Number</th>
-                <th className="py-4 px-6">Country</th>
-                <th className="py-4 px-6">Cost</th>
-                <th className="py-4 px-6">Status</th>
-                <th className="py-4 px-6">Time Left / Created</th>
-                <th className="py-4 px-6 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading && rentals.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="py-12 text-center text-secondary">
-                    <div className="flex flex-col items-center justify-center gap-2">
-                      <div className="spinner-lg" />
-                      <span>Loading rentals…</span>
-                    </div>
-                  </td>
-                </tr>
-              ) : rentals.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="py-16 text-center text-secondary">
-                    <div className="flex flex-col items-center justify-center gap-3">
-                      <svg width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="text-tertiary"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                      <div>
-                        <p className="font-bold" style={{ color: 'var(--text)' }}>No rentals found</p>
-                        <p className="text-sm mt-1 text-tertiary">Select a service on the dashboard to rent a number.</p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                rentals.map((r) => <RentalRow key={r.id} rental={r} />)
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t px-6 py-4" style={{ borderColor: 'var(--border)', background: 'var(--bg-muted)' }}>
-            <div className="text-sm" style={{ color: 'var(--text-muted)' }}>
-              Showing page <span className="font-semibold" style={{ color: 'var(--text)' }}>{page}</span> of <span className="font-semibold" style={{ color: 'var(--text)' }}>{totalPages}</span> ({total} total)
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="pagination-btn"
-              >
-                Previous
-              </button>
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                className="pagination-btn"
-              >
-                Next
-              </button>
-            </div>
+      {/* Grid */}
+      <div className="rentals-grid">
+        {loading && rentals.length === 0 ? (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        ) : rentals.length === 0 ? (
+          <div className="rentals-empty">
+            <svg width="48" height="48" fill="none" stroke="var(--text-faint)" strokeWidth="1.5" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            <p className="rentals-empty-title">No rentals found</p>
+            <p className="rentals-empty-desc">Select a service on the dashboard to rent a number.</p>
+            <Link href="/dashboard" className="btn btn-primary">Browse Services</Link>
           </div>
+        ) : (
+          rentals.map((r) => <RentalCard key={r.id} rental={r} />)
         )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="rentals-pagination">
+          <span className="rentals-pagination-info">
+            Page {page} of {totalPages} &middot; {total} total
+          </span>
+          <div className="rentals-pagination-btns">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="rentals-pagination-btn"
+            >
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              Previous
+            </button>
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+              const start = Math.max(1, page - 2)
+              const p = start + i
+              if (p > totalPages) return null
+              return (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`rentals-pagination-page${p === page ? ' active' : ''}`}
+                >
+                  {p}
+                </button>
+              )
+            })}
+            <button
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="rentals-pagination-btn"
+            >
+              Next
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

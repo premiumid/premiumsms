@@ -205,7 +205,7 @@
     min-height: 44px;
     padding: 0.625rem 1rem;
   }
-  .amount-btn, .topup-btn, .rent-btn, .copy-btn, .copy-code-btn, .back-btn, .modal-close {
+  .amount-btn, .topup-btn, .rent-btn, .copy-btn, .copy-code-btn, .modal-close {
     min-height: 44px;
     min-width: 44px;
   }
@@ -886,20 +886,7 @@
   min-height: 0;
 }
 
-.polling-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--danger);
-  display: inline-block;
-  animation: pulse 2s ease-in-out infinite;
-  margin-right: 6px;
-}
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
 
 /* ─────────────── Docs tabs ─────────────── */
 .docs-tabs {
@@ -1433,61 +1420,43 @@
   box-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 
-/* ─────────────── My Rentals Custom UI ─────────────── */
-.rentals-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  overflow-y: auto;
-  height: 100%;
-  width: 100%;
+/* ─────────────── Rentals List (Card-based) ─────────────── */
+.rentals-page {
+  max-width: 1000px;
 }
 
-.rentals-header {
+.rentals-page-header {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
-@media (min-width: 768px) {
-  .rentals-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-
-.rentals-title-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.rentals-title {
+.rentals-page-title {
   font-family: var(--font-display);
-  font-size: 2.25rem;
+  font-size: 1.5rem;
   font-weight: 800;
+  margin-bottom: 0.125rem;
   color: var(--text);
-  letter-spacing: -0.025em;
-  margin: 0;
 }
 
-.rentals-subtitle {
+.rentals-page-subtitle {
   color: var(--text-muted);
   font-size: 0.875rem;
-  margin: 0;
 }
 
+/* ── Filter Bar ── */
 .rentals-filter-bar {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   padding: 1rem 1.25rem;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 @media (min-width: 768px) {
@@ -1500,33 +1469,26 @@
 
 .rentals-filter-pills {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.375rem;
   overflow-x: auto;
   -ms-overflow-style: none;
-  padding-bottom: 4px;
+  scrollbar-width: none;
 }
 
-@supports (-moz-appearance: none) {
-  .rentals-filter-pills {
-    scrollbar-width: none;
-  }
-}
-
-.rentals-filter-pills::-webkit-scrollbar {
-  display: none;
-}
+.rentals-filter-pills::-webkit-scrollbar { display: none; }
 
 .rentals-filter-pill {
-  padding: 0.625rem 1.125rem;
+  padding: 0.5rem 1rem;
   border-radius: 9999px;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   text-transform: capitalize;
   cursor: pointer;
   background: var(--bg-muted);
   border: 1px solid var(--border);
   color: var(--text-muted);
-  transition: all 0.2s ease-in-out;
+  transition: all 0.15s ease;
+  white-space: nowrap;
   outline: none;
 }
 
@@ -1550,33 +1512,743 @@
 
 @media (min-width: 768px) {
   .rentals-search-wrap {
-    max-width: 320px;
+    max-width: 280px;
   }
+}
+
+.rentals-search-icon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-faint);
+  pointer-events: none;
 }
 
 .rentals-search-input {
   width: 100%;
-  padding: 0.625rem 1rem 0.625rem 2.5rem;
+  padding: 0.5625rem 1rem 0.5625rem 2.25rem;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 9999px;
   color: var(--text);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   outline: none;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.15s ease;
 }
 
-.rentals-search-input::placeholder {
-  color: var(--text-faint);
-}
+.rentals-search-input::placeholder { color: var(--text-faint); }
 
 .rentals-search-input:focus {
   border-color: var(--accent);
   box-shadow: var(--focus-ring);
 }
 
-.rentals-search-icon {
+/* ── Rental Grid ── */
+.rentals-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .rentals-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── Rental Card ── */
+.rentals-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+}
+
+.rentals-card:hover {
+  border-color: var(--accent-muted);
+  box-shadow: var(--shadow-md);
+}
+
+.rentals-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.rentals-card-service {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.rentals-card-service-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.rentals-card-service-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.rentals-card-country {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.rentals-flag {
+  border-radius: 2px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* ── Badges ── */
+.rentals-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1875rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.rentals-badge--active { background: var(--success-bg); color: var(--success); }
+.rentals-badge--pending { background: var(--warning-bg); color: var(--warning); }
+.rentals-badge--received { background: var(--accent-subtle); color: var(--accent); }
+.rentals-badge--expired { background: var(--bg-muted); color: var(--text-faint); }
+.rentals-badge--canceled { background: var(--danger-bg); color: var(--danger); }
+.rentals-badge--refunded { background: var(--warning-bg); color: var(--warning); }
+
+.rentals-card-number {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.rentals-card-number-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.rentals-card-number-value {
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text);
+  word-break: break-all;
+  letter-spacing: 0.01em;
+}
+
+.rentals-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--border);
+}
+
+.rentals-card-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.rentals-card-meta-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.rentals-card-meta-value {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.rentals-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.rentals-timer--urgent {
+  color: var(--danger);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.rentals-card-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  background: var(--accent-subtle);
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.rentals-card-action:hover {
+  background: var(--accent);
+  color: white;
+}
+
+/* ── Skeleton ── */
+.rentals-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.rentals-skeleton-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.rentals-skeleton-service {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.rentals-skeleton-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--bg-muted);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.rentals-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.rentals-skeleton-line {
+  height: 12px;
+  border-radius: 4px;
+  background: var(--bg-muted);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.rentals-skeleton-line--name { width: 100px; }
+.rentals-skeleton-line--country { width: 70px; }
+.rentals-skeleton-line--label { width: 50px; }
+.rentals-skeleton-line--phone { width: 160px; height: 18px; }
+.rentals-skeleton-line--meta { width: 80px; }
+
+.rentals-skeleton-badge {
+  width: 60px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--bg-muted);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.rentals-skeleton-number {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rentals-skeleton-meta {
+  display: flex;
+  gap: 1.5rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--border);
+}
+
+.rentals-skeleton-action {
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--bg-muted);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ── Empty ── */
+.rentals-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 1rem;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.rentals-empty-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.rentals-empty-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  max-width: 320px;
+}
+
+/* ── Pagination ── */
+.rentals-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  flex-wrap: wrap;
+}
+
+.rentals-pagination-info {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.rentals-pagination-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.rentals-pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4375rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rentals-pagination-btn:hover:not(:disabled) {
+  background: var(--bg-muted);
+  border-color: var(--accent-muted);
+}
+
+.rentals-pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rentals-pagination-page {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .rentals-pagination-page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.rentals-pagination-page:hover {
+  background: var(--bg-muted);
+  border-color: var(--accent-muted);
+  color: var(--text);
+}
+
+.rentals-pagination-page.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* ─────────────── Rental Detail (SMS Inbox) ─────────────── */
+.detail-page {
+  max-width: 700px;
+}
+
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  margin-bottom: 0.75rem;
+  transition: color 0.15s ease;
+}
+
+.detail-back:hover { color: var(--accent-hover); }
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.detail-title {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+/* ── Number Card ── */
+.detail-number-card {
+  position: relative;
+  background: linear-gradient(135deg, var(--accent), #4338ca);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+  margin-bottom: 1.5rem;
+}
+
+.detail-number-card-bg {
   position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 80% 30%, rgba(255,255,255,0.1) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.detail-number-body {
+  position: relative;
+  z-index: 1;
+  padding: 1.5rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detail-number-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.detail-number-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+}
+
+.detail-number-value-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.detail-number-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+  word-break: break-all;
+  flex: 1;
+}
+
+.detail-number-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.detail-number-copy:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.4);
+}
+
+.detail-number-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.detail-number-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.detail-number-meta-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.65;
+}
+
+.detail-number-meta-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.detail-timer {
+  font-family: var(--font-mono);
+}
+
+.detail-timer--urgent {
+  color: #fca5a5;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.detail-cancel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  align-self: flex-start;
+}
+
+.detail-cancel:hover:not(:disabled) {
+  background: rgba(239,68,68,0.8);
+  border-color: rgba(239,68,68,0.6);
+}
+
+.detail-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Messages ── */
+.detail-messages-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.detail-messages-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-messages-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.detail-messages-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.detail-export-btn:hover {
+  background: var(--bg-muted);
+  border-color: var(--accent-muted);
+  color: var(--text);
+}
+
+.detail-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--success);
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  background: var(--success-bg);
+}
+
+.detail-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.detail-messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  min-height: 150px;
+}
+
+.detail-message {
+  padding: 1rem 1.125rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-muted);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s ease;
+  animation: fade-in-up 0.3s ease-out both;
+}
+
+.detail-message:hover {
+  border-color: var(--accent-muted);
+}
+
+.detail-message-time {
+  font-size: 0.625rem;
+  color: var(--text-faint);
+  margin-bottom: 0.25rem;
+}
+
+.detail-message-code {
+  display: inline-flex;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-subtle);
+  padding: 0.125rem 0.625rem;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.375rem;
+}
+
+.detail-message-text {
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.detail-message-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.detail-message-copy:hover {
+  background: var(--accent-subtle);
+  border-color: var(--accent-muted);
+  color: var(--accent);
+}
+
+.detail-messages-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.detail-messages-empty-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.detail-messages-empty-desc {
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+  max-width: 320px;
+}
   left: 0.875rem;
   top: 50%;
   transform: translateY(-50%);
@@ -2649,28 +3321,6 @@
   opacity: 0.4;
 }
 
-.pagination-btn {
-  padding: 0.375rem 0.875rem;
-  border-radius: 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background: var(--bg-muted);
-  border-color: var(--accent-muted);
-}
-
-.pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .pill-active {
   background: var(--accent);
   color: white;
@@ -2712,188 +3362,6 @@
   border-radius: 50%;
   display: inline-block;
   flex-shrink: 0;
-}
-
-/* ─────────────── Rental Detail (SMS Inbox) ─────────────── */
-
-.back-btn {
-  background: none;
-  border: none;
-  color: var(--accent);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0.25rem 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  transition: color 0.15s ease;
-  margin-bottom: 0.5rem;
-}
-
-.back-btn:hover {
-  color: var(--accent-hover);
-  text-decoration: underline;
-}
-
-.number-card {
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.number-display {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  flex-wrap: wrap;
-}
-
-.number-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-faint);
-}
-
-.number-value {
-  font-size: 1.5rem;
-  font-weight: 800;
-  font-family: var(--font-mono);
-  color: var(--text);
-  letter-spacing: 0.02em;
-  flex: 1;
-  word-break: break-all;
-}
-
-.number-meta {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-}
-
-.meta-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-faint);
-}
-
-.meta-value {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.timer {
-  font-family: var(--font-mono);
-}
-
-.timer-urgent {
-  color: var(--danger);
-  animation: pulse 1s ease-in-out infinite;
-}
-
-.btn-cancel {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.625rem 1.125rem;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(var(--danger-r), var(--danger-g), var(--danger-b), 0.2);
-  background: var(--danger-bg);
-  color: var(--danger);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.btn-cancel:hover:not(:disabled) {
-  background: var(--danger);
-  color: white;
-  border-color: var(--danger);
-}
-
-.btn-cancel:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* SMS Inbox */
-.sms-inbox {
-  min-height: 200px;
-}
-
-.sms-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
-}
-
-.sms-message {
-  padding: 1rem 1.25rem;
-  border-radius: var(--radius-md);
-  background: var(--bg-muted);
-  border: 1px solid var(--border);
-  transition: border-color 0.15s ease;
-}
-
-.sms-message:hover {
-  border-color: var(--accent-muted);
-}
-
-.sms-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.sms-time {
-  font-size: 0.6875rem;
-  color: var(--text-faint);
-}
-
-.sms-code {
-  font-size: 0.8125rem;
-  font-weight: 800;
-  color: var(--accent);
-  background: var(--accent-subtle);
-  padding: 0.125rem 0.625rem;
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  letter-spacing: 0.05em;
-}
-
-.sms-text {
-  font-size: 0.875rem;
-  color: var(--text);
-  line-height: 1.5;
-  word-break: break-word;
-}
-
-.polling-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--text-faint);
-  padding: 0.25rem 0.625rem;
-  border-radius: 9999px;
-  background: var(--bg-muted);
 }
 
 .section-header-spaced {
@@ -3050,7 +3518,5 @@
   font-size: 0.8125rem;
 }
 
-.rentals-table-wrapper {
-  padding: 1rem 0;
-}
+
 
