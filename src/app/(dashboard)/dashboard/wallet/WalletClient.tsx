@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import FormattedDate from '@/components/FormattedDate'
 import { useToast } from '@/components/Toast'
@@ -64,6 +64,8 @@ function StatusIcon({ type }: { type: string }) {
   }
 }
 
+const AMOUNT_PRESETS = [15, 20, 30, 50]
+
 export default function WalletClient({ initialBalance, initialTransactions, userEmail }: WalletClientProps) {
   const router = useRouter()
   const { success: toastSuccess, error: toastError } = useToast()
@@ -95,6 +97,18 @@ export default function WalletClient({ initialBalance, initialTransactions, user
 
   const finalAmount = customAmount ? Number(customAmount) : selectedAmount
 
+  const totalSpent = useMemo(() =>
+    allTransactions
+      .filter(tx => tx.type === 'debit')
+      .reduce((sum, tx) => sum + tx.amount, 0),
+    [allTransactions]
+  )
+
+  const lastActivity = useMemo(() => {
+    if (allTransactions.length === 0) return null
+    return allTransactions[0].created_at
+  }, [allTransactions])
+
   const stopRealtimeSubscription = () => {
     if (activeChannelRef.current) {
       const supabase = createClient()
@@ -103,37 +117,25 @@ export default function WalletClient({ initialBalance, initialTransactions, user
     }
   }
 
-  // Focus trap for payment modal
   useEffect(() => {
     if (!isModalOpen) return
     prevFocusRef.current = document.activeElement as HTMLElement
-
     const modal = modalRef.current
     if (!modal) return
-
     const focusable = modal.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     )
     const first = focusable[0]
     const last = focusable[focusable.length - 1]
-
     first?.focus()
-
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key !== 'Tab') return
       if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault()
-          last?.focus()
-        }
+        if (document.activeElement === first) { e.preventDefault(); last?.focus() }
       } else {
-        if (document.activeElement === last) {
-          e.preventDefault()
-          first?.focus()
-        }
+        if (document.activeElement === last) { e.preventDefault(); first?.focus() }
       }
     }
-
     modal.addEventListener('keydown', handleKeyDown)
     return () => {
       modal.removeEventListener('keydown', handleKeyDown)
@@ -141,7 +143,6 @@ export default function WalletClient({ initialBalance, initialTransactions, user
     }
   }, [isModalOpen])
 
-  // Cleanup on unmount
   useEffect(() => () => stopRealtimeSubscription(), [])
 
   const handleAmountSelect = (amount: number) => {
@@ -173,10 +174,8 @@ export default function WalletClient({ initialBalance, initialTransactions, user
       }, (payload: { new: { status: string; processed?: boolean } }) => {
         const status = payload.new.status as PaymentStatus
         setPaymentStatus(status)
-
         const isComplete = status === 'finished' || status === 'confirmed' || payload.new.processed
         const isFailed = status === 'failed' || status === 'expired'
-
         if (isComplete) {
           stopRealtimeSubscription()
           setPaymentStep('success')
@@ -188,7 +187,6 @@ export default function WalletClient({ initialBalance, initialTransactions, user
         }
       })
       .subscribe()
-
     activeChannelRef.current = channel
   }
 
@@ -197,27 +195,22 @@ export default function WalletClient({ initialBalance, initialTransactions, user
       setError('Minimum top-up amount is $12.00 USD (USDT TRC-20)')
       return
     }
-
     setError(null)
     setIsCreatingPayment(true)
     setIsModalOpen(true)
     setPaymentStep('select')
-
     try {
       const res = await fetch('/api/wallet/topup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: finalAmount }),
       })
-
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed to create payment')
-
       setPaymentData(data)
       setPaymentStatus('waiting')
       setPaymentStep('awaiting')
       startRealtimeSubscription(data.paymentId)
-
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
       setIsModalOpen(false)
@@ -235,10 +228,18 @@ export default function WalletClient({ initialBalance, initialTransactions, user
     setError(null)
   }
 
-  const txIcon = (type: Transaction['type']) => {
-    if (type === 'topup' || type === 'admin_credit') return '↓'
-    return '↑'
+  const txMeta = (type: Transaction['type']) => {
+    switch (type) {
+      case 'topup':
+      case 'admin_credit':
+        return { icon: '↓', label: 'Credit', className: 'tx-credit' }
+      case 'debit':
+        return { icon: '↑', label: 'Debit', className: 'tx-debit' }
+      case 'refund':
+        return { icon: '↻', label: 'Refund', className: 'tx-refund' }
+    }
   }
+
   const loadMoreTransactions = async () => {
     setTxLoading(true)
     try {
@@ -260,127 +261,208 @@ export default function WalletClient({ initialBalance, initialTransactions, user
   }
 
   const statusCfg = STATUS_CONFIG[paymentStatus] || STATUS_CONFIG.waiting
+  const validAmount = finalAmount > 0 && !isNaN(finalAmount)
 
   return (
-    <div className="wallet-container">
-      <div className="wallet-grid">
+    <div className="wallet-page">
+      {/* ── Header ── */}
+      <div className="wallet-page-header">
+        <div>
+          <h1 className="wallet-page-title">Wallet</h1>
+          <p className="wallet-page-subtitle">Manage your funds and view transaction history</p>
+        </div>
+      </div>
 
-        {/* Balance Card */}
-        <div className="balance-card glass-panel card-glow">
-          <div className="balance-card-header">
-            <span className="balance-card-icon">
-              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-            </span>
-            <p className="balance-card-label">Current Balance</p>
+      <div className="wallet-grid">
+        {/* ── Balance Card ── */}
+        <div className="wallet-balance-card">
+          <div className="wallet-balance-glow" />
+          <div className="wallet-balance-body">
+            <div className="wallet-balance-top">
+              <div className="wallet-balance-icon">
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              </div>
+              <span className="wallet-balance-label">Current Balance</span>
+            </div>
+            <div className="wallet-balance-amount-row">
+              <span className="wallet-balance-currency">$</span>
+              <span className="wallet-balance-amount">{initialBalance.toFixed(2)}</span>
+              <span className="wallet-balance-ccy">USD</span>
+            </div>
+            <div className="wallet-balance-stats">
+              <div className="wallet-balance-stat">
+                <span className="wallet-balance-stat-value">${totalSpent.toFixed(2)}</span>
+                <span className="wallet-balance-stat-label">Total Spent</span>
+              </div>
+              <div className="wallet-balance-stat-divider" />
+              <div className="wallet-balance-stat">
+                <span className="wallet-balance-stat-value">
+                  {lastActivity ? <FormattedDate date={lastActivity} /> : '—'}
+                </span>
+                <span className="wallet-balance-stat-label">Last Activity</span>
+              </div>
+            </div>
+            <div className="wallet-balance-footer">
+              <span className="wallet-balance-email">{userEmail}</span>
+              <div className="wallet-balance-actions">
+                <button className="wallet-balance-btn" onClick={() => document.getElementById('topup-card')?.scrollIntoView({ behavior: 'smooth' })}>
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Top Up
+                </button>
+                <a href="/dashboard/api" className="wallet-balance-btn">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  API
+                </a>
+              </div>
+            </div>
           </div>
-          <p className="balance-card-amount">${initialBalance.toFixed(2)}</p>
-          <p className="balance-card-sub">USD</p>
-          <p className="balance-card-email">{userEmail}</p>
         </div>
 
-        {/* Top-up Card */}
-        <div className="topup-card glass-panel">
-          <h2 className="topup-title">Top Up Wallet</h2>
-          <p className="topup-subtitle">Pay with USDT (TRC-20) · Minimum $12.00 USD</p>
-
-          {/* Quick amounts */}
-          <div className="amount-grid">
-            {[15, 20, 30, 50].map((amt) => (
-              <button
-                key={amt}
-                id={`amount-btn-${amt}`}
-                className={`amount-btn ${selectedAmount === amt && !customAmount ? 'active' : ''}`}
-                onClick={() => handleAmountSelect(amt)}
-              >
-                ${amt}
-              </button>
-            ))}
+        {/* ── Top-up Card ── */}
+        <div className="wallet-card wallet-topup-card" id="topup-card">
+          <div className="wallet-topup-header">
+            <h2 className="wallet-topup-title">Top Up Wallet</h2>
+            <p className="wallet-topup-subtitle">Pay with USDT (TRC-20) · Minimum $12.00 USD</p>
           </div>
 
-          <input
-            id="custom-amount-input"
-            className="custom-amount-input"
-            type="number"
-            min="1"
-            step="0.01"
-            placeholder="Custom amount (USD)"
-            value={customAmount}
-            onChange={handleCustomAmountChange}
-          />
+          <div className="wallet-topup-amounts">
+            <div className="wallet-topup-grid">
+              {AMOUNT_PRESETS.map((amt) => (
+                <button
+                  key={amt}
+                  id={`amount-btn-${amt}`}
+                  className={`wallet-topup-preset ${selectedAmount === amt && !customAmount ? 'active' : ''}`}
+                  onClick={() => handleAmountSelect(amt)}
+                >
+                  ${amt}
+                </button>
+              ))}
+            </div>
+            <div className="wallet-topup-custom">
+              <span className="wallet-topup-custom-prefix">$</span>
+              <input
+                id="custom-amount-input"
+                className="wallet-topup-input"
+                type="number"
+                min="1"
+                step="0.01"
+                placeholder="Custom amount"
+                value={customAmount}
+                onChange={handleCustomAmountChange}
+              />
+            </div>
+          </div>
 
-          {error && <p className="wallet-error">{error}</p>}
+          {error && <div className="wallet-error">{error}</div>}
 
           <button
             id="topup-submit-btn"
-            className="topup-btn btn-primary"
+            className="wallet-topup-btn btn-primary"
             onClick={handleCreatePayment}
             disabled={isCreatingPayment || finalAmount < 12}
           >
             {isCreatingPayment ? (
-              <span className="btn-loading"><span className="spinner-sm" /> Generating invoice…</span>
+              <>
+                <span className="spinner-sm" />
+                Generating invoice…
+              </>
             ) : (
-              `Top Up $${finalAmount > 0 ? finalAmount.toFixed(2) : '0.00'}`
+              <>
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="12 5 12 19 12 5"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                {validAmount ? `Top Up $${finalAmount.toFixed(2)}` : 'Select Amount'}
+              </>
             )}
           </button>
 
-          {/* Coming soon: Card payments */}
-          <div className="payment-coming-soon">
-            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-            <span>Credit / Debit Card</span>
-            <span className="badge-soon">Coming Soon</span>
+          <div className="wallet-topup-divider">
+            <span className="wallet-topup-divider-text">More payment methods</span>
+          </div>
+
+          <div className="wallet-topup-options">
+            <div className="wallet-topup-option active">
+              <div className="wallet-topup-option-icon wallet-topup-option-icon--usdt">
+                <span className="wallet-topup-option-icon-text">$</span>
+              </div>
+              <div className="wallet-topup-option-info">
+                <span className="wallet-topup-option-name">USDT (TRC-20)</span>
+                <span className="wallet-topup-option-desc">Instant · Low fees</span>
+              </div>
+              <span className="wallet-topup-option-check">✓</span>
+            </div>
+            <div className="wallet-topup-option disabled">
+              <div className="wallet-topup-option-icon">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              </div>
+              <div className="wallet-topup-option-info">
+                <span className="wallet-topup-option-name">Credit / Debit Card</span>
+                <span className="wallet-topup-option-desc">Coming soon</span>
+              </div>
+              <span className="wallet-topup-option-badge">Soon</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Transaction History */}
-      <div className="tx-section glass-panel">
-        <h2 className="tx-title">Transaction History</h2>
+      {/* ── Transaction History ── */}
+      <div className="wallet-tx-section">
+        <div className="wallet-tx-header">
+          <h2 className="wallet-tx-title">Transaction History</h2>
+          {allTransactions.length > 0 && (
+            <span className="wallet-tx-count">{allTransactions.length} transaction{allTransactions.length !== 1 ? 's' : ''}</span>
+          )}
+        </div>
+
         {loading && allTransactions.length === 0 ? (
-          <div className="tx-list">
+          <div className="wallet-tx-list">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="tx-row opacity-40">
-                <div className="skeleton-circle" />
-                <div className="tx-info">
-                  <div className="skeleton-line" style={{ width: '60%', height: '14px', marginBottom: '6px' }} />
-                  <div className="skeleton-line" style={{ width: '40%', height: '12px' }} />
+              <div key={i} className="wallet-tx-skeleton">
+                <div className="wallet-tx-skeleton-icon" />
+                <div className="wallet-tx-skeleton-lines">
+                  <div className="wallet-tx-skeleton-line wallet-tx-skeleton-line--short" />
+                  <div className="wallet-tx-skeleton-line wallet-tx-skeleton-line--long" />
                 </div>
-                <div className="tx-amounts">
-                  <div className="skeleton-line" style={{ width: '70px', height: '16px', marginBottom: '4px', marginLeft: 'auto' }} />
-                  <div className="skeleton-line" style={{ width: '90px', height: '12px', marginLeft: 'auto' }} />
+                <div className="wallet-tx-skeleton-right">
+                  <div className="wallet-tx-skeleton-line wallet-tx-skeleton-line--amount" />
+                  <div className="wallet-tx-skeleton-line wallet-tx-skeleton-line--balance" />
                 </div>
               </div>
             ))}
           </div>
         ) : allTransactions.length === 0 ? (
-          <EmptyState
-            icon={<svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>}
-            title="No transactions yet"
-            description="Top up your wallet to get started"
-          />
+          <div className="wallet-tx-empty">
+            <EmptyState
+              icon={<svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>}
+              title="No transactions yet"
+              description="Top up your wallet to get started"
+            />
+          </div>
         ) : (
-          <div className="tx-list">
-            {allTransactions.map((tx) => (
-              <div key={tx.id} className="tx-row">
-                <div className={`tx-icon ${tx.type === 'topup' || tx.type === 'admin_credit' ? 'text-success' : 'text-danger'}`}>
-                  {txIcon(tx.type)}
+          <div className="wallet-tx-list">
+            {allTransactions.map((tx) => {
+              const meta = txMeta(tx.type)
+              return (
+                <div key={tx.id} className="wallet-tx-item">
+                  <div className={`wallet-tx-icon ${meta.className}`}>
+                    {meta.icon}
+                  </div>
+                  <div className="wallet-tx-info">
+                    <p className="wallet-tx-desc">{tx.description}</p>
+                    <p className="wallet-tx-date">
+                      <FormattedDate date={tx.created_at} />
+                    </p>
+                  </div>
+                  <div className={`wallet-tx-amount ${tx.type === 'topup' || tx.type === 'admin_credit' || tx.type === 'refund' ? 'wallet-tx-amount--positive' : ''}`}>
+                    {tx.type === 'debit' ? '−' : '+'}${tx.amount.toFixed(2)}
+                  </div>
+                  <div className="wallet-tx-balance">
+                    ${tx.balance_after.toFixed(2)}
+                  </div>
                 </div>
-                <div className="tx-info">
-                  <p className="tx-desc">{tx.description}</p>
-                  <p className="tx-date">
-                    <FormattedDate date={tx.created_at} />
-                  </p>
-                </div>
-                <div className="tx-amounts">
-                  <p className={`tx-amount ${tx.type === 'topup' || tx.type === 'admin_credit' ? 'text-success' : 'text-danger'}`}>
-                    {tx.type === 'debit' ? '-' : '+'}${tx.amount.toFixed(2)}
-                  </p>
-                  <p className="tx-balance">Balance: ${tx.balance_after.toFixed(2)}</p>
-                </div>
-              </div>
-            ))}
+              )
+            })}
             {txHasMore && (
-              <div style={{ textAlign: 'center', padding: '1rem' }}>
-                <button className="btn btn-secondary" style={{ fontSize: '0.875rem' }} onClick={loadMoreTransactions} disabled={txLoading}>
+              <div className="wallet-tx-loadmore">
+                <button className="btn btn-secondary" onClick={loadMoreTransactions} disabled={txLoading}>
                   {txLoading ? 'Loading…' : 'Load More'}
                 </button>
               </div>
@@ -391,104 +473,124 @@ export default function WalletClient({ initialBalance, initialTransactions, user
 
       {/* ── Payment Modal ── */}
       {isModalOpen && (
-        <div className="modal-overlay" ref={modalRef} onClick={paymentStep === 'success' ? handleCloseModal : undefined} role="dialog" aria-modal="true" tabIndex={-1} onKeyDown={(e) => { if (e.key === 'Escape') handleCloseModal() }}>
-          <div className="modal-box glass-panel" onClick={(e) => e.stopPropagation()}>
+        <div className="wallet-modal-overlay" ref={modalRef} onClick={paymentStep === 'success' ? handleCloseModal : undefined} role="dialog" aria-modal="true" tabIndex={-1} onKeyDown={(e) => { if (e.key === 'Escape') handleCloseModal() }}>
+          <div className="wallet-modal-box" onClick={(e) => e.stopPropagation()}>
+
+            {/* Step indicator */}
+            <div className="wallet-modal-steps">
+              <div className={`wallet-modal-step ${paymentStep === 'select' && !isCreatingPayment ? 'active' : paymentStep !== 'select' ? 'done' : ''}`}>
+                <div className="wallet-modal-step-num">{paymentStep !== 'select' ? '✓' : '1'}</div>
+                <span className="wallet-modal-step-label">Amount</span>
+              </div>
+              <div className="wallet-modal-step-line" />
+              <div className={`wallet-modal-step ${paymentStep === 'awaiting' ? 'active' : paymentStep === 'success' ? 'done' : ''}`}>
+                <div className="wallet-modal-step-num">{paymentStep === 'success' ? '✓' : '2'}</div>
+                <span className="wallet-modal-step-label">Payment</span>
+              </div>
+              <div className="wallet-modal-step-line" />
+              <div className={`wallet-modal-step ${paymentStep === 'success' ? 'done' : ''}`}>
+                <div className="wallet-modal-step-num">3</div>
+                <span className="wallet-modal-step-label">Confirm</span>
+              </div>
+            </div>
 
             {/* STEP: Creating payment */}
             {paymentStep === 'select' && isCreatingPayment && (
-              <div className="modal-loading">
+              <div className="wallet-modal-loading">
                 <div className="spinner-lg" />
-                <p>Generating your payment invoice…</p>
-                <p className="modal-sub">Connecting to payment provider</p>
+                <p>Generating invoice…</p>
+                <p className="wallet-modal-sub">Connecting to payment provider</p>
               </div>
             )}
 
             {/* STEP: Awaiting payment */}
             {paymentStep === 'awaiting' && paymentData && (
               <>
-                <div className="modal-header">
-                  <h3>Send USDT (TRC-20)</h3>
-                  <button className="modal-close" onClick={handleCloseModal} aria-label="Close modal">
+                <div className="wallet-modal-header">
+                  <h3>Complete Payment</h3>
+                  <button className="wallet-modal-close" onClick={handleCloseModal} aria-label="Close modal">
                     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   </button>
                 </div>
 
-                <div className={`payment-status-badge ${statusCfg.borderClass}`}>
+                <div className={`wallet-modal-status ${statusCfg.borderClass}`}>
                   <StatusIcon type={statusCfg.icon} />
                   <span className={statusCfg.textClass}>{statusCfg.label}</span>
                   {(paymentStatus === 'waiting' || paymentStatus === 'confirming') && (
-                    <span className={`status-pulse ${statusCfg.bgClass}`} />
+                    <span className="wallet-modal-status-pulse" />
                   )}
                 </div>
 
-                <div className="qr-section">
+                <div className="wallet-modal-qr">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(paymentData.payAddress)}&color=4f46e5&bgcolor=f8fafc`}
                     alt="USDT TRC-20 Deposit QR"
                     width={150}
                     height={150}
-                    className="rounded-lg shadow-sm"
                   />
-                  <span className="qr-label">Scan to Deposit</span>
+                  <span className="wallet-modal-qr-label">Scan to Deposit</span>
                 </div>
 
-                <div className="payment-info-box">
-                  <p className="payment-info-label">Send exactly this amount:</p>
-                  <div className="copy-row">
-                    <span className="payment-usdt-amount">
-                      {paymentData.payAmount} <span className="currency-tag">USDT TRC-20</span>
-                    </span>
-                    <button
-                      className="copy-btn"
-                      onClick={() => copyToClipboard(String(paymentData.payAmount), 'amount')}
-                    >
-                      {copied === 'amount' ? '✓ Copied' : 'Copy'}
-                    </button>
+                <div className="wallet-modal-info">
+                  <div className="wallet-modal-info-row">
+                    <span className="wallet-modal-info-label">Send exactly this amount</span>
+                    <div className="wallet-modal-info-field">
+                      <span className="wallet-modal-info-value">{paymentData.payAmount} <span className="wallet-modal-info-tag">USDT TRC-20</span></span>
+                      <button className="wallet-modal-copy" onClick={() => copyToClipboard(String(paymentData.payAmount), 'amount')}>
+                        {copied === 'amount' ? (
+                          <><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Copied</>
+                        ) : (
+                          <><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="wallet-modal-info-row">
+                    <span className="wallet-modal-info-label">To this wallet address</span>
+                    <div className="wallet-modal-info-field wallet-modal-info-field--address">
+                      <span className="wallet-modal-info-address">{paymentData.payAddress}</span>
+                      <button className="wallet-modal-copy" onClick={() => copyToClipboard(paymentData.payAddress, 'address')}>
+                        {copied === 'address' ? (
+                          <><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Copied</>
+                        ) : (
+                          <><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                <div className="payment-info-box">
-                  <p className="payment-info-label">To this wallet address:</p>
-                  <div className="copy-row">
-                    <span className="payment-address">{paymentData.payAddress}</span>
-                    <button
-                      className="copy-btn"
-                      onClick={() => copyToClipboard(paymentData.payAddress, 'address')}
-                    >
-                      {copied === 'address' ? '✓ Copied' : 'Copy'}
-                    </button>
+                <div className="wallet-modal-warning">
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  <div>
+                    <strong>Send only USDT on the TRC-20 (Tron) network.</strong><br />
+                    Other networks or coins will result in permanent loss of funds.
                   </div>
                 </div>
 
-                <div className="payment-warning">
-                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                  Send <strong>only USDT on the TRC-20 (Tron) network</strong>. Other networks or
-                  coins will result in permanent loss of funds.
+                <div className="wallet-modal-footer">
+                  <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Monitoring blockchain in real-time
+                  <span className="wallet-modal-footer-id">ID: <code>{paymentData.paymentId}</code></span>
                 </div>
 
-                <p className="payment-tracking">
-                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  Monitoring blockchain in real-time · Payment ID: <code>{paymentData.paymentId}</code>
-                </p>
-
-                {error && <p className="wallet-error">{error}</p>}
+                {error && <div className="wallet-error">{error}</div>}
               </>
             )}
 
             {/* STEP: Success */}
             {paymentStep === 'success' && (
-              <div className="modal-success">
-                <div className="success-icon">
-                  <svg aria-hidden="true" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <div className="wallet-modal-success">
+                <div className="wallet-modal-success-icon">
+                  <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
                 <h3>Payment Confirmed!</h3>
-                <p>
-                  <strong>${paymentData?.priceAmount.toFixed(2)}</strong> has been credited to
-                  your wallet.
+                <p className="wallet-modal-success-amount">
+                  <strong>${paymentData?.priceAmount.toFixed(2)}</strong> credited to your wallet
                 </p>
-                <p className="modal-sub">Your balance has been updated.</p>
-                <button id="success-close-btn" className="topup-btn btn-primary" onClick={handleCloseModal}>
+                <p className="wallet-modal-sub">Your balance has been updated.</p>
+                <button id="success-close-btn" className="btn btn-primary" onClick={handleCloseModal}>
                   Done
                 </button>
               </div>
