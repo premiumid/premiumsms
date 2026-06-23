@@ -132,6 +132,25 @@ function TrendChart({
           </g>
         ))}
       </svg>
+      <table className="sr-only" aria-label={`${title} data`}>
+        <caption>{title}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Value</th>
+            {secondValueKey && <th scope="col">{secondValueKey}</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((d, i) => (
+            <tr key={i}>
+              <td>{String(d.date)}</td>
+              <td>{prefix}{d[valueKey]}</td>
+              {secondValueKey && <td>{d[secondValueKey]}</td>}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -376,24 +395,25 @@ export default function AdminClient({
               <label className="admin-label">Reason</label>
               <input className="admin-input" type="text" placeholder="e.g. Support compensation" value={adjustReason} onChange={e => setAdjustReason(e.target.value)} />
             </div>
-            {formError && <p className="admin-msg admin-msg--error">{formError}</p>}
-            {formSuccess && <p className="admin-msg admin-msg--success">{formSuccess}</p>}
+            {formError && <p className="admin-msg admin-msg--error" role="alert">{formError}</p>}
+            {formSuccess && <p className="admin-msg admin-msg--success" role="status">{formSuccess}</p>}
             <button className="admin-btn" type="submit" disabled={isAdjusting}>{isAdjusting ? 'Processing...' : 'Execute'}</button>
           </form>
         </div>
 
         <div className="admin-card">
           <h2 className="admin-card-title" style={{ marginBottom: '0.25rem' }}>Users</h2>
-          <input className="admin-input" type="search" placeholder="Search email..." value={userSearch} onChange={e => setUserSearch(e.target.value)} />
-          <div className="admin-user-list">
+          <label htmlFor="admin-user-search" className="sr-only">Search users by email</label>
+          <input id="admin-user-search" className="admin-input" type="search" placeholder="Search email..." value={userSearch} onChange={e => setUserSearch(e.target.value)} />
+          <div className="admin-user-list" role="listbox" aria-label="Select a user">
             {filteredUsers.map(u => (
-              <div key={u.id} className={`admin-user-row${targetUserId === u.id ? ' admin-user-row--selected' : ''}`} onClick={() => setTargetUserId(u.id)}>
+              <button key={u.id} role="option" aria-selected={targetUserId === u.id} className={`admin-user-row${targetUserId === u.id ? ' admin-user-row--selected' : ''}`} onClick={() => setTargetUserId(u.id)}>
                 <div className="admin-user-info">
                   <p className="admin-user-email">{u.email}</p>
                   <span className={`admin-role-badge admin-role-badge--${u.role}`}>{u.role}</span>
                 </div>
                 <p className="admin-user-balance">${Number(u.balance).toFixed(2)}</p>
-              </div>
+              </button>
             ))}
             {filteredUsers.length === 0 && <p className="admin-empty">No users found</p>}
           </div>
@@ -403,7 +423,8 @@ export default function AdminClient({
       {/* Rentals */}
       <div className="admin-card" style={{ marginTop: '1.5rem' }}>
         <h2 className="admin-card-title" style={{ marginBottom: '0.75rem' }}>Rentals</h2>
-        <input className="admin-input" type="search" placeholder="Search by phone, email, or service..." value={rentalSearch} onChange={e => setRentalSearch(e.target.value)} style={{ marginBottom: '0.75rem', maxWidth: '360px' }} />
+        <label htmlFor="admin-rental-search" className="sr-only">Search rentals</label>
+        <input id="admin-rental-search" className="admin-input" type="search" placeholder="Search by phone, email, or service..." value={rentalSearch} onChange={e => setRentalSearch(e.target.value)} style={{ marginBottom: '0.75rem', maxWidth: '360px' }} />
         {filteredRentals.length === 0 ? (
           <p className="admin-empty">No rentals found</p>
         ) : (

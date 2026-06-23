@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -16,6 +16,28 @@ const TABS = [
 export default function NavTabs() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const hamburgerRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!menuRef.current) return
+    const firstLink = menuRef.current.querySelector<HTMLElement>('a')
+    if (menuOpen && firstLink) {
+      firstLink.focus()
+    }
+  }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        hamburgerRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [menuOpen])
 
   function isActive(href: string) {
     if (href === '/dashboard') return pathname === '/dashboard'
@@ -24,14 +46,14 @@ export default function NavTabs() {
 
   return (
     <>
-      <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen}>
+      <button ref={hamburgerRef} className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen}>
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           {menuOpen ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></> : <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>}
         </svg>
       </button>
-      <div className={`app-tabs${menuOpen ? ' open' : ''}`}>
+      <div ref={menuRef} className={`app-tabs${menuOpen ? ' open' : ''}`} role="tablist" aria-label="Dashboard navigation">
         {TABS.map(tab => (
-          <Link key={tab.href} href={tab.href} className={`app-tab${isActive(tab.href) ? ' active' : ''}`} onClick={() => setMenuOpen(false)}>
+          <Link key={tab.href} href={tab.href} className={`app-tab${isActive(tab.href) ? ' active' : ''}`} onClick={() => { setMenuOpen(false); hamburgerRef.current?.focus() }} role="tab" aria-current={isActive(tab.href) ? 'page' : undefined}>
             <span style={{ width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {tab.icon}
             </span>

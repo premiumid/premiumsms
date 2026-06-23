@@ -333,13 +333,15 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                   id={`amount-btn-${amt}`}
                   className={`wallet-topup-preset ${selectedAmount === amt && !customAmount ? 'active' : ''}`}
                   onClick={() => handleAmountSelect(amt)}
+                  aria-pressed={selectedAmount === amt && !customAmount}
                 >
                   ${amt}
                 </button>
               ))}
             </div>
             <div className="wallet-topup-custom">
-              <span className="wallet-topup-custom-prefix">$</span>
+              <span className="wallet-topup-custom-prefix" aria-hidden="true">$</span>
+              <label htmlFor="custom-amount-input" className="sr-only">Custom amount</label>
               <input
                 id="custom-amount-input"
                 className="wallet-topup-input"
@@ -443,7 +445,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
               return (
                 <div key={tx.id} className="wallet-tx-item">
                   <div className={`wallet-tx-icon ${meta.className}`}>
-                    {meta.icon}
+                    <span aria-hidden="true">{meta.icon}</span>
                   </div>
                   <div className="wallet-tx-info">
                     <p className="wallet-tx-desc">{tx.description}</p>
@@ -473,8 +475,8 @@ export default function WalletClient({ initialBalance, initialTransactions, user
 
       {/* ── Payment Modal ── */}
       {isModalOpen && (
-        <div className="wallet-modal-overlay" ref={modalRef} onClick={paymentStep === 'success' ? handleCloseModal : undefined} role="dialog" aria-modal="true" tabIndex={-1} onKeyDown={(e) => { if (e.key === 'Escape') handleCloseModal() }}>
-          <div className="wallet-modal-box" onClick={(e) => e.stopPropagation()}>
+        <div className="wallet-modal-overlay" ref={modalRef} onClick={paymentStep === 'success' ? handleCloseModal : undefined} role="dialog" aria-modal="true" aria-labelledby="payment-modal-title" tabIndex={-1}>
+          <div className="wallet-modal-box" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') handleCloseModal() }}>
 
             {/* Step indicator */}
             <div className="wallet-modal-steps">
@@ -507,7 +509,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
             {paymentStep === 'awaiting' && paymentData && (
               <>
                 <div className="wallet-modal-header">
-                  <h3>Complete Payment</h3>
+                  <h3 id="payment-modal-title">Complete Payment</h3>
                   <button className="wallet-modal-close" onClick={handleCloseModal} aria-label="Close modal">
                     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   </button>

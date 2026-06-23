@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, startTransition } from 'react'
+import { useState, useEffect, useRef, startTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/Toast'
 import FormattedDate from '@/components/FormattedDate'
@@ -8,6 +8,7 @@ import FormattedDate from '@/components/FormattedDate'
 export default function SettingsPage() {
   const router = useRouter()
   const { success: toastSuccess } = useToast()
+  const confirmRef = useRef<HTMLInputElement>(null)
   const [user, setUser] = useState<{ email: string; created_at: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [confirming, setConfirming] = useState(false)
@@ -90,22 +91,28 @@ export default function SettingsPage() {
             Once deleted, your profile, wallet balance, rental history, and API keys are permanently removed. This cannot be undone.
           </p>
           {!confirming ? (
-            <button className="settings-danger-btn" onClick={() => setConfirming(true)}>
+            <button className="settings-danger-btn" onClick={() => { setConfirming(true); setTimeout(() => confirmRef.current?.focus(), 50) }}>
               Delete Account
             </button>
           ) : (
             <div className="settings-confirm">
-              <p className="settings-confirm-text">
+              <p className="settings-confirm-text" id="delete-confirm-desc">
                 Type <strong>DELETE</strong> to confirm:
               </p>
+              <label htmlFor="delete-confirm-input" className="sr-only">Type DELETE to confirm</label>
               <input
+                ref={confirmRef}
+                id="delete-confirm-input"
                 className="settings-input"
                 type="text"
                 value={confirmText}
                 onChange={e => setConfirmText(e.target.value)}
                 placeholder="Type DELETE to confirm"
+                aria-describedby="delete-confirm-desc"
               />
+              <label htmlFor="delete-password-input" className="sr-only">Enter your password</label>
               <input
+                id="delete-password-input"
                 className="settings-input"
                 type="password"
                 value={password}
@@ -113,7 +120,7 @@ export default function SettingsPage() {
                 placeholder="Enter your password"
                 autoComplete="current-password"
               />
-              {error && <p className="settings-error">{error}</p>}
+              {error && <p className="settings-error" role="alert">{error}</p>}
               <div className="settings-confirm-actions">
                 <button
                   className="settings-danger-btn"

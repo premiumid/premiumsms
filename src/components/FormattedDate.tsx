@@ -34,5 +34,5 @@ export default function FormattedDate({ date, type = 'datetime' }: FormattedDate
     return <span>N/A</span>
   }
 
-  return <span>{formatted}</span>
+  return <time dateTime={new Date(date).toISOString()}>{formatted}</time>
 }

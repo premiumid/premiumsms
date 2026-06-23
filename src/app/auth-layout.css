@@ -18,6 +18,12 @@
   box-shadow: var(--shadow-sm);
 }
 
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+}
+
 .auth-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -26,6 +32,12 @@
 .auth-title {
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .auth-title {
+    font-size: 1.375rem;
+  }
 }
 
 .auth-subtitle {
@@ -82,6 +94,11 @@
 .input-field:focus {
   border-color: var(--accent);
   box-shadow: var(--focus-ring);
+}
+
+.input-field:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .grid {

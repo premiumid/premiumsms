@@ -32,7 +32,7 @@ export default function LoginPage() {
         </div>
 
         {displayError && (
-          <div className="auth-error">
+          <div className="auth-error" role="alert" id="login-error">
             {displayError}
           </div>
         )}

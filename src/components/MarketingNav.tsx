@@ -1,13 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState, useEffect, startTransition } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { useState, useEffect, useRef, startTransition } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 export default function MarketingNav() {
   const router = useRouter()
+  const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const hamburgerRef = useRef<HTMLButtonElement>(null)
   const [user, setUser] = useState<{ email?: string } | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -20,6 +22,21 @@ export default function MarketingNav() {
       })
     })
   }, [])
+
+  useEffect(() => {
+    if (!open) return
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        hamburgerRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [open])
+
+  // Close on navigation
+  useEffect(() => { startTransition(() => setOpen(false)) }, [pathname])
 
   async function handleSignOut() {
     const supabase = createClient()
@@ -34,14 +51,15 @@ export default function MarketingNav() {
         Premium<span className="text-gradient">ID</span>
       </Link>
       <button
+        ref={hamburgerRef}
         className={`hamburger ${open ? 'open' : ''}`}
         onClick={() => setOpen(o => !o)}
         aria-label="Toggle navigation"
         aria-expanded={open}
       >
-        <span /><span /><span />
+        <span aria-hidden="true" /><span aria-hidden="true" /><span aria-hidden="true" />
       </button>
-      {open && <div className="nav-overlay" onClick={() => setOpen(false)} role="button" tabIndex={-1} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setOpen(false) }} />}
+      {open && <div className="nav-overlay" onClick={() => setOpen(false)} />}
       <div className={`nav-links ${open ? 'nav-open' : ''}`}>
         <Link href="/services" className="nav-link" onClick={() => setOpen(false)}>Services</Link>
         <Link href="/pricing" className="nav-link" onClick={() => setOpen(false)}>Pricing</Link>

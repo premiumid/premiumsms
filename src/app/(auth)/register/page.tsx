@@ -64,7 +64,7 @@ export default function RegisterPage() {
         </div>
 
         {error && (
-          <div className="auth-error">
+          <div className="auth-error" role="alert">
             {error}
           </div>
         )}
@@ -112,8 +112,8 @@ export default function RegisterPage() {
             </button>
             </div>
             {passwordValue && (
-              <div className="password-strength">
-                <div className="password-strength-bar">
+              <div className="password-strength" role="status" aria-live="polite">
+                <div className="password-strength-bar" role="progressbar" aria-valuenow={strength.score} aria-valuemin={0} aria-valuemax={5} aria-label={`Password strength: ${strength.label}`}>
                   <div className="password-strength-fill" style={{ width: `${(strength.score / 5) * 100}%`, background: strength.color }} />
                 </div>
                 <p className="password-strength-label" style={{ color: strength.color }}>{strength.label}</p>
@@ -126,15 +126,17 @@ export default function RegisterPage() {
             <input
               type="password"
               id="confirm-password"
+              name="confirm-password"
               className="input-field"
               placeholder="••••••••"
               required
+              aria-describedby={confirmValue && !passwordsMatch ? 'pw-mismatch-error' : undefined}
               style={{ borderColor: confirmValue && !passwordsMatch ? 'var(--danger)' : undefined }}
               value={confirmValue}
               onChange={e => setConfirmValue(e.target.value)}
             />
             {confirmValue && !passwordsMatch && (
-              <p className="input-error">Passwords do not match</p>
+              <p className="input-error" id="pw-mismatch-error">Passwords do not match</p>
             )}
           </div>
 

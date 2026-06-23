@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 interface Step {
@@ -68,27 +68,54 @@ export default function OnboardingTour() {
     return !localStorage.getItem('onboarding-complete')
   })
   const [currentStep, setCurrentStep] = useState(0)
+  const modalRef = useRef<HTMLDivElement>(null)
+  const prevFocusRef = useRef<HTMLElement | null>(null)
 
-  const close = useCallback(() => {
+  const skip = useCallback(() => {
     setIsOpen(false)
     localStorage.setItem('onboarding-complete', 'true')
   }, [])
+
+  const close = skip
 
   const next = useCallback(() => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(s => s + 1)
     } else {
-      close()
+      skip()
     }
-  }, [currentStep, close])
+  }, [currentStep, skip])
 
   const prev = useCallback(() => {
     if (currentStep > 0) setCurrentStep(s => s - 1)
   }, [currentStep])
 
-  const skip = useCallback(() => {
-    close()
-  }, [close])
+  useEffect(() => {
+    if (!isOpen) return
+    prevFocusRef.current = document.activeElement as HTMLElement
+    const modal = modalRef.current
+    if (!modal) return
+    const focusable = modal.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    first?.focus()
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') { skip(); return }
+      if (e.key !== 'Tab') return
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last?.focus() }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first?.focus() }
+      }
+    }
+    modal.addEventListener('keydown', handleKeyDown)
+    return () => {
+      modal.removeEventListener('keydown', handleKeyDown)
+      prevFocusRef.current?.focus()
+    }
+  }, [isOpen, skip])
 
   if (!isOpen) return null
 
@@ -97,8 +124,8 @@ export default function OnboardingTour() {
   const isLast = currentStep === steps.length - 1
 
   return (
-    <div className="onboarding-overlay" onClick={skip}>
-      <div className="onboarding-modal" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Onboarding tour">
+    <div className="onboarding-overlay">
+      <div className="onboarding-modal" ref={modalRef} onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
         <div className="onboarding-step-indicator">
           {steps.map((_, i) => (
             <div key={i} className={`onboarding-dot ${i === currentStep ? 'active' : ''} ${i < currentStep ? 'done' : ''}`} />
@@ -106,7 +133,7 @@ export default function OnboardingTour() {
         </div>
 
         <div className="onboarding-icon">{step.icon}</div>
-        <h2 className="onboarding-title">{step.title}</h2>
+        <h2 className="onboarding-title" id="onboarding-title">{step.title}</h2>
         <p className="onboarding-desc">{step.description}</p>
 
         {step.action && (

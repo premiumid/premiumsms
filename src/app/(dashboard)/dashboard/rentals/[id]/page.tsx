@@ -276,7 +276,7 @@ export default function RentalDetailPage() {
           </div>
         </div>
 
-        <div className="detail-messages-list">
+        <div className="detail-messages-list" aria-live="polite" aria-atomic="false">
           {messages.length === 0 ? (
             <div className="detail-messages-empty">
               <svg width="40" height="40" fill="none" stroke="var(--text-faint)" strokeWidth="1.5" viewBox="0 0 24 24">

@@ -49,7 +49,8 @@ export default function CookieConsent() {
         }
         .cookie-consent .btn {
           font-size: 0.75rem;
-          padding: 0.375rem 1rem;
+          padding: 0.75rem 1.25rem;
+          min-height: 44px;
         }
         @media (max-width: 640px) {
           .cookie-consent {

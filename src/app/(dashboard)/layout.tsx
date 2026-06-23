@@ -62,9 +62,9 @@ export default async function DashboardLayout({
         </div>
       </nav>
 
-      <div id="main-content" className="app-content-wrapper">
+      <main id="main-content" className="app-content-wrapper">
         {children}
-      </div>
+      </main>
       <OnboardingTour />
     </div>
   )
