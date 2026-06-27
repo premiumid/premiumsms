@@ -57,11 +57,7 @@ export function getSimpleIconSlug(slug: string, name: string): string {
     return nameMapping[nameLower]
   }
 
-  const cleanName = nameLower
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-
-  return cleanName || slug.toLowerCase()
+  return ''
 }
 
 function getBrandColor(slug: string): string {
@@ -87,19 +83,23 @@ interface ServiceIconProps {
 
 export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize = 28 }: ServiceIconProps) {
   const cleanSlug = getSimpleIconSlug(slug, name)
-  const isUnknown = !cleanSlug
+  const iconSrc = iconUrl
+    ? (iconUrl.startsWith('/') ? `https://virtualsms.io${iconUrl}` : iconUrl)
+    : cleanSlug
+      ? `https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/${cleanSlug}.svg`
+      : ''
   const [imageFailed, setImageFailed] = useState(false)
   const imgRef = useRef<HTMLImageElement>(null)
-  const color = getBrandColor(cleanSlug)
-  const failed = isUnknown || imageFailed
+  const color = getBrandColor(cleanSlug || slug)
+  const failed = !iconSrc || imageFailed
 
   useEffect(() => {
-    if (!isUnknown && imgRef.current) {
+    if (iconSrc && imgRef.current) {
       if (imgRef.current.complete && imgRef.current.naturalWidth === 0) {
         setImageFailed(true)
       }
     }
-  }, [cleanSlug, isUnknown])
+  }, [iconSrc])
 
   return (
     <div
@@ -110,7 +110,7 @@ export default function ServiceIcon({ slug, name, iconUrl, size = 48, iconSize =
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
           ref={imgRef}
-          src={(iconUrl && iconUrl.startsWith('/')) ? `https://virtualsms.io${iconUrl}` : (iconUrl || `https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/${cleanSlug}.svg`)}
+          src={iconSrc}
           alt=""
           width={iconSize}
           height={iconSize}
