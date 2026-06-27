@@ -62,8 +62,8 @@ export default function SettingsPage() {
           </div>
           {loading ? (
             <div className="settings-skeleton">
-              <div className="settings-skeleton-line" style={{ width: '60%' }} />
-              <div className="settings-skeleton-line" style={{ width: '40%' }} />
+              <div className="settings-skeleton-line settings-skeleton-line--lg" />
+              <div className="settings-skeleton-line settings-skeleton-line--sm" />
             </div>
           ) : user ? (
             <div className="settings-profile-rows">
@@ -85,7 +85,7 @@ export default function SettingsPage() {
             <div className="settings-card-icon settings-card-icon--danger">
               <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             </div>
-            <h2 className="settings-card-title" style={{ color: 'var(--danger)' }}>Delete Account</h2>
+            <h2 className="settings-card-title settings-card-title--danger">Delete Account</h2>
           </div>
           <p className="settings-desc">
             Once deleted, your profile, wallet balance, rental history, and API keys are permanently removed. This cannot be undone.

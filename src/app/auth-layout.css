@@ -56,6 +56,11 @@
   color: var(--text-muted);
 }
 
+.auth-terms-link {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
 .auth-error {
   background: var(--danger-bg);
   border: 1px solid var(--danger);
@@ -101,6 +106,10 @@
   outline-offset: 2px;
 }
 
+.input-field--error {
+  border-color: var(--danger);
+}
+
 .grid {
   display: flex;
   flex-direction: column;
@@ -110,6 +119,10 @@
 /* Password field */
 .input-password-wrap {
   position: relative;
+}
+
+.input-password-wrap .input-field {
+  padding-right: 2.5rem;
 }
 
 .password-toggle {
@@ -130,6 +143,53 @@
 .password-toggle:hover {
   color: var(--text-muted);
 }
+
+/* ── Password Strength Meter ── */
+.password-strength {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.password-strength-bar {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--bg-muted);
+  overflow: hidden;
+}
+
+.password-strength-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--danger);
+  width: 0%;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+[data-score="1"] .password-strength-fill { width: 20%; }
+[data-score="2"] .password-strength-fill { width: 40%; }
+[data-score="3"] .password-strength-fill { width: 60%; }
+[data-score="4"] .password-strength-fill { width: 80%; }
+[data-score="5"] .password-strength-fill { width: 100%; }
+
+.password-strength-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--danger);
+  transition: color 0.3s ease;
+}
+
+/* Strength color states via data attribute */
+[data-strength="weak"]       .password-strength-fill { background: var(--danger); }
+[data-strength="weak"]       .password-strength-label { color: var(--danger); }
+[data-strength="fair"]       .password-strength-fill { background: var(--warning); }
+[data-strength="fair"]       .password-strength-label { color: var(--warning); }
+[data-strength="good"]       .password-strength-fill,
+[data-strength="strong"]     .password-strength-fill { background: var(--success); }
+[data-strength="good"]       .password-strength-label,
+[data-strength="strong"]     .password-strength-label { color: var(--success); }
+[data-strength="very-strong"] .password-strength-fill { background: #047857; }
+[data-strength="very-strong"] .password-strength-label { color: #047857; }
 
 .forgot-link {
   text-align: right;

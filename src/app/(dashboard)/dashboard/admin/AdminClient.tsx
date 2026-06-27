@@ -86,8 +86,8 @@ function TrendChart({
         <h3 className="admin-chart-title">{title}</h3>
         {secondValueKey && (
           <div className="admin-chart-legend">
-            <span className="admin-legend-item" style={{ color: 'var(--accent)' }}>Rentals</span>
-            <span className="admin-legend-item" style={{ color: 'var(--warning)' }}>Signups</span>
+            <span className="admin-legend-item admin-legend-item--accent">Rentals</span>
+            <span className="admin-legend-item admin-legend-item--warning">Signups</span>
           </div>
         )}
       </div>
@@ -368,12 +368,12 @@ export default function AdminClient({
       {/* Balance Adjustment + Users */}
       <div className="admin-two-col">
         <div className="admin-card">
-          <h2 className="admin-card-title" style={{ marginBottom: '0.25rem' }}>Adjust Balance</h2>
+          <h2 className="admin-card-title mb-1">Adjust Balance</h2>
           <p className="admin-desc">Credit or debit a user&apos;s wallet.</p>
           <form onSubmit={handleAdjustBalance} className="admin-form">
             <div className="admin-field">
-              <label className="admin-label">User</label>
-              <select className="admin-select" value={targetUserId} onChange={e => setTargetUserId(e.target.value)}>
+              <label htmlFor="admin-balance-user" className="admin-label">User</label>
+              <select id="admin-balance-user" className="admin-select" value={targetUserId} onChange={e => setTargetUserId(e.target.value)}>
                 <option value="">-- Select --</option>
                 {users.map(u => (
                   <option key={u.id} value={u.id}>{u.email} (${Number(u.balance).toFixed(2)})</option>
@@ -381,8 +381,8 @@ export default function AdminClient({
               </select>
             </div>
             <div className="admin-field">
-              <label className="admin-label">Action</label>
-              <select className="admin-select" value={adjustAction} onChange={e => setAdjustAction(e.target.value as 'credit' | 'debit')}>
+              <label htmlFor="admin-balance-action" className="admin-label">Action</label>
+              <select id="admin-balance-action" className="admin-select" value={adjustAction} onChange={e => setAdjustAction(e.target.value as 'credit' | 'debit')}>
                 <option value="credit">+ Credit</option>
                 <option value="debit">− Debit</option>
               </select>
@@ -402,12 +402,12 @@ export default function AdminClient({
         </div>
 
         <div className="admin-card">
-          <h2 className="admin-card-title" style={{ marginBottom: '0.25rem' }}>Users</h2>
+          <h2 className="admin-card-title mb-1">Users</h2>
           <label htmlFor="admin-user-search" className="sr-only">Search users by email</label>
           <input id="admin-user-search" className="admin-input" type="search" placeholder="Search email..." value={userSearch} onChange={e => setUserSearch(e.target.value)} />
           <div className="admin-user-list" role="listbox" aria-label="Select a user">
             {filteredUsers.map(u => (
-              <button key={u.id} role="option" aria-selected={targetUserId === u.id} className={`admin-user-row${targetUserId === u.id ? ' admin-user-row--selected' : ''}`} onClick={() => setTargetUserId(u.id)}>
+              <button key={u.id} role="option" aria-selected={targetUserId === u.id ? 'true' : 'false'} className={`admin-user-row${targetUserId === u.id ? ' admin-user-row--selected' : ''}`} onClick={() => setTargetUserId(u.id)}>
                 <div className="admin-user-info">
                   <p className="admin-user-email">{u.email}</p>
                   <span className={`admin-role-badge admin-role-badge--${u.role}`}>{u.role}</span>
@@ -421,10 +421,10 @@ export default function AdminClient({
       </div>
 
       {/* Rentals */}
-      <div className="admin-card" style={{ marginTop: '1.5rem' }}>
-        <h2 className="admin-card-title" style={{ marginBottom: '0.75rem' }}>Rentals</h2>
+      <div className="admin-card mt-6">
+        <h2 className="admin-card-title mb-3">Rentals</h2>
         <label htmlFor="admin-rental-search" className="sr-only">Search rentals</label>
-        <input id="admin-rental-search" className="admin-input" type="search" placeholder="Search by phone, email, or service..." value={rentalSearch} onChange={e => setRentalSearch(e.target.value)} style={{ marginBottom: '0.75rem', maxWidth: '360px' }} />
+        <input id="admin-rental-search" className="admin-input admin-search-filter mb-3" type="search" placeholder="Search by phone, email, or service..." value={rentalSearch} onChange={e => setRentalSearch(e.target.value)} />
         {filteredRentals.length === 0 ? (
           <p className="admin-empty">No rentals found</p>
         ) : (

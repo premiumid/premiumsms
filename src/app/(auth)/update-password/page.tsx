@@ -76,7 +76,6 @@ export default function UpdatePasswordPage() {
               placeholder="••••••••"
               required
               minLength={6}
-              style={{ paddingRight: '2.5rem' }}
               value={passwordValue}
               onChange={e => setPasswordValue(e.target.value)}
               autoFocus
@@ -95,11 +94,11 @@ export default function UpdatePasswordPage() {
             </button>
             </div>
             {passwordValue && (
-              <div className="password-strength">
+              <div className="password-strength" role="status" aria-live="polite" data-strength={strength.label.toLowerCase().replace(/\s+/g, '-')} data-score={strength.score}>
                 <div className="password-strength-bar">
-                  <div className="password-strength-fill" style={{ width: `${(strength.score / 5) * 100}%`, background: strength.color }} />
+                  <div className="password-strength-fill" />
                 </div>
-                <p className="password-strength-label" style={{ color: strength.color }}>{strength.label}</p>
+                <p className="password-strength-label">{strength.label}</p>
               </div>
             )}
           </div>
@@ -109,10 +108,9 @@ export default function UpdatePasswordPage() {
             <input
               type="password"
               id="confirm-password"
-              className="input-field"
+              className={`input-field${confirmValue && !passwordsMatch ? ' input-field--error' : ''}`}
               placeholder="••••••••"
               required
-              style={{ borderColor: confirmValue && !passwordsMatch ? 'var(--danger)' : undefined }}
               value={confirmValue}
               onChange={e => setConfirmValue(e.target.value)}
             />

@@ -58,10 +58,9 @@ export default function LoginPage() {
               type={showPassword ? 'text' : 'password'}
               id="password" 
               name="password" 
-              className="input-field" 
-              placeholder="••••••••" 
-              required 
-              style={{ paddingRight: '2.5rem' }}
+              className="input-field"
+              placeholder="••••••••"
+              required
             />
             <button
               type="button"

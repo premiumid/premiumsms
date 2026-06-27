@@ -109,6 +109,10 @@
   text-decoration: none;
   border: 1px solid var(--border);
   transition: all 0.2s ease;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .app-balance:hover {
@@ -281,7 +285,8 @@
   }
 }
 
-.catalog-header h1 {
+.catalog-header h1,
+.catalog-header h2 {
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.025em;
@@ -290,7 +295,8 @@
 }
 
 @media (max-width: 640px) {
-  .catalog-header h1 {
+  .catalog-header h1,
+  .catalog-header h2 {
     font-size: 1.5rem;
   }
 }
@@ -435,6 +441,21 @@
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+}
+
+@media (max-width: 480px) {
+  .catalog-step-indicator {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .step-indicator-text {
+    display: none;
+  }
+  .step-indicator-item {
+    gap: 0.5rem;
+  }
 }
 
 .step-indicator-item {

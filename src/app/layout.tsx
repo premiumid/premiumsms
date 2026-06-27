@@ -46,7 +46,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} style={{ colorScheme: 'light' }}>
+    <html lang={locale} style={{ colorScheme: 'dark' }}>
       <body className={`${inter.variable} ${outfit.variable}`}>
         <a href="#main-content" className="skip-nav">Skip to main content</a>
         <NextIntlClientProvider messages={messages} locale={locale}>

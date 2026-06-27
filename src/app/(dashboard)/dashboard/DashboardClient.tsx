@@ -251,9 +251,9 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
 
           {!search && (
             <div className="catalog-stats-bar mt-8 flex justify-center gap-6 text-sm text-secondary font-medium">
-                <span className="flex items-center gap-1.5"><span className="stat-dot" style={{ background: 'var(--success)' }}></span> 2500+ services</span>
-              <span className="flex items-center gap-1.5"><span className="stat-dot" style={{ background: 'var(--accent)' }}></span> 145+ countries</span>
-              <span className="flex items-center gap-1.5"><span className="stat-dot" style={{ background: 'var(--accent-muted)' }}></span> From $0.05</span>
+                <span className="flex items-center gap-1.5"><span className="stat-dot stat-dot--success"></span> 2500+ services</span>
+              <span className="flex items-center gap-1.5"><span className="stat-dot stat-dot--accent"></span> 145+ countries</span>
+              <span className="flex items-center gap-1.5"><span className="stat-dot stat-dot--muted"></span> From $0.05</span>
             </div>
           )}
           
@@ -271,7 +271,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                     {recentRentals.slice(0, 3).map(r => (
                       <Link key={r.id} href={`/dashboard/rentals/${r.id}`} className="flex justify-between items-center p-3 rounded-md hover-bg-muted transition-colors no-underline">
                         <span className="flex flex-col gap-1">
-                          <span className="font-semibold" style={{ color: 'var(--text)' }}>{r.phone_number || 'Processing…'}</span>
+                          <span className="font-semibold">{r.phone_number || 'Processing…'}</span>
                           <span className="text-xs text-tertiary">{formatDate(r.created_at)}</span>
                         </span>
                         <span className={`text-sm font-bold ${r.status === 'active' ? 'text-success' : 'text-tertiary'}`}>${Number(r.price).toFixed(2)}</span>
@@ -285,7 +285,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                     {recentTransactions.slice(0, 3).map(tx => (
                       <div key={tx.id} className="flex justify-between items-center p-3 rounded-md">
                         <span className="flex flex-col gap-1">
-                          <span className="font-semibold" style={{ color: 'var(--text)' }}>{tx.description}</span>
+                          <span className="font-semibold">{tx.description}</span>
                           <span className="text-xs text-tertiary">{formatDate(tx.created_at)}</span>
                         </span>
                         <span className={`text-sm font-bold ${tx.type === 'debit' ? 'text-danger' : 'text-success'}`}>
@@ -335,7 +335,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                       className="premium-dropdown-trigger"
                       id="dashboard-country-select-btn"
                       aria-haspopup="listbox"
-                      aria-expanded={isDropdownOpen}
+                      aria-expanded={isDropdownOpen ? 'true' : 'false'}
                       aria-label={activeCountry ? `Selected country: ${activeCountry.name}` : 'Choose a country'}
                     >
                       <span className="premium-dropdown-trigger-content">
@@ -376,7 +376,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                           className="premium-dropdown-overlay" 
                           onClick={() => setIsDropdownOpen(false)} 
                         />
-                        <div className="premium-dropdown-menu" role="listbox" aria-label="Select a country">
+                        <div className="premium-dropdown-menu">
                           {/* Search bar inside dropdown */}
                           <div className="premium-dropdown-search-wrap">
                             <div className="premium-dropdown-search-icon">
@@ -393,13 +393,13 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                             />
                           </div>
                           {/* Country List items */}
-                          <div className="premium-dropdown-list">
+                          <div className="premium-dropdown-list" role="listbox" aria-label="Select a country">
                             {filteredCountries.map(c => (
                               <button
                                 key={c.code}
                                 type="button"
                                 role="option"
-                                aria-selected={selectedCountry === c.code}
+                                aria-selected={selectedCountry === c.code ? 'true' : 'false'}
                                 onClick={() => {
                                   setSelectedCountry(c.code)
                                   setIsDropdownOpen(false)

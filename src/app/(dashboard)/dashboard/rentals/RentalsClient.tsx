@@ -249,7 +249,7 @@ export default function RentalsClient({
             <button
               key={st}
               role="tab"
-              aria-selected={statusFilter === st}
+              aria-selected={statusFilter === st ? 'true' : 'false'}
               onClick={() => { setStatusFilter(st); setPage(1) }}
               className={`rentals-filter-pill${statusFilter === st ? ' active' : ''}`}
             >

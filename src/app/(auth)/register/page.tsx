@@ -86,15 +86,14 @@ export default function RegisterPage() {
           <div className="input-group">
             <label htmlFor="password" className="input-label">Password</label>
             <div className="input-password-wrap">
-            <input 
+            <input
               type={showPassword ? 'text' : 'password'}
-              id="password" 
-              name="password" 
-              className="input-field" 
-              placeholder="••••••••" 
-              required 
+              id="password"
+              name="password"
+              className="input-field"
+              placeholder="••••••••"
+              required
               minLength={6}
-              style={{ paddingRight: '2.5rem' }}
               value={passwordValue}
               onChange={e => setPasswordValue(e.target.value)}
             />
@@ -112,11 +111,11 @@ export default function RegisterPage() {
             </button>
             </div>
             {passwordValue && (
-              <div className="password-strength" role="status" aria-live="polite">
-                <div className="password-strength-bar" role="progressbar" aria-valuenow={strength.score} aria-valuemin={0} aria-valuemax={5} aria-label={`Password strength: ${strength.label}`}>
-                  <div className="password-strength-fill" style={{ width: `${(strength.score / 5) * 100}%`, background: strength.color }} />
+              <div className="password-strength" role="status" aria-live="polite" data-strength={strength.label.toLowerCase().replace(/\s+/g, '-')} data-score={strength.score}>
+                <div className="password-strength-bar">
+                  <div className="password-strength-fill" />
                 </div>
-                <p className="password-strength-label" style={{ color: strength.color }}>{strength.label}</p>
+                <p className="password-strength-label">{strength.label}</p>
               </div>
             )}
           </div>
@@ -127,11 +126,10 @@ export default function RegisterPage() {
               type="password"
               id="confirm-password"
               name="confirm-password"
-              className="input-field"
+              className={`input-field${confirmValue && !passwordsMatch ? ' input-field--error' : ''}`}
               placeholder="••••••••"
               required
               aria-describedby={confirmValue && !passwordsMatch ? 'pw-mismatch-error' : undefined}
-              style={{ borderColor: confirmValue && !passwordsMatch ? 'var(--danger)' : undefined }}
               value={confirmValue}
               onChange={e => setConfirmValue(e.target.value)}
             />
@@ -146,7 +144,7 @@ export default function RegisterPage() {
               checked={termsAccepted}
               onChange={e => setTermsAccepted(e.target.checked)}
             />
-            I accept the <Link href="/terms" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Terms of Service</Link> and <Link href="/privacy" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>
+            I accept the <Link href="/terms" className="auth-terms-link">Terms of Service</Link> and <Link href="/privacy" className="auth-terms-link">Privacy Policy</Link>
           </label>
 
           <button type="submit" className="btn btn-primary auth-btn-container" disabled={loading || !termsAccepted}>

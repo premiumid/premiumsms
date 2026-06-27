@@ -1,17 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useSyncExternalStore } from 'react'
 import Link from 'next/link'
 
+function subscribeCookieConsent(onStoreChange: () => void) {
+  window.addEventListener('cookie-consent-change', onStoreChange)
+  return () => window.removeEventListener('cookie-consent-change', onStoreChange)
+}
+
 export default function CookieConsent() {
-  const [visible, setVisible] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return !localStorage.getItem('cookie-consent')
-  })
+  const visible = useSyncExternalStore(
+    subscribeCookieConsent,
+    () => !localStorage.getItem('cookie-consent'),
+    () => false,
+  )
 
   function accept() {
     localStorage.setItem('cookie-consent', 'true')
-    setVisible(false)
+    window.dispatchEvent(new Event('cookie-consent-change'))
   }
 
   if (!visible) return null
@@ -22,7 +28,7 @@ export default function CookieConsent() {
         We use essential cookies to operate this site. By continuing, you accept our{' '}
         <Link href="/privacy">Privacy Policy</Link>.
       </p>
-      <button className="btn btn-primary" onClick={accept} style={{ flexShrink: 0 }}>
+      <button className="btn btn-primary cookie-consent-btn" onClick={accept}>
         Accept
       </button>
       <style>{`
@@ -47,7 +53,8 @@ export default function CookieConsent() {
           color: var(--accent-muted);
           text-decoration: underline;
         }
-        .cookie-consent .btn {
+        .cookie-consent-btn {
+          flex-shrink: 0;
           font-size: 0.75rem;
           padding: 0.75rem 1.25rem;
           min-height: 44px;

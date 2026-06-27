@@ -333,7 +333,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                   id={`amount-btn-${amt}`}
                   className={`wallet-topup-preset ${selectedAmount === amt && !customAmount ? 'active' : ''}`}
                   onClick={() => handleAmountSelect(amt)}
-                  aria-pressed={selectedAmount === amt && !customAmount}
+                  aria-pressed={selectedAmount === amt && !customAmount ? 'true' : 'false'}
                 >
                   ${amt}
                 </button>

@@ -295,7 +295,7 @@ export default function RentalDetailPage() {
             </div>
           ) : (
             messages.map((msg, i) => (
-              <div key={msg.id} className={`detail-message`} style={{ animationDelay: `${i * 0.05}s` }}>
+              <div key={msg.id} className="detail-message" style={{ '--delay': `${i * 0.05}s` } as React.CSSProperties}>
                 <div className="detail-message-time">
                   <FormattedDate date={msg.received_at} type="time" />
                 </div>
