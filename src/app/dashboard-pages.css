@@ -1168,25 +1168,47 @@
 .dashboard-layout-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0;
   width: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .dashboard-hero {
-  margin-bottom: 2rem;
+  padding: 1.5rem 2rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .dashboard-hero {
+    padding: 1rem 1.25rem 0.875rem;
+  }
 }
 
 .dashboard-hero h1 {
-  font-size: 2.25rem;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--text);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   letter-spacing: -0.02em;
+}
+
+@media (max-width: 640px) {
+  .dashboard-hero h1 {
+    font-size: 1.375rem;
+  }
 }
 
 .dashboard-hero p {
   color: var(--text-muted);
-  font-size: 1.125rem;
+  font-size: 0.9375rem;
+}
+
+@media (max-width: 640px) {
+  .dashboard-hero p {
+    font-size: 0.8125rem;
+  }
 }
 
 .stat-cards-row {
@@ -1330,6 +1352,92 @@
   font-weight: 600;
   color: var(--text);
   text-align: center;
+}
+
+/* ─────────── Mobile search strip ─────────── */
+.mobile-search-strip {
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.mobile-search-input-wrap {
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .mobile-search-strip {
+    display: none;
+  }
+}
+
+/* ─────────── Mobile order panel ─────────── */
+.mobile-order-panel {
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: 1.5rem;
+  box-shadow: var(--shadow-md);
+  animation: mobile-panel-in 0.25s ease-out both;
+  will-change: transform, opacity;
+}
+
+@keyframes mobile-panel-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 768px) {
+  .mobile-order-panel {
+    display: none;
+  }
+}
+
+.mobile-order-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.08), rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.03));
+  border-bottom: 1px solid var(--border);
+}
+
+.mobile-order-panel-service-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.mobile-order-panel-price {
+  font-size: 0.875rem;
+  color: var(--success);
+  font-weight: 600;
+  margin-top: 0.125rem;
+}
+
+.mobile-order-panel-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-muted);
+  color: var(--text-faint);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.mobile-order-panel-close:hover {
+  background: var(--bg-inset);
+  color: var(--text);
+}
+
+.mobile-order-panel-body {
+  padding: 1.25rem;
 }
 
 .recent-activity-section {
