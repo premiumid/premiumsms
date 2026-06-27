@@ -4607,7 +4607,7 @@
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.40);
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
     z-index: 400;
@@ -4694,8 +4694,8 @@
 }
 
 .order-sheet-body {
-  padding: 1.25rem;
-  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));
+  padding: 1rem 1.25rem;
+  padding-bottom: max(2.5rem, env(safe-area-inset-bottom, 2.5rem));
   flex: 1;
 }
 

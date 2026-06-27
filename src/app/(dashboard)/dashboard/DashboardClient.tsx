@@ -333,7 +333,7 @@ export default function DashboardClient({
         </div>
         <div className={`step-line${s2 ? ' filled' : ''}`} />
         <div className={`step-item${s3 ? ' active' : ''}`}>
-          <div className="step-dot">3</div>
+          <div className="step-dot">{s3 ? '→' : '3'}</div>
           <span className="step-label">Confirm</span>
         </div>
       </div>
