@@ -611,13 +611,10 @@ export default function DashboardClient({
               <div className="order-sheet-handle" aria-hidden="true" />
             </div>
 
-            {/* Step progress */}
-            <StepBar />
-
             {/* Service header */}
             <div className="order-sheet-header">
               <div className="flex items-center gap-3 flex-1 min-w-0">
-                <ServiceIcon slug={activeApp.slug} name={activeApp.name} iconUrl={activeApp.icon_url} size={48} />
+                <ServiceIcon slug={activeApp.slug} name={activeApp.name} iconUrl={activeApp.icon_url} size={44} />
                 <div className="min-w-0">
                   <div className="order-sheet-service-name">{activeApp.name}</div>
                   <div className="order-sheet-price">
@@ -631,23 +628,25 @@ export default function DashboardClient({
                   </div>
                 </div>
               </div>
-              <button
-                type="button"
-                className="mobile-order-panel-close"
-                onClick={closeSheet}
-                aria-label="Close order panel"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="order-sheet-step-badge">
+                  {!selectedCountry ? 'Step 2' : price !== null ? 'Step 3' : 'Step 2'}
+                </span>
+                <button
+                  type="button"
+                  className="mobile-order-panel-close"
+                  onClick={closeSheet}
+                  aria-label="Close order panel"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             {/* Body */}
             <div className="order-sheet-body">
-              <label className="block text-xs font-bold text-tertiary uppercase tracking-wider mb-2">
-                Select Country
-              </label>
               <CountryDropdown />
 
               {error && (
@@ -656,13 +655,7 @@ export default function DashboardClient({
                 </div>
               )}
 
-              <div className="order-sheet-features mt-4">
-                <span className="order-sheet-feature">Real SIM</span>
-                <span className="order-sheet-feature">145+ Countries</span>
-                <span className="order-sheet-feature">Auto-refund</span>
-              </div>
-
-              <div className="mt-4">
+              <div className="mt-3">
                 <OrderCTA pulse />
                 <p className="catalog-price-footnote">One-time charge. Auto-refund if no SMS received.</p>
               </div>
