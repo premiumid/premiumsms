@@ -61,12 +61,14 @@ export default function DashboardClient({
   recentTransactions,
   recentRentals,
   servicesError,
+  walletBalance,
 }: {
   initialServices: Service[]
   isLoggedIn: boolean
   recentTransactions?: TxRecord[]
   recentRentals?: RentalRecord[]
   servicesError?: boolean
+  walletBalance?: number
 }) {
   const router = useRouter()
   const [search, setSearch] = useState('')
@@ -354,6 +356,14 @@ export default function DashboardClient({
             <h1>Dashboard</h1>
             <p>Welcome back. Manage your rentals and wallet balance.</p>
           </div>
+          {walletBalance !== undefined && walletBalance < 1 && (
+            <Link href="/dashboard/wallet#topup-card" className="hero-topup-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Funds
+            </Link>
+          )}
         </div>
       )}
 
@@ -652,6 +662,11 @@ export default function DashboardClient({
               {error && (
                 <div className="text-xs text-danger mt-3 bg-danger/10 p-2.5 rounded-lg border border-danger/20">
                   {error}
+                  {error.startsWith('Insufficient') && (
+                    <Link href="/dashboard/wallet#topup-card" className="sheet-topup-link">
+                      Top Up Wallet →
+                    </Link>
+                  )}
                 </div>
               )}
 

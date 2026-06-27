@@ -46,9 +46,16 @@ export default async function DashboardLayout({
         <div className="app-user">
           {user ? (
             <>
-              <Link href="/dashboard/wallet" className="app-balance">
-                ${Number(balance).toFixed(2)}
-              </Link>
+              <div className="app-balance-group">
+                <Link href="/dashboard/wallet" className="app-balance">
+                  ${Number(balance).toFixed(2)}
+                </Link>
+                <Link href="/dashboard/wallet#topup-card" className="app-funds-btn" aria-label="Add funds to wallet">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                </Link>
+              </div>
               <form action={signout}>
                 <button type="submit" className="btn btn-secondary">Log out</button>
               </form>

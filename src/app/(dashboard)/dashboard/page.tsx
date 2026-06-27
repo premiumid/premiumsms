@@ -38,9 +38,10 @@ export default async function DashboardPage() {
 
   let recentTransactions: TxRecord[] = []
   let recentRentals: RentalRecord[] = []
+  let walletBalance: number | undefined
 
   if (user) {
-    const [txRes, rentalsRes] = await Promise.all([
+    const [txRes, rentalsRes, walletRes] = await Promise.all([
       supabase.from('wallet_transactions')
         .select('id, type, amount, description, created_at')
         .order('created_at', { ascending: false })
@@ -50,9 +51,14 @@ export default async function DashboardPage() {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(5),
+      supabase.from('wallets')
+        .select('balance')
+        .eq('user_id', user.id)
+        .single(),
     ])
     recentTransactions = (txRes.data as TxRecord[]) || []
     recentRentals = (rentalsRes.data as RentalRecord[]) || []
+    walletBalance = walletRes.data ? Number(walletRes.data.balance) : 0
   }
 
   return (
@@ -62,6 +68,7 @@ export default async function DashboardPage() {
       recentTransactions={recentTransactions}
       recentRentals={recentRentals}
       servicesError={servicesError}
+      walletBalance={walletBalance}
     />
   );
 }
