@@ -386,6 +386,9 @@
 /* Background */
 [class~="bg-accent/20"] { background: rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.2); }
 [class~="bg-accent/10"] { background: rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.1); }
+[class~="bg-danger/10"] { background: rgba(var(--danger-r), var(--danger-g), var(--danger-b), 0.1); }
+[class~="border-danger/20"] { border-color: rgba(var(--danger-r), var(--danger-g), var(--danger-b), 0.2); }
+[class~="p-2.5"] { padding: 0.625rem; }
 
 /* Typography utilities */
 .tracking-wider { letter-spacing: 0.05em; }
@@ -1309,9 +1312,9 @@
 }
 
 .catalog-sidebar-item.active {
-  background: var(--accent-subtle);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--accent);
+  color: white;
+  border-radius: var(--radius-md);
 }
 
 .catalog-apps-grid {
@@ -1352,6 +1355,92 @@
   font-weight: 600;
   color: var(--text);
   text-align: center;
+}
+
+/* ─────────── Guest welcome banner ─────────── */
+.guest-welcome-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.08), rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.03));
+  border: 1px solid rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.15);
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+}
+
+.guest-welcome-banner h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.guest-welcome-banner p {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  max-width: 40rem;
+}
+
+@media (max-width: 767px) {
+  .guest-welcome-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+  }
+  .guest-welcome-banner h1 {
+    font-size: 1.25rem;
+  }
+}
+
+/* ─────────── Catalog empty & error states ─────────── */
+.catalog-empty-state {
+  grid-column: 1 / -1;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.catalog-empty-state p {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.catalog-error-state {
+  grid-column: 1 / -1;
+  padding: 2rem;
+  text-align: center;
+  background: rgba(var(--danger-r), var(--danger-g), var(--danger-b), 0.05);
+  border: 1px solid rgba(var(--danger-r), var(--danger-g), var(--danger-b), 0.2);
+  border-radius: var(--radius-lg);
+  color: var(--danger);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+/* ─────────── Price footnote ─────────── */
+.catalog-price-footnote {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  text-align: center;
+  margin-top: 0.75rem;
+  line-height: 1.4;
+}
+
+/* ─────────── Mobile tap hint ─────────── */
+.catalog-tap-hint {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--text-faint);
+  text-align: center;
+  margin-top: -0.25rem;
+}
+
+@media (min-width: 1024px) {
+  .catalog-tap-hint {
+    display: none;
+  }
 }
 
 /* ─────────── Mobile search strip ─────────── */
@@ -1417,8 +1506,8 @@
 }
 
 .mobile-order-panel-close {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--bg-muted);

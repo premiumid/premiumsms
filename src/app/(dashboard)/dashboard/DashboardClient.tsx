@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import ServiceIcon from '@/components/ServiceIcon'
@@ -55,7 +55,7 @@ const POPULAR_SERVICES: Service[] = [
   { slug: 'steam', name: 'Steam' }
 ]
 
-export default function DashboardClient({ initialServices, isLoggedIn, recentTransactions, recentRentals }: { initialServices: Service[]; isLoggedIn: boolean; recentTransactions?: TxRecord[]; recentRentals?: RentalRecord[] }) {
+export default function DashboardClient({ initialServices, isLoggedIn, recentTransactions, recentRentals, servicesError }: { initialServices: Service[]; isLoggedIn: boolean; recentTransactions?: TxRecord[]; recentRentals?: RentalRecord[]; servicesError?: boolean }) {
   const router = useRouter()
   const [search, setSearch] = useState('')
   const [selectedApp, setSelectedApp] = useState<string | null>(null)
@@ -137,6 +137,14 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
       .finally(() => setPriceLoading(false))
   }, [activeAppSlug, selectedCountry])
   /* eslint-enable react-hooks/set-state-in-effect */
+
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (selectedApp !== null) {
+      panelRef.current?.focus()
+    }
+  }, [selectedApp])
 
   async function handleRent() {
     if (!activeApp || !selectedCountry || !isLoggedIn) return
@@ -303,6 +311,17 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
         </div>
       )}
 
+      {/* Guest welcome banner — visible when logged out */}
+      {!isLoggedIn && (
+        <div className="guest-welcome-banner">
+          <div>
+            <h1>Get Virtual Phone Numbers Instantly</h1>
+            <p>Browse 2500+ services. Pick a number, receive your SMS, and verify your account in seconds.</p>
+          </div>
+          <Link href="/register" className="btn btn-primary">Get Started Free &rarr;</Link>
+        </div>
+      )}
+
       {/* Main Catalog 3-Col Layout */}
       <div className="catalog-grid-layout">
 
@@ -363,23 +382,34 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
           <div className="catalog-header mb-8 text-center sm:text-left">
             <h2 className="text-2xl font-bold mb-2">Pick a service to get started</h2>
             <p className="text-secondary">
-              {search ? `Browse search results` : 'Choose a popular app below, or search the full catalog on the left.'}
+              {search ? `Browse search results` : 'Choose a popular app below, or search by name.'}
             </p>
           </div>
 
           <div className="catalog-apps-grid">
-            {search ? (
-              filteredApps.slice(0, 24).map(app => (
-                <button
-                  key={app.slug}
-                  type="button"
-                  className={`catalog-app-card w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
-                  onClick={() => setSelectedApp(app.slug)}
-                >
-                  <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={64} />
-                  <div className="catalog-app-name">{app.name}</div>
-                </button>
-              ))
+            {servicesError ? (
+              <div className="catalog-error-state">
+                Services are temporarily unavailable. Please try again later.
+              </div>
+            ) : search ? (
+              filteredApps.length > 0 ? (
+                filteredApps.slice(0, 24).map(app => (
+                  <button
+                    key={app.slug}
+                    type="button"
+                    className={`catalog-app-card w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
+                    onClick={() => setSelectedApp(app.slug)}
+                  >
+                    <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={64} />
+                    <div className="catalog-app-name">{app.name}</div>
+                    <span className="catalog-tap-hint">Tap to order →</span>
+                  </button>
+                ))
+              ) : (
+                <div className="catalog-empty-state">
+                  <p>No services found for &ldquo;{search}&rdquo;</p>
+                </div>
+              )
             ) : (
               popularApps.map(app => (
                 <button
@@ -390,6 +420,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
                 >
                   <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={64} />
                   <div className="catalog-app-name">{app.name}</div>
+                  <span className="catalog-tap-hint">Tap to order →</span>
                 </button>
               ))
             )}
@@ -405,7 +436,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
 
           {/* Mobile order panel — visible only on mobile (< 768px) */}
           {activeApp && (
-            <div className="mobile-order-panel">
+            <div className="mobile-order-panel" ref={panelRef} tabIndex={-1}>
               <div className="mobile-order-panel-header">
                 <div className="flex items-center gap-3">
                   <ServiceIcon slug={activeApp.slug} name={activeApp.name} iconUrl={activeApp.icon_url} size={40} />
@@ -446,6 +477,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
 
                 <div className="mt-4">
                   <OrderCTA />
+                  <p className="catalog-price-footnote">One-time charge. Auto-refund if no SMS received.</p>
                 </div>
               </div>
             </div>
@@ -522,7 +554,7 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
               </div>
             ) : (
               <p className="text-sm text-secondary mb-6 text-center">
-                Please select a service from the catalog or popular list to choose a country and get your virtual phone number.
+                Select a service from the grid to get started.
               </p>
             )}
 
@@ -539,7 +571,10 @@ export default function DashboardClient({ initialServices, isLoggedIn, recentTra
             </ul>
 
             {activeApp ? (
-              <OrderCTA />
+              <>
+                <OrderCTA />
+                <p className="catalog-price-footnote">One-time charge. Auto-refund if no SMS received.</p>
+              </>
             ) : (
               <button
                 type="button"

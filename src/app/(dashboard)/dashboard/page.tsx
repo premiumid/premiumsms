@@ -28,10 +28,12 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   let services: VsmsService[] = [];
+  let servicesError = false;
   try {
     services = await listServices();
   } catch (error) {
     console.error("Failed to load services", error);
+    servicesError = true;
   }
 
   let recentTransactions: TxRecord[] = []
@@ -54,11 +56,12 @@ export default async function DashboardPage() {
   }
 
   return (
-    <DashboardClient 
-      initialServices={services} 
-      isLoggedIn={!!user} 
+    <DashboardClient
+      initialServices={services}
+      isLoggedIn={!!user}
       recentTransactions={recentTransactions}
       recentRentals={recentRentals}
+      servicesError={servicesError}
     />
   );
 }
