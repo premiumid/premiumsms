@@ -95,10 +95,18 @@ export async function listCountries(
 }
 
 export async function getPrice(service: string, country: string): Promise<VsmsPrice> {
-  const data = await request<PriceRaw>(`/price?service=${service}&country=${country}`)
-  return {
-    price_usd: Number(data.price ?? data.price_usd ?? 0),
-    available: data.available !== undefined ? Boolean(data.available) : true
+  try {
+    const data = await request<PriceRaw>(`/price?service=${service}&country=${country}`)
+    return {
+      price_usd: Number(data.price ?? data.price_usd ?? 0),
+      available: data.available !== undefined ? Boolean(data.available) : true,
+    }
+  } catch (err) {
+    console.warn(
+      `[VirtualSMS] Price unavailable for ${service}/${country}:`,
+      err instanceof Error ? err.message : String(err)
+    )
+    return { price_usd: 0, available: false }
   }
 }
 

@@ -172,7 +172,14 @@ export default function DashboardClient({
 
     fetch(`/api/price?service=${activeAppSlug}&country=${selectedCountry}`)
       .then(r => r.json())
-      .then(d => setPrice(d.price?.price_usd ?? null))
+      .then(d => {
+        if (d.price?.available === false) {
+          setError('Not available for this country. Try another.')
+          setPrice(null)
+        } else {
+          setPrice(d.price?.price_usd ?? null)
+        }
+      })
       .catch(() => setError('Failed to load price'))
       .finally(() => setPriceLoading(false))
   }, [activeAppSlug, selectedCountry])
