@@ -248,6 +248,7 @@ export default function RentalsClient({
           {['all', 'active', 'received', 'expired', 'canceled'].map((st) => (
             <button
               key={st}
+              type="button"
               role="tab"
               aria-selected={statusFilter === st ? 'true' : 'false'}
               onClick={() => { setStatusFilter(st); setPage(1) }}
@@ -302,6 +303,7 @@ export default function RentalsClient({
           </span>
           <div className="rentals-pagination-btns">
             <button
+              type="button"
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
               className="rentals-pagination-btn"
@@ -316,6 +318,7 @@ export default function RentalsClient({
               return (
                 <button
                   key={p}
+                  type="button"
                   onClick={() => setPage(p)}
                   className={`rentals-pagination-page${p === page ? ' active' : ''}`}
                 >
@@ -324,6 +327,7 @@ export default function RentalsClient({
               )
             })}
             <button
+              type="button"
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
               className="rentals-pagination-btn"
