@@ -49,6 +49,7 @@ export default function RentalDetailPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [cancelling, setCancelling] = useState(false)
+  const [confirmingCancel, setConfirmingCancel] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [timeLeft, setTimeLeft] = useState(0)
   const [copiedNum, setCopiedNum] = useState(false)
@@ -140,7 +141,12 @@ export default function RentalDetailPage() {
   }, [rental])
 
   async function handleCancel() {
-    if (!confirm('Cancel this rental? You will be refunded.')) return
+    if (!confirmingCancel) {
+      setConfirmingCancel(true)
+      setTimeout(() => setConfirmingCancel(false), 4000)
+      return
+    }
+    setConfirmingCancel(false)
     setCancelling(true)
     try {
       const res = await fetch(`/api/rentals/${id}`, { method: 'POST' })
@@ -161,7 +167,7 @@ export default function RentalDetailPage() {
 
   if (loading) {
     return (
-      <div className="dashboard-content">
+      <div className="detail-page">
         <div className="empty-state">
           <div className="spinner-lg" />
           <p className="empty-title">Loading rental…</p>
@@ -172,12 +178,12 @@ export default function RentalDetailPage() {
 
   if (error || !rental) {
     return (
-      <div className="dashboard-content">
+      <div className="detail-page">
         <div className="alert-error">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
           {error ?? 'Rental not found'}
         </div>
-        <button className="btn btn-secondary" onClick={() => router.back()}>← Go Back</button>
+        <button type="button" className="btn btn-secondary mt-4" onClick={() => router.back()}>← Go Back</button>
       </div>
     )
   }
@@ -185,7 +191,7 @@ export default function RentalDetailPage() {
   return (
     <div className="detail-page">
       {/* Back */}
-      <button className="detail-back" onClick={() => router.push('/dashboard/rentals')}>
+      <button type="button" className="detail-back" onClick={() => router.push('/dashboard/rentals')}>
         <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         My Rentals
       </button>
@@ -206,6 +212,7 @@ export default function RentalDetailPage() {
             <div className="detail-number-value-row">
               <span className="detail-number-value">{rental.phone_number}</span>
               <button
+                type="button"
                 className="detail-number-copy"
                 onClick={() => { navigator.clipboard.writeText(rental.phone_number); setCopiedNum(true); setTimeout(() => setCopiedNum(false), 2000); toastSuccess('Number copied') }}
               >
@@ -242,8 +249,10 @@ export default function RentalDetailPage() {
           </div>
 
           {rental.status === 'active' && (
-            <button className="detail-cancel" onClick={handleCancel} disabled={cancelling}>
-              {cancelling ? 'Cancelling…' : (
+            <button type="button" className={`detail-cancel${confirmingCancel ? ' detail-cancel--confirm' : ''}`} onClick={handleCancel} disabled={cancelling}>
+              {cancelling ? 'Cancelling…' : confirmingCancel ? (
+                <><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Tap again to confirm</>
+              ) : (
                 <><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancel & Refund</>
               )}
             </button>
@@ -257,7 +266,7 @@ export default function RentalDetailPage() {
           <h2 className="detail-messages-title">Messages</h2>
           <div className="detail-messages-actions">
             {messages.length > 0 && (
-              <button className="detail-export-btn" onClick={() => {
+              <button type="button" className="detail-export-btn" onClick={() => {
                 const blob = new Blob([JSON.stringify({ phone_number: rental?.phone_number, service: rental?.service_slug, messages }, null, 2)], { type: 'application/json' })
                 const url = URL.createObjectURL(blob)
                 const a = document.createElement('a'); a.href = url; a.download = `sms-${rental?.phone_number || 'export'}.json`; a.click()
@@ -305,6 +314,7 @@ export default function RentalDetailPage() {
                 <p className="detail-message-text">{msg.text}</p>
                 {msg.code && (
                   <button
+                    type="button"
                     className="detail-message-copy"
                     onClick={() => { navigator.clipboard.writeText(msg.code!); setCopiedCodeId(msg.id); setTimeout(() => setCopiedCodeId(null), 2000); toastSuccess('Code copied') }}
                   >

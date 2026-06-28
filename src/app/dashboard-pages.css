@@ -1723,6 +1723,15 @@
 /* ─────────────── Rentals List (Card-based) ─────────────── */
 .rentals-page {
   max-width: 1000px;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+@media (max-width: 640px) {
+  .rentals-page { padding: 1rem; }
 }
 
 .rentals-page-header {
@@ -2215,6 +2224,15 @@
 /* ─────────────── Rental Detail (SMS Inbox) ─────────────── */
 .detail-page {
   max-width: 700px;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+@media (max-width: 640px) {
+  .detail-page { padding: 1rem; }
 }
 
 .detail-back {
@@ -2389,6 +2407,12 @@
 .detail-cancel:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.detail-cancel--confirm {
+  background: rgba(239, 68, 68, 0.75);
+  border-color: rgba(239, 68, 68, 0.5);
+  animation: pulse 0.8s ease-in-out 2;
 }
 
 /* ── Messages ── */
@@ -3742,6 +3766,15 @@
 /* ─────────────── Admin Page ─────────────── */
 .admin-page {
   max-width: 1200px;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+@media (max-width: 640px) {
+  .admin-page { padding: 1rem; }
 }
 
 .admin-stats-grid {
