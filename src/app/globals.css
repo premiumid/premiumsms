@@ -358,6 +358,7 @@ ul {
   position: fixed;
   top: 0;
   right: -100%;
+  z-index: 60;
   width: min(280px, 80vw);
   height: 100vh;
   flex-direction: column;
