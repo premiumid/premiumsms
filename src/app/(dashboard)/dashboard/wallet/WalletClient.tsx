@@ -275,14 +275,6 @@ export default function WalletClient({ initialBalance, initialTransactions, user
 
   return (
     <div className="wallet-page">
-      {/* ── Header ── */}
-      <div className="wallet-page-header">
-        <div>
-          <h1 className="wallet-page-title">Wallet</h1>
-          <p className="wallet-page-subtitle">Manage your funds and view transaction history</p>
-        </div>
-      </div>
-
       <div className="wallet-grid">
         {/* ── Balance Card ── */}
         <div className="wallet-balance-card">
