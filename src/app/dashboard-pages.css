@@ -3603,6 +3603,19 @@
   color: var(--text);
 }
 
+.wallet-success-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.wallet-success-actions .btn {
+  flex: 1;
+  min-width: 130px;
+}
+
 /* Loading spinner variants */
 .spinner-sm {
   width: 16px;

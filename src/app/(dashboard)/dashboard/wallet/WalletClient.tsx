@@ -64,7 +64,7 @@ function StatusIcon({ type }: { type: string }) {
   }
 }
 
-const AMOUNT_PRESETS = [15, 20, 30, 50]
+const AMOUNT_PRESETS = [12, 20, 30, 50]
 
 export default function WalletClient({ initialBalance, initialTransactions, userEmail }: WalletClientProps) {
   const router = useRouter()
@@ -76,7 +76,16 @@ export default function WalletClient({ initialBalance, initialTransactions, user
     return () => clearTimeout(timer)
   }, [])
 
-  const [selectedAmount, setSelectedAmount] = useState<number>(15)
+  // Scroll to top-up card when arriving via #topup-card hash
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (window.location.hash === '#topup-card') {
+      const el = document.getElementById('topup-card')
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [])
+
+  const [selectedAmount, setSelectedAmount] = useState<number>(12)
   const [customAmount, setCustomAmount] = useState<string>('')
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -370,7 +379,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
               </>
             ) : (
               <>
-                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="12 5 12 19 12 5"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 {validAmount ? `Top Up $${finalAmount.toFixed(2)}` : 'Select Amount'}
               </>
             )}
@@ -592,9 +601,14 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                   <strong>${paymentData?.priceAmount.toFixed(2)}</strong> credited to your wallet
                 </p>
                 <p className="wallet-modal-sub">Your balance has been updated.</p>
-                <button id="success-close-btn" className="btn btn-primary" onClick={handleCloseModal}>
-                  Done
-                </button>
+                <div className="wallet-success-actions">
+                  <button type="button" id="success-close-btn" className="btn btn-secondary" onClick={handleCloseModal}>
+                    Stay Here
+                  </button>
+                  <button type="button" className="btn btn-primary" onClick={() => router.push('/dashboard')}>
+                    Order a Number →
+                  </button>
+                </div>
               </div>
             )}
 
