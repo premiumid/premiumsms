@@ -31,6 +31,7 @@ export function getSimpleIconSlug(slug: string, name: string): string {
     'google': 'google',
     'twitter': 'x',
     'twitter/x': 'x',
+    'twitter / x': 'x',
     'x (twitter)': 'x',
     'discord': 'discord',
     'microsoft': 'microsoft',

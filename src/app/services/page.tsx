@@ -10,7 +10,7 @@ const services = [
   { name: 'WhatsApp', slug: 'whatsapp', color: '#25D366', desc: 'WhatsApp numbers for account creation and re-verification.', popular: true },
   { name: 'Google', slug: 'google', color: '#EA4335', desc: 'Gmail and Google account verification. High availability.', popular: true },
   { name: 'Instagram', slug: 'instagram', color: '#E4405F', desc: 'Create or verify Instagram accounts with temp numbers.', popular: true },
-  { name: 'Facebook', slug: 'facebook', color: '#1877F2', desc: 'Facebook registration and account recovery.', popular: true },
+  { name: 'Facebook', slug: 'facebook', color: '#1877F2', desc: 'Facebook registration and account recovery.', popular: false },
   { name: 'Twitter / X', slug: 'x', color: '#000000', desc: 'X (Twitter) account sign-up verification.', popular: false },
   { name: 'TikTok', slug: 'tiktok', color: '#000000', desc: 'TikTok account creation across multiple regions.', popular: false },
   { name: 'Snapchat', slug: 'snapchat', color: '#FFFC00', desc: 'Snapchat number verification for new accounts.', popular: false },

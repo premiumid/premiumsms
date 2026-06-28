@@ -96,7 +96,7 @@ export default function DashboardClient({
     const found = initialServices.find(
       s => s.slug.toLowerCase() === p.slug.toLowerCase() || s.name.toLowerCase() === p.name.toLowerCase()
     )
-    return found || p
+    return found ? { ...found, name: p.name } : p
   })
 
   const activeApp =

@@ -93,6 +93,10 @@
   gap: 1rem;
 }
 
+.app-user .btn {
+  white-space: nowrap;
+}
+
 @media (max-width: 480px) {
   .app-user {
     gap: 0.5rem;
