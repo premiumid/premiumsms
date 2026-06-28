@@ -1617,6 +1617,37 @@ details[open] .faq-question::after {
   width: 100%;
 }
 
+/* ─────────── Docs page layout ─────────── */
+.docs-layout {
+  padding: 4rem 1.5rem 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.docs-sidebar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .docs-layout {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .docs-sidebar {
+    display: block;
+    position: sticky;
+    top: 5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+  }
+}
+
 .services-cta {
   padding: 5rem 1.5rem;
   text-align: center;

@@ -167,7 +167,8 @@ export default function OnboardingTour() {
           padding: 1rem;
         }
         .onboarding-modal {
-          background: white;
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: var(--radius-xl);
           padding: 2.5rem 2rem;
           max-width: 440px;

@@ -92,13 +92,14 @@ export default function DocsPage() {
         </div>
       </section>
 
-      <div className="container" style={{ padding: '4rem 1.5rem 6rem', display: 'grid', gridTemplateColumns: '200px 1fr', gap: '3rem', alignItems: 'start' }}>
-        {/* Sidebar */}
-        <nav style={{ position: 'sticky', top: '1rem' }}>
-          <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div className="container docs-layout">
+        {/* Sidebar — hidden on mobile */}
+        <nav className="docs-sidebar">
+          <p style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-faint)', marginBottom: '0.75rem' }}>On this page</p>
+          <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
             {['Authentication', 'Rate Limits', 'Endpoints', 'Code Examples', 'MCP Integration'].map(s => (
               <li key={s}>
-                <a href={`#${s.toLowerCase().replace(/ /g, '-')}`} style={{ fontSize: '0.875rem', color: 'var(--text-muted)', display: 'block', padding: '0.25rem 0' }}>
+                <a href={`#${s.toLowerCase().replace(/ /g, '-')}`} style={{ fontSize: '0.875rem', color: 'var(--text-muted)', display: 'block', padding: '0.375rem 0.5rem', borderRadius: '6px', textDecoration: 'none' }}>
                   {s}
                 </a>
               </li>
