@@ -220,6 +220,16 @@ ul {
   outline: none;
 }
 
+.btn:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
 /* Responsive hero */
 @media (max-width: 640px) {
   .hero-title {

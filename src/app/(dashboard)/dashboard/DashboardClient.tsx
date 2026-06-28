@@ -668,7 +668,7 @@ export default function DashboardClient({
                     <span className={walletBalance < (price ?? 0) && price !== null ? 'catalog-wallet-hint--low' : ''}>
                       ${walletBalance.toFixed(2)}
                     </span>
-                    {walletBalance < (price ?? 0) && price !== null && (
+                    {walletBalance < (price ?? 0) && price !== null && !error && (
                       <Link href="/dashboard/wallet#topup-card" className="catalog-wallet-topup">Top Up →</Link>
                     )}
                   </p>
