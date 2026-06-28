@@ -38,7 +38,7 @@ const steps: Step[] = [
     ),
     title: '2. Rent a Number',
     description: 'Browse 2,500+ services across 145+ countries. Pick a service (WhatsApp, Telegram, Google…), choose a country, and rent a number in seconds.',
-    action: { label: 'Browse Numbers', href: '/dashboard/numbers' },
+    action: { label: 'Browse Services', href: '/dashboard' },
   },
   {
     icon: (
