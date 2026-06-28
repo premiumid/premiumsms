@@ -35,14 +35,14 @@ interface WalletClientProps {
 type PaymentStep = 'select' | 'awaiting' | 'success'
 type PaymentStatus = 'waiting' | 'confirming' | 'confirmed' | 'finished' | 'failed' | 'expired' | 'partially_paid'
 
-const STATUS_CONFIG: Record<string, { label: string; borderClass: string; textClass: string; bgClass: string; icon: 'waiting' | 'confirming' | 'confirmed' | 'partial' | 'failed' | 'expired' }> = {
-  waiting:       { label: 'Awaiting your transfer…',            borderClass: 'border-amber-500', textClass: 'text-amber-500', bgClass: 'bg-amber-500', icon: 'waiting' },
-  confirming:    { label: 'Detected! Awaiting confirmations…',  borderClass: 'border-blue-500', textClass: 'text-blue-500', bgClass: 'bg-blue-500', icon: 'confirming' },
-  confirmed:     { label: 'Confirmed! Crediting wallet…',       borderClass: 'border-emerald-500', textClass: 'text-emerald-500', bgClass: 'bg-emerald-500', icon: 'confirmed' },
-  finished:      { label: 'Payment complete!',                  borderClass: 'border-emerald-500', textClass: 'text-emerald-500', bgClass: 'bg-emerald-500', icon: 'confirmed' },
-  partially_paid:{ label: 'Partial payment received…',          borderClass: 'border-amber-500', textClass: 'text-amber-500', bgClass: 'bg-amber-500', icon: 'partial' },
-  failed:        { label: 'Payment failed',                     borderClass: 'border-red-500', textClass: 'text-red-500', bgClass: 'bg-red-500', icon: 'failed' },
-  expired:       { label: 'Payment expired',                    borderClass: 'border-gray-500', textClass: 'text-gray-500', bgClass: 'bg-gray-500', icon: 'expired' },
+const STATUS_CONFIG: Record<string, { label: string; statusClass: string; icon: 'waiting' | 'confirming' | 'confirmed' | 'partial' | 'failed' | 'expired' }> = {
+  waiting:       { label: 'Awaiting your transfer…',            statusClass: 'is-waiting',    icon: 'waiting'    },
+  confirming:    { label: 'Detected! Awaiting confirmations…',  statusClass: 'is-confirming', icon: 'confirming' },
+  confirmed:     { label: 'Confirmed! Crediting wallet…',       statusClass: 'is-confirmed',  icon: 'confirmed'  },
+  finished:      { label: 'Payment complete!',                  statusClass: 'is-confirmed',  icon: 'confirmed'  },
+  partially_paid:{ label: 'Partial payment received…',          statusClass: 'is-partial',    icon: 'partial'    },
+  failed:        { label: 'Payment failed',                     statusClass: 'is-failed',     icon: 'failed'     },
+  expired:       { label: 'Payment expired',                    statusClass: 'is-expired',    icon: 'expired'    },
 }
 
 function StatusIcon({ type }: { type: string }) {
@@ -363,7 +363,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
             id="topup-submit-btn"
             className="wallet-topup-btn btn-primary"
             onClick={handleCreatePayment}
-            disabled={isCreatingPayment || finalAmount < 12}
+            disabled={isCreatingPayment || finalAmount < 15}
           >
             {isCreatingPayment ? (
               <>
@@ -517,9 +517,9 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                   </button>
                 </div>
 
-                <div className={`wallet-modal-status ${statusCfg.borderClass}`}>
+                <div className={`wallet-modal-status ${statusCfg.statusClass}`}>
                   <StatusIcon type={statusCfg.icon} />
-                  <span className={statusCfg.textClass}>{statusCfg.label}</span>
+                  <span>{statusCfg.label}</span>
                   {(paymentStatus === 'waiting' || paymentStatus === 'confirming') && (
                     <span className="wallet-modal-status-pulse" />
                   )}

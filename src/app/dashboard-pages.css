@@ -2943,10 +2943,26 @@
   width: 100%;
   padding: 0.875rem;
   font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+/* Hide browser-default number input spinners */
+.wallet-topup-input::-webkit-outer-spin-button,
+.wallet-topup-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.wallet-topup-input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .wallet-topup-divider {
@@ -3417,6 +3433,13 @@
   flex-shrink: 0;
   background: currentColor;
 }
+
+.wallet-modal-status.is-waiting    { border-color: var(--warning);    color: var(--warning);    }
+.wallet-modal-status.is-confirming { border-color: #3b82f6;           color: #3b82f6;           }
+.wallet-modal-status.is-confirmed  { border-color: var(--success);    color: var(--success);    }
+.wallet-modal-status.is-partial    { border-color: var(--warning);    color: var(--warning);    }
+.wallet-modal-status.is-failed     { border-color: var(--danger);     color: var(--danger);     }
+.wallet-modal-status.is-expired    { border-color: var(--text-faint); color: var(--text-faint); }
 
 /* ── QR ── */
 .wallet-modal-qr {
