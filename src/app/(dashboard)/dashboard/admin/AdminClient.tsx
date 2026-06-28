@@ -294,7 +294,7 @@ export default function AdminClient({
         <div className="admin-card admin-health-card">
           <div className="admin-card-header">
             <h3 className="admin-card-title">System Health</h3>
-            <button className="admin-refresh-btn" onClick={fetchHealth} disabled={isLoadingHealth}>
+            <button type="button" className="admin-refresh-btn" onClick={fetchHealth} disabled={isLoadingHealth}>
               <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
               {isLoadingHealth ? '...' : 'Refresh'}
             </button>

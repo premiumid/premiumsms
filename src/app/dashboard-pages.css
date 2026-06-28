@@ -4554,6 +4554,21 @@
 }
 
 /* ─────────────── API Keys Page Cards ─────────────── */
+.api-keys-container {
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+@media (max-width: 640px) {
+  .api-keys-container {
+    padding: 1rem;
+  }
+}
+
 .api-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
