@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import FormattedDate from '@/components/FormattedDate'
 import { useToast } from '@/components/Toast'
 import EmptyState from '@/components/EmptyState'
@@ -318,10 +319,10 @@ export default function WalletClient({ initialBalance, initialTransactions, user
                   <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   Top Up
                 </button>
-                <a href="/dashboard/api" className="wallet-balance-btn">
+                <Link href="/dashboard/api" className="wallet-balance-btn">
                   <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                   API
-                </a>
+                </Link>
               </div>
             </div>
           </div>
