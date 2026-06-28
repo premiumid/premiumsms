@@ -67,14 +67,31 @@ export async function listServices(): Promise<VsmsService[]> {
   }))
 }
 
-export async function listCountries(service?: string): Promise<VsmsCountry[]> {
-  const qs = service ? `?service=${service}` : ''
-  const data = await request<{ countries: CountryRaw[] }>(`/customer/countries${qs}`)
-  return data.countries.map(c => ({
-    code: c.country_id,
-    name: c.country_name,
-    flag: c.flag
-  }))
+export async function listCountries(
+  service?: string
+): Promise<{ countries: VsmsCountry[]; available: boolean }> {
+  try {
+    const qs = service ? `?service=${service}` : ''
+    const data = await request<{ countries: CountryRaw[] }>(`/customer/countries${qs}`)
+    return {
+      countries: (data.countries ?? []).map(c => ({
+        code: c.country_id,
+        name: c.country_name,
+        flag: c.flag,
+      })),
+      available: true,
+    }
+  } catch (err) {
+    if (service) {
+      // Provider does not recognise this slug — degrade gracefully, not a 500
+      console.warn(
+        `[VirtualSMS] Service "${service}" unavailable:`,
+        err instanceof Error ? err.message : String(err)
+      )
+      return { countries: [], available: false }
+    }
+    throw err
+  }
 }
 
 export async function getPrice(service: string, country: string): Promise<VsmsPrice> {

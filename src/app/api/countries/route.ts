@@ -14,8 +14,11 @@ export async function GET(request: Request) {
       return errorResponse(400, 'Invalid service name')
     }
 
-    const countries = await listCountries(service ?? undefined)
-    return Response.json({ countries }, { headers: cacheControl(300) })
+    const result = await listCountries(service ?? undefined)
+    return Response.json(
+      { countries: result.countries, available: result.available },
+      { headers: cacheControl(300) }
+    )
   } catch (err) {
     return handleApiError(err, 'countries')
   }

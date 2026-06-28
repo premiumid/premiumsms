@@ -75,16 +75,29 @@ export default function DashboardClient({
   const [selectedApp, setSelectedApp] = useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  // Apply canonical name overrides so API casing (e.g. "facebook", "Whatsapp") is corrected everywhere
-  const nameMap = new Map(POPULAR_SERVICES.map(p => [p.slug.toLowerCase(), p.name]))
+  // Canonical name overrides: keyed by both slug AND name so we catch providers
+  // that use different service_id values (e.g. "ig" instead of "instagram")
+  const slugToName = new Map(POPULAR_SERVICES.map(p => [p.slug.toLowerCase(), p.name]))
+  const nameToName = new Map(POPULAR_SERVICES.map(p => [p.name.toLowerCase(), p.name]))
   const normalizedServices = initialServices.map(s => ({
     ...s,
-    name: nameMap.get(s.slug.toLowerCase()) || s.name,
+    name:
+      slugToName.get(s.slug.toLowerCase()) ||
+      nameToName.get(s.name.toLowerCase()) ||
+      s.name,
   }))
 
   const sortedServices = [...normalizedServices].sort((a, b) => {
-    const aIndex = POPULAR_SERVICES.findIndex(p => p.slug.toLowerCase() === a.slug.toLowerCase())
-    const bIndex = POPULAR_SERVICES.findIndex(p => p.slug.toLowerCase() === b.slug.toLowerCase())
+    const aIndex = POPULAR_SERVICES.findIndex(
+      p =>
+        p.slug.toLowerCase() === a.slug.toLowerCase() ||
+        p.name.toLowerCase() === a.name.toLowerCase()
+    )
+    const bIndex = POPULAR_SERVICES.findIndex(
+      p =>
+        p.slug.toLowerCase() === b.slug.toLowerCase() ||
+        p.name.toLowerCase() === b.name.toLowerCase()
+    )
     if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex
     if (aIndex !== -1) return -1
     if (bIndex !== -1) return 1
@@ -95,9 +108,14 @@ export default function DashboardClient({
     app.name.toLowerCase().includes(search.toLowerCase())
   )
 
+  // Match by slug first, then by name — ensures we use the provider's actual service_id
   const popularApps = POPULAR_SERVICES.map(p => {
-    const found = sortedServices.find(s => s.slug.toLowerCase() === p.slug.toLowerCase())
-    return found || p
+    const found = sortedServices.find(
+      s =>
+        s.slug.toLowerCase() === p.slug.toLowerCase() ||
+        s.name.toLowerCase() === p.name.toLowerCase()
+    )
+    return found || p  // fallback only when service is absent from provider catalog
   })
 
   const activeApp =
@@ -136,7 +154,12 @@ export default function DashboardClient({
 
     fetch(`/api/countries?service=${activeAppSlug}`)
       .then(r => r.json())
-      .then(d => setCountries(d.countries || []))
+      .then(d => {
+        setCountries(d.countries || [])
+        if (d.available === false) {
+          setError('This service is not currently available. Please try a different one.')
+        }
+      })
       .catch(() => setError('Failed to load countries'))
       .finally(() => setCountriesLoading(false))
   }, [activeAppSlug])
@@ -216,7 +239,7 @@ export default function DashboardClient({
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           className="premium-dropdown-trigger"
           aria-haspopup="listbox"
-          aria-expanded={isDropdownOpen ? 'true' : 'false'}
+          aria-expanded={isDropdownOpen}
           aria-label={activeCountry ? `Selected: ${activeCountry.name}` : 'Choose a country'}
         >
           <span className="premium-dropdown-trigger-content">
@@ -268,7 +291,7 @@ export default function DashboardClient({
                     key={c.code}
                     type="button"
                     role="option"
-                    aria-selected={selectedCountry === c.code ? 'true' : 'false'}
+                    aria-selected={selectedCountry === c.code}
                     onClick={() => { setSelectedCountry(c.code); setIsDropdownOpen(false); setCountrySearch('') }}
                     className={`premium-dropdown-item${selectedCountry === c.code ? ' active' : ''}`}
                   >
