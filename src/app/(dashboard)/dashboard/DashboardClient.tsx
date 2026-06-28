@@ -499,6 +499,7 @@ export default function DashboardClient({
                 >
                   <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={56} />
                   <div className="catalog-app-name">{app.name}</div>
+                  <span className="catalog-tap-hint" aria-hidden="true">Tap to order →</span>
                 </button>
               ))
             )}
