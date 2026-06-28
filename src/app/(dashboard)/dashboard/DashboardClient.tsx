@@ -55,6 +55,175 @@ const POPULAR_SERVICES: Service[] = [
   { slug: 'mt',  name: 'Steam' },
 ]
 
+// ── Hoisted sub-components (cannot be defined inside render) ─────────────────
+
+function CountryDropdown({
+  loading, filteredCountries, selectedCountry, activeCountry, isOpen, search,
+  onToggle, onClose, onSelect, onSearchChange,
+}: {
+  loading: boolean
+  filteredCountries: Country[]
+  selectedCountry: string | null
+  activeCountry: Country | undefined
+  isOpen: boolean
+  search: string
+  onToggle: () => void
+  onClose: () => void
+  onSelect: (code: string) => void
+  onSearchChange: (v: string) => void
+}) {
+  if (loading) return <div className="text-sm text-secondary animate-pulse py-2">Loading countries…</div>
+  return (
+    <div className="premium-dropdown-container">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="premium-dropdown-trigger"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen ? 'true' : 'false'}
+        aria-label={activeCountry ? `Selected: ${activeCountry.name}` : 'Choose a country'}
+      >
+        <span className="premium-dropdown-trigger-content">
+          {activeCountry ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`https://flagcdn.com/16x12/${activeCountry.code.toLowerCase()}.png`}
+                alt=""
+                className="country-flag-icon"
+              />
+              {activeCountry.name}
+            </>
+          ) : (
+            <span className="text-secondary">-- Choose a country --</span>
+          )}
+        </span>
+        <svg
+          width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          aria-hidden="true"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <>
+          <div className="premium-dropdown-overlay" onClick={onClose} />
+          <div className="premium-dropdown-menu">
+            <div className="premium-dropdown-search-wrap">
+              <div className="premium-dropdown-search-icon">
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search countries..."
+                value={search}
+                onChange={e => onSearchChange(e.target.value)}
+                className="premium-dropdown-search-input"
+                autoFocus
+                aria-label="Search countries"
+              />
+            </div>
+            <div className="premium-dropdown-list" role="listbox" aria-label="Select a country">
+              {filteredCountries.map(c => (
+                <button
+                  key={c.code}
+                  type="button"
+                  role="option"
+                  aria-selected={selectedCountry === c.code ? 'true' : 'false'}
+                  onClick={() => { onSelect(c.code); onClose(); onSearchChange('') }}
+                  className={`premium-dropdown-item${selectedCountry === c.code ? ' active' : ''}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`https://flagcdn.com/16x12/${c.code.toLowerCase()}.png`} alt="" className="country-flag-icon" />
+                  <span>{c.name}</span>
+                </button>
+              ))}
+              {filteredCountries.length === 0 && (
+                <div className="premium-dropdown-empty">No countries found</div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+function OrderCTA({
+  activeApp, isLoggedIn, renting, selectedCountry, price, isCtaReady, onRent, pulse = false,
+}: {
+  activeApp: Service | null
+  isLoggedIn: boolean
+  renting: boolean
+  selectedCountry: string | null
+  price: number | null
+  isCtaReady: boolean
+  onRent: () => void
+  pulse?: boolean
+}) {
+  if (!activeApp) return null
+  if (isLoggedIn) {
+    return (
+      <button
+        type="button"
+        onClick={onRent}
+        disabled={renting || !selectedCountry || price === null}
+        className={`btn btn-primary w-full py-3 flex items-center justify-center gap-2${pulse && isCtaReady ? ' btn-ready-pulse' : ''}`}
+      >
+        {renting ? (
+          <><span className="spinner-sm animate-spin" /> Renting…</>
+        ) : (
+          <>Get My Number &rarr;</>
+        )}
+      </button>
+    )
+  }
+  return (
+    <Link
+      href="/register"
+      className="btn btn-primary w-full py-3 block text-center"
+    >
+      Create Free Account &rarr;
+    </Link>
+  )
+}
+
+function StepBar({
+  selectedApp, selectedCountry, price, priceLoading,
+}: {
+  selectedApp: string | null
+  selectedCountry: string | null
+  price: number | null
+  priceLoading: boolean
+}) {
+  const s1 = !!selectedApp
+  const s2 = !!selectedCountry
+  const s3 = s2 && price !== null && !priceLoading
+  return (
+    <div className="step-bar">
+      <div className={`step-item${s1 ? ' done' : ' active'}`}>
+        <div className="step-dot">{s1 ? '✓' : '1'}</div>
+        <span className="step-label">Service</span>
+      </div>
+      <div className={`step-line${s1 ? ' filled' : ''}`} />
+      <div className={`step-item${s2 ? ' done' : s1 ? ' active' : ''}`}>
+        <div className="step-dot">{s2 ? '✓' : '2'}</div>
+        <span className="step-label">Country</span>
+      </div>
+      <div className={`step-line${s2 ? ' filled' : ''}`} />
+      <div className={`step-item${s3 ? ' active' : ''}`}>
+        <div className="step-dot">{s3 ? '→' : '3'}</div>
+        <span className="step-label">Confirm</span>
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function DashboardClient({
   initialServices,
   isLoggedIn,
@@ -236,143 +405,6 @@ export default function DashboardClient({
 
   const isCtaReady = !!selectedCountry && price !== null && !priceLoading && !renting
 
-  /* Shared country dropdown */
-  function CountryDropdown() {
-    return countriesLoading ? (
-      <div className="text-sm text-secondary animate-pulse py-2">Loading countries…</div>
-    ) : (
-      <div className="premium-dropdown-container">
-        <button
-          type="button"
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="premium-dropdown-trigger"
-          aria-haspopup="listbox"
-          aria-expanded={isDropdownOpen}
-          aria-label={activeCountry ? `Selected: ${activeCountry.name}` : 'Choose a country'}
-        >
-          <span className="premium-dropdown-trigger-content">
-            {activeCountry ? (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`https://flagcdn.com/16x12/${activeCountry.code.toLowerCase()}.png`}
-                  alt=""
-                  className="country-flag-icon"
-                />
-                {activeCountry.name}
-              </>
-            ) : (
-              <span className="text-secondary">-- Choose a country --</span>
-            )}
-          </span>
-          <svg
-            width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            className={`transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
-            aria-hidden="true"
-          >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </button>
-
-        {isDropdownOpen && (
-          <>
-            <div className="premium-dropdown-overlay" onClick={() => setIsDropdownOpen(false)} />
-            <div className="premium-dropdown-menu">
-              <div className="premium-dropdown-search-wrap">
-                <div className="premium-dropdown-search-icon">
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search countries..."
-                  value={countrySearch}
-                  onChange={e => setCountrySearch(e.target.value)}
-                  className="premium-dropdown-search-input"
-                  autoFocus
-                  aria-label="Search countries"
-                />
-              </div>
-              <div className="premium-dropdown-list" role="listbox" aria-label="Select a country">
-                {filteredCountries.map(c => (
-                  <button
-                    key={c.code}
-                    type="button"
-                    role="option"
-                    aria-selected={selectedCountry === c.code}
-                    onClick={() => { setSelectedCountry(c.code); setIsDropdownOpen(false); setCountrySearch('') }}
-                    className={`premium-dropdown-item${selectedCountry === c.code ? ' active' : ''}`}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`https://flagcdn.com/16x12/${c.code.toLowerCase()}.png`} alt="" className="country-flag-icon" />
-                    <span>{c.name}</span>
-                  </button>
-                ))}
-                {filteredCountries.length === 0 && (
-                  <div className="premium-dropdown-empty">No countries found</div>
-                )}
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-    )
-  }
-
-  /* Shared rent / login CTA */
-  function OrderCTA({ pulse = false }: { pulse?: boolean }) {
-    if (!activeApp) return null
-    if (isLoggedIn) {
-      return (
-        <button
-          type="button"
-          onClick={handleRent}
-          disabled={renting || !selectedCountry || price === null}
-          className={`btn btn-primary w-full py-3 flex items-center justify-center gap-2${pulse && isCtaReady ? ' btn-ready-pulse' : ''}`}
-          id="dashboard-checkout-btn"
-        >
-          {renting ? (
-            <><span className="spinner-sm animate-spin" /> Renting…</>
-          ) : (
-            <>Get My Number &rarr;</>
-          )}
-        </button>
-      )
-    }
-    return (
-      <Link
-        href="/register"
-        className="btn btn-primary w-full py-3 block text-center"
-      >
-        Create Free Account &rarr;
-      </Link>
-    )
-  }
-
-  /* 3-step progress indicator */
-  function StepBar() {
-    const s1 = !!selectedApp
-    const s2 = !!selectedCountry
-    const s3 = s2 && price !== null && !priceLoading
-    return (
-      <div className="step-bar">
-        <div className={`step-item${s1 ? ' done' : ' active'}`}>
-          <div className="step-dot">{s1 ? '✓' : '1'}</div>
-          <span className="step-label">Service</span>
-        </div>
-        <div className={`step-line${s1 ? ' filled' : ''}`} />
-        <div className={`step-item${s2 ? ' done' : s1 ? ' active' : ''}`}>
-          <div className="step-dot">{s2 ? '✓' : '2'}</div>
-          <span className="step-label">Country</span>
-        </div>
-        <div className={`step-line${s2 ? ' filled' : ''}`} />
-        <div className={`step-item${s3 ? ' active' : ''}`}>
-          <div className="step-dot">{s3 ? '→' : '3'}</div>
-          <span className="step-label">Confirm</span>
-        </div>
-      </div>
-    )
-  }
 
   const displayApps = search
     ? (filteredApps.length > 0 ? filteredApps.slice(0, 24) : [])
@@ -573,7 +605,7 @@ export default function DashboardClient({
         <aside className="catalog-right p-4 pt-0">
 
           {/* Step bar */}
-          <StepBar />
+          <StepBar selectedApp={selectedApp} selectedCountry={selectedCountry} price={price} priceLoading={priceLoading} />
 
           <div className="catalog-right-hero-dynamic">
             <div className="dynamic-hero-icon">
@@ -603,7 +635,18 @@ export default function DashboardClient({
                 <label className="block text-xs font-bold text-tertiary uppercase tracking-wider mb-2">
                   Select Country
                 </label>
-                <CountryDropdown />
+                <CountryDropdown
+                  loading={countriesLoading}
+                  filteredCountries={filteredCountries}
+                  selectedCountry={selectedCountry}
+                  activeCountry={activeCountry}
+                  isOpen={isDropdownOpen}
+                  search={countrySearch}
+                  onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
+                  onClose={() => setIsDropdownOpen(false)}
+                  onSelect={setSelectedCountry}
+                  onSearchChange={setCountrySearch}
+                />
               </div>
             ) : (
               <p className="text-sm text-secondary mb-6 text-center">
@@ -625,7 +668,16 @@ export default function DashboardClient({
 
             {activeApp ? (
               <>
-                <OrderCTA pulse />
+                <OrderCTA
+                  pulse
+                  activeApp={activeApp}
+                  isLoggedIn={isLoggedIn}
+                  renting={renting}
+                  selectedCountry={selectedCountry}
+                  price={price}
+                  isCtaReady={isCtaReady}
+                  onRent={handleRent}
+                />
                 <p className="catalog-price-footnote">One-time charge. Auto-refund if no SMS received.</p>
               </>
             ) : (
@@ -701,7 +753,18 @@ export default function DashboardClient({
 
             {/* Body */}
             <div className="order-sheet-body">
-              <CountryDropdown />
+              <CountryDropdown
+                loading={countriesLoading}
+                filteredCountries={filteredCountries}
+                selectedCountry={selectedCountry}
+                activeCountry={activeCountry}
+                isOpen={isDropdownOpen}
+                search={countrySearch}
+                onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
+                onClose={() => setIsDropdownOpen(false)}
+                onSelect={setSelectedCountry}
+                onSearchChange={setCountrySearch}
+              />
 
               {error && (
                 <div className="text-xs text-danger mt-3 bg-danger/10 p-2.5 rounded-lg border border-danger/20">
@@ -715,7 +778,16 @@ export default function DashboardClient({
               )}
 
               <div className="mt-3">
-                <OrderCTA pulse />
+                <OrderCTA
+                  pulse
+                  activeApp={activeApp}
+                  isLoggedIn={isLoggedIn}
+                  renting={renting}
+                  selectedCountry={selectedCountry}
+                  price={price}
+                  isCtaReady={isCtaReady}
+                  onRent={handleRent}
+                />
                 <p className="catalog-price-footnote">One-time charge. Auto-refund if no SMS received.</p>
               </div>
             </div>
