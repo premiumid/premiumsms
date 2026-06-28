@@ -633,7 +633,9 @@ export default function DashboardClient({
             {activeApp ? (
               <div className="mb-6">
                 <label className="block text-xs font-bold text-tertiary uppercase tracking-wider mb-2">
-                  Select Country
+                  Select Country{!countriesLoading && countries.length > 0 && (
+                    <span className="ml-2 font-normal normal-case tracking-normal text-faint">{countries.length} available</span>
+                  )}
                 </label>
                 <CountryDropdown
                   loading={countriesLoading}
@@ -657,6 +659,11 @@ export default function DashboardClient({
             {error && (
               <div className="text-xs text-danger mb-4 bg-danger/10 p-2.5 rounded-lg border border-danger/20">
                 {error}
+                {error.startsWith('Insufficient') && (
+                  <Link href="/dashboard/wallet#topup-card" className="sheet-topup-link">
+                    Top Up Wallet →
+                  </Link>
+                )}
               </div>
             )}
 

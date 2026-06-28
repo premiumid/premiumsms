@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import FormattedDate from '@/components/FormattedDate'
 import { useToast } from '@/components/Toast'
 import { createClient } from '@/lib/supabase/client'
+import { displayService } from '@/lib/service-names'
 
 interface Message {
   id: string
@@ -28,18 +29,6 @@ const STATUS_LABELS: Record<string, string> = {
   expired: 'Expired', canceled: 'Canceled', refunded: 'Refunded',
 }
 
-function displayService(slug: string): string {
-  const names: Record<string, string> = {
-    telegram: 'Telegram', whatsapp: 'WhatsApp', instagram: 'Instagram',
-    facebook: 'Facebook', twitter: 'Twitter / X', tiktok: 'TikTok',
-    google: 'Google', discord: 'Discord', netflix: 'Netflix',
-    spotify: 'Spotify', steam: 'Steam', apple: 'Apple',
-    microsoft: 'Microsoft', amazon: 'Amazon', uber: 'Uber',
-    paypal: 'PayPal', binance: 'Binance', coinbase: 'Coinbase',
-    viber: 'Viber', line: 'LINE', snapchat: 'Snapchat',
-  }
-  return names[slug.toLowerCase()] || slug.charAt(0).toUpperCase() + slug.slice(1)
-}
 
 export default function RentalDetailPage() {
   const { id } = useParams<{ id: string }>()
