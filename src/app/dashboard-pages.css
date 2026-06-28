@@ -284,7 +284,9 @@
 .relative { position: relative; }
 .w-full { width: 100%; }
 .h-full { height: 100%; }
+.min-w-0 { min-width: 0; }
 .text-center { text-align: center; }
+.text-left { text-align: left; }
 .uppercase { text-transform: uppercase; }
 .cursor-pointer { cursor: pointer; }
 .overflow-y-auto { overflow-y: auto; }

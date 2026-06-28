@@ -80,7 +80,7 @@ function CountryDropdown({
         onClick={onToggle}
         className="premium-dropdown-trigger"
         aria-haspopup="listbox"
-        aria-expanded={isOpen ? 'true' : 'false'}
+        aria-expanded={isOpen}
         aria-label={activeCountry ? `Selected: ${activeCountry.name}` : 'Choose a country'}
       >
         <span className="premium-dropdown-trigger-content">
@@ -132,7 +132,7 @@ function CountryDropdown({
                   key={c.code}
                   type="button"
                   role="option"
-                  aria-selected={selectedCountry === c.code ? 'true' : 'false'}
+                  aria-selected={selectedCountry === c.code}
                   onClick={() => { onSelect(c.code); onClose(); onSearchChange('') }}
                   className={`premium-dropdown-item${selectedCountry === c.code ? ' active' : ''}`}
                 >
@@ -536,11 +536,12 @@ export default function DashboardClient({
           {/* Recent Activity */}
           {isLoggedIn && recentTransactions && recentTransactions.length > 0 && (
             <div className="recent-activity-section">
-              <div className="activity-header flex justify-between items-center mb-4">
+              <div className="glass-panel">
+              <div className="activity-header flex justify-between items-center">
                 <h3 className="text-lg font-bold">Recent Activity</h3>
                 <Link href="/dashboard/wallet" className="text-sm font-semibold text-accent no-underline hover-link transition-colors">View all</Link>
               </div>
-              <div className="glass-panel p-5">
+              <div className="p-5">
                 {recentRentals && recentRentals.length > 0 && (
                   <div className="mb-6">
                     <p className="text-xs font-bold text-tertiary uppercase tracking-wider mb-3">Rentals</p>
@@ -571,6 +572,7 @@ export default function DashboardClient({
                     ))}
                   </div>
                 )}
+              </div>
               </div>
             </div>
           )}
