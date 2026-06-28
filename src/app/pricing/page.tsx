@@ -44,18 +44,25 @@ const plans = [
 ]
 
 const tiers = [
-  { label: 'Telegram', price: '$0.05', countries: '80+' },
-  { label: 'WhatsApp', price: '$0.08', countries: '60+' },
-  { label: 'Google', price: '$0.05', countries: '90+' },
-  { label: 'Instagram', price: '$0.10', countries: '50+' },
-  { label: 'Facebook', price: '$0.07', countries: '70+' },
-  { label: 'Twitter / X', price: '$0.09', countries: '55+' },
-  { label: 'TikTok', price: '$0.06', countries: '65+' },
-  { label: 'Snapchat', price: '$0.06', countries: '60+' },
-  { label: 'Amazon', price: '$0.08', countries: '45+' },
-  { label: 'Microsoft', price: '$0.08', countries: '50+' },
-  { label: 'Uber', price: '$0.07', countries: '40+' },
+  { label: 'Telegram',      price: '$0.05',  countries: '80+'  },
+  { label: 'WhatsApp',      price: '$0.08',  countries: '60+'  },
+  { label: 'Google',        price: '$0.05',  countries: '90+'  },
+  { label: 'Instagram',     price: '$0.10',  countries: '50+'  },
+  { label: 'Facebook',      price: '$0.07',  countries: '70+'  },
+  { label: 'Twitter / X',   price: '$0.09',  countries: '55+'  },
+  { label: 'TikTok',        price: '$0.06',  countries: '65+'  },
+  { label: 'Snapchat',      price: '$0.06',  countries: '60+'  },
+  { label: 'Amazon',        price: '$0.08',  countries: '45+'  },
+  { label: 'Microsoft',     price: '$0.08',  countries: '50+'  },
+  { label: 'Uber',          price: '$0.07',  countries: '40+'  },
   { label: 'Other / 2500+', price: 'Varies', countries: '145+' },
+]
+
+const faqs = [
+  { q: 'Does my balance expire?',     a: 'No. Your wallet balance never expires.' },
+  { q: 'What if no code arrives?',    a: 'You are automatically refunded to your wallet within seconds.' },
+  { q: 'Can I use crypto to top up?', a: 'Yes — we accept USDT (TRC-20) via NOWPayments.' },
+  { q: 'Is there a minimum top-up?',  a: 'The minimum is $15 USD. The exact amount is shown in the top-up dialog.' },
 ]
 
 export default function PricingPage() {
@@ -63,115 +70,96 @@ export default function PricingPage() {
     <div>
       <MarketingNav />
 
-      {/* Hero */}
-      <section className="hero-wrapper pb-24">
-        <div className="container hero-container justify-center text-center">
-          <div className="hero-content max-w-[640px] mx-auto">
-            <div className="hero-badge">Transparent Pricing</div>
-            <h1 className="hero-title">Pay only for what you use</h1>
-            <p className="hero-desc mx-auto mb-8">
-              No subscriptions. No hidden fees. Top up your wallet and spend as you go.
-              Prices start from $0.05 per verification.
-            </p>
-          </div>
+      {/* ── Hero ── */}
+      <section className="hero-wrapper services-page-hero">
+        <div className="container pricing-hero-inner">
+          <div className="hero-badge pricing-hero-badge">Transparent Pricing</div>
+          <h1 className="hero-title">Pay only for what you use</h1>
+          <p className="hero-desc pricing-hero-desc">
+            No subscriptions. No hidden fees. Top up your wallet and spend as you go.
+            Prices start from $0.05 per verification.
+          </p>
         </div>
       </section>
 
-      {/* Plans */}
-      <section className="container py-20 px-6 -mt-12">
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 max-w-[800px] mx-auto">
+      {/* ── Plan cards ── */}
+      <section className="container pricing-plans-section">
+        <div className="pricing-plans-grid">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              style={{
-                borderRadius: 'var(--radius-xl)',
-                padding: '2rem',
-                ...(plan.highlight
-                  ? { background: 'var(--accent)', color: 'white', boxShadow: '0 20px 40px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.3)' }
-                   : { background: 'var(--bg-card)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }
-                )
-              }}
+              className={`pricing-plan-card${plan.highlight ? ' pricing-plan-card--highlight' : ''}`}
             >
-              <h3 style={{ fontWeight: 700, marginBottom: '0.5rem', color: plan.highlight ? 'white' : undefined }}>{plan.name}</h3>
-              <div style={{ fontSize: '1.875rem', fontWeight: 800, marginBottom: '0.25rem', color: plan.highlight ? 'white' : 'var(--accent)' }}>{plan.price}</div>
-              <div style={{ fontSize: '0.75rem', marginBottom: '1rem', opacity: 0.7 }}>{plan.per}</div>
-              <p style={{ fontSize: '0.875rem', marginBottom: '1.5rem', opacity: 0.85 }}>{plan.description}</p>
-              <ul style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <p className="pricing-plan-badge">{plan.name}</p>
+              <p className="pricing-plan-price">{plan.price}</p>
+              <p className="pricing-plan-per">{plan.per}</p>
+              <p className="pricing-plan-desc">{plan.description}</p>
+              <ul className="pricing-plan-features">
                 {plan.features.map((f) => (
-                  <li key={f} style={{ fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontWeight: 700, color: plan.highlight ? 'var(--accent-muted)' : 'var(--success)' }}>✓</span> {f}
+                  <li key={f} className="pricing-plan-feature">
+                    <span className="pricing-plan-check">✓</span>
+                    {f}
                   </li>
                 ))}
               </ul>
-              <Link href={plan.href} className="btn" style={{ width: '100%', background: plan.highlight ? 'white' : 'var(--accent)', color: plan.highlight ? 'var(--accent)' : 'white' }}>
-                {plan.cta}
-              </Link>
+              <Link href={plan.href} className="btn pricing-plan-cta">{plan.cta}</Link>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Price Table */}
-      <section className="container px-6 pb-24">
-        <div className="section-header-center text-center mb-8">
-          <h2 className="text-3xl font-bold">Example Prices by Service</h2>
-          <p className="text-secondary mt-2">Prices vary by country. Browse full catalog after signing up.</p>
+      {/* ── Price table ── */}
+      <section className="container pricing-table-section">
+        <div className="pricing-table-header">
+          <h2 className="pricing-table-title">Example Prices by Service</h2>
+          <p className="pricing-table-desc">Prices vary by country. Browse the full catalog after signing up.</p>
         </div>
-        <div style={{ maxWidth: '700px', margin: '0 auto', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
-          <table className="w-full border-collapse">
+        <div className="pricing-table-wrap">
+          <table className="pricing-table">
             <thead>
-              <tr style={{ background: 'var(--bg-muted)', borderBottom: '1px solid var(--border)' }}>
-                <th className="py-3.5 px-5 text-left text-xs font-semibold text-secondary uppercase tracking-widest">Service</th>
-                <th className="py-3.5 px-5 text-left text-xs font-semibold text-secondary uppercase tracking-widest">Starting Price</th>
-                <th className="py-3.5 px-5 text-left text-xs font-semibold text-secondary uppercase tracking-widest">Countries</th>
+              <tr>
+                <th>Service</th>
+                <th>Starting Price</th>
+                <th>Countries</th>
               </tr>
             </thead>
             <tbody>
-              {tiers.map((tier, i) => (
-                <tr key={tier.label} className={i < tiers.length - 1 ? 'border-b border-border' : ''}>
-                  <td className="py-3.5 px-5 text-sm font-semibold">{tier.label}</td>
-                  <td className="py-3.5 px-5 text-sm text-accent font-bold">{tier.price}</td>
-                  <td className="py-3.5 px-5 text-sm text-secondary">{tier.countries}</td>
+              {tiers.map((tier) => (
+                <tr key={tier.label}>
+                  <td>{tier.label}</td>
+                  <td>{tier.price}</td>
+                  <td>{tier.countries}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="text-center mt-6 text-sm text-secondary">
-          * Live prices from the provider. Exact amounts shown before you confirm.
-        </p>
+        <p className="pricing-table-note">* Live prices from the provider. Exact cost shown before you confirm.</p>
       </section>
 
-      {/* FAQ snippet */}
-      <section className="bg-tertiary py-20 px-6">
-        <div className="container max-w-[700px]">
-          <h2 className="text-2xl font-bold mb-8 text-center">Pricing FAQ</h2>
-          <div className="flex flex-col gap-4">
-            {[
-              { q: 'Does my balance expire?', a: 'No. Your wallet balance never expires.' },
-              { q: 'What if no code arrives?', a: 'You are automatically refunded to your wallet within seconds.' },
-              { q: 'Can I use crypto to top up?', a: 'Yes — we accept USDT (TRC-20) via NOWPayments.' },
-              { q: 'Is there a minimum top-up?', a: 'The minimum is $15 USD.' },
-            ].map(({ q, a }) => (
-              <details key={q} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '1rem 1.25rem' }}>
-                <summary className="font-semibold cursor-pointer text-[15px]">{q}</summary>
-                <p className="mt-3 text-secondary text-sm">{a}</p>
+      {/* ── FAQ ── */}
+      <section className="pricing-faq-section">
+        <div className="pricing-faq-inner">
+          <h2 className="pricing-faq-title">Pricing FAQ</h2>
+          <div className="pricing-faq-list">
+            {faqs.map(({ q, a }) => (
+              <details key={q} className="pricing-faq-item">
+                <summary className="pricing-faq-summary">{q}</summary>
+                <p className="pricing-faq-answer">{a}</p>
               </details>
             ))}
           </div>
-          <div className="text-center mt-8">
+          <div className="pricing-faq-footer">
             <Link href="/faq" className="btn btn-secondary">View all FAQs</Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8 px-6 text-center">
-        <p className="text-sm text-secondary">
-          &copy; {new Date().getFullYear()} PremiumID. All rights reserved. &nbsp;|&nbsp;{' '}
-          <Link href="/privacy" className="text-secondary">Privacy</Link> &nbsp;|&nbsp;{' '}
-          <Link href="/terms" className="text-secondary">Terms</Link>
-        </p>
+      {/* ── Footer ── */}
+      <footer className="pricing-page-footer">
+        &copy; {new Date().getFullYear()} PremiumID. All rights reserved. &nbsp;|&nbsp;{' '}
+        <Link href="/privacy">Privacy</Link> &nbsp;|&nbsp;{' '}
+        <Link href="/terms">Terms</Link>
       </footer>
     </div>
   )
