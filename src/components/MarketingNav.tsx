@@ -51,6 +51,7 @@ export default function MarketingNav() {
         Premium<span className="text-gradient">ID</span>
       </Link>
       <button
+        type="button"
         ref={hamburgerRef}
         className={`hamburger ${open ? 'open' : ''}`}
         onClick={() => setOpen(o => !o)}
@@ -68,7 +69,7 @@ export default function MarketingNav() {
           <>
             <Link href="/dashboard" className="nav-link" onClick={() => setOpen(false)}>Dashboard</Link>
             <span className="nav-user-email">{user.email}</span>
-            <button className="btn btn-ghost" onClick={() => { setOpen(false); handleSignOut() }}>Log out</button>
+            <button type="button" className="btn btn-ghost" onClick={() => { setOpen(false); handleSignOut() }}>Log out</button>
           </>
         ) : (
           <>
