@@ -74,6 +74,7 @@ export default function DashboardClient({
   const [search, setSearch] = useState('')
   const [selectedApp, setSelectedApp] = useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   // Canonical name overrides: keyed by both slug AND name so we catch providers
   // that use different service_id values (e.g. "ig" instead of "instagram")
@@ -410,11 +411,21 @@ export default function DashboardClient({
       )}
 
       {/* 3-col catalog */}
-      <div className="catalog-grid-layout">
+      <div className={`catalog-grid-layout${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
 
         {/* Left sidebar — desktop only */}
-        <aside className="catalog-sidebar">
-          <div className="p-4">
+        <aside className={`catalog-sidebar${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
+          <div className="sidebar-collapse-bar">
+            <button
+              type="button"
+              className="sidebar-collapse-btn"
+              aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              onClick={() => setSidebarCollapsed(c => !c)}
+            >
+              {sidebarCollapsed ? '›' : '‹'}
+            </button>
+          </div>
+          <div className="catalog-sidebar-search">
             <label htmlFor="catalog-search-input" className="sr-only">Search services</label>
             <div className="catalog-search-input-wrap">
               <div className="catalog-search-icon">
@@ -430,16 +441,17 @@ export default function DashboardClient({
               />
             </div>
           </div>
-          <div className="catalog-sidebar-list overflow-y-auto px-2 pb-4">
+          <div className="catalog-sidebar-list overflow-y-auto pb-4">
             {filteredApps.map(app => (
               <button
                 key={app.slug}
                 type="button"
-                className={`catalog-sidebar-item flex items-center gap-3 w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
+                className={`catalog-sidebar-item flex items-center w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
                 onClick={() => openSheet(app.slug)}
+                title={sidebarCollapsed ? app.name : undefined}
               >
-                <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={24} iconSize={14} />
-                <span className="text-sm font-semibold text-primary">{app.name}</span>
+                <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={22} iconSize={13} />
+                <span className="sidebar-item-name text-sm font-semibold text-primary">{app.name}</span>
               </button>
             ))}
           </div>
@@ -497,7 +509,7 @@ export default function DashboardClient({
                   className={`catalog-app-card w-full text-left${selectedApp === app.slug ? ' active' : ''}`}
                   onClick={() => openSheet(app.slug)}
                 >
-                  <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={56} />
+                  <ServiceIcon slug={app.slug} name={app.name} iconUrl={app.icon_url} size={40} iconSize={24} />
                   <div className="catalog-app-name">{app.name}</div>
                   <span className="catalog-tap-hint" aria-hidden="true">Tap to order →</span>
                 </button>
