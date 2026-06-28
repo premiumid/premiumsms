@@ -4984,8 +4984,11 @@
 .catalog-right .catalog-right-hero-dynamic {
   border-radius: 0;
   border: none;
-  border-bottom: 1px solid var(--border);
+  border-bottom: none;
   background: transparent;
+}
+.catalog-right .catalog-right-hero-dynamic.has-service {
+  border-bottom: 1px solid var(--border);
 }
 
 .catalog-country-label {

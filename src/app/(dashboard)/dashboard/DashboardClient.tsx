@@ -215,7 +215,7 @@ function StepBar({
       </div>
       <div className={`step-line${s2 ? ' filled' : ''}`} />
       <div className={`step-item${s3 ? ' active' : ''}`}>
-        <div className="step-dot">{s3 ? '→' : '3'}</div>
+        <div className="step-dot">3</div>
         <span className="step-label">Confirm</span>
       </div>
     </div>
@@ -582,7 +582,7 @@ export default function DashboardClient({
           {/* Step bar */}
           <StepBar selectedApp={selectedApp} selectedCountry={selectedCountry} price={price} priceLoading={priceLoading} />
 
-          <div className="catalog-right-hero-dynamic">
+          <div className={`catalog-right-hero-dynamic${activeApp ? ' has-service' : ''}`}>
             <div className="dynamic-hero-icon">
               {activeApp ? (
                 <ServiceIcon slug={activeApp.slug} name={activeApp.name} iconUrl={activeApp.icon_url} size={48} />
@@ -632,7 +632,7 @@ export default function DashboardClient({
               </p>
             )}
 
-            {error && (
+            {activeApp && error && (
               <div className="text-xs text-danger mb-4 bg-danger/10 p-2.5 rounded-lg border border-danger/20">
                 {error}
                 {error.startsWith('Insufficient') && (
@@ -643,14 +643,13 @@ export default function DashboardClient({
               </div>
             )}
 
-            <ul className="order-summary-features">
-              <li>Real SIM Cards</li>
-              <li>145+ Countries</li>
-              <li>Auto-Refund on failure</li>
-            </ul>
-
             {activeApp ? (
               <>
+                <ul className="order-summary-features">
+                  <li>Real SIM Cards</li>
+                  <li>145+ Countries</li>
+                  <li>Auto-Refund on failure</li>
+                </ul>
                 <OrderCTA
                   pulse
                   activeApp={activeApp}
