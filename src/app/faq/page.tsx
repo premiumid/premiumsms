@@ -58,7 +58,7 @@ const faqs = [
       },
       {
         q: 'What is the minimum top-up?',
-        a: 'The minimum is approximately $12 USD due to USDT (TRC-20) network minimums. The exact minimum is shown in the top-up dialog.',
+        a: 'The minimum is $15 USD. The exact amount is shown in the top-up dialog.',
       },
       {
         q: 'Does my balance expire?',

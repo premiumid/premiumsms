@@ -151,7 +151,7 @@ export default function PricingPage() {
               { q: 'Does my balance expire?', a: 'No. Your wallet balance never expires.' },
               { q: 'What if no code arrives?', a: 'You are automatically refunded to your wallet within seconds.' },
               { q: 'Can I use crypto to top up?', a: 'Yes — we accept USDT (TRC-20) via NOWPayments.' },
-              { q: 'Is there a minimum top-up?', a: 'The minimum is ~$12 USD due to USDT (TRC-20) network minimums.' },
+              { q: 'Is there a minimum top-up?', a: 'The minimum is $15 USD.' },
             ].map(({ q, a }) => (
               <details key={q} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '1rem 1.25rem' }}>
                 <summary className="font-semibold cursor-pointer text-[15px]">{q}</summary>

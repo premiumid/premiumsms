@@ -27,7 +27,7 @@ const steps: Step[] = [
       </svg>
     ),
     title: '1. Top Up Your Wallet',
-    description: 'Add funds to your wallet using USDT (TRC-20). Minimum top-up is $12. Your balance is used to pay for each number rental.',
+    description: 'Add funds to your wallet using USDT (TRC-20). Minimum top-up is $15. Your balance is used to pay for each number rental.',
     action: { label: 'Go to Wallet', href: '/dashboard/wallet' },
   },
   {

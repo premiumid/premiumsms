@@ -65,7 +65,7 @@ function StatusIcon({ type }: { type: string }) {
   }
 }
 
-const AMOUNT_PRESETS = [12, 20, 30, 50]
+const AMOUNT_PRESETS = [15, 20, 30, 50]
 
 export default function WalletClient({ initialBalance, initialTransactions, userEmail }: WalletClientProps) {
   const router = useRouter()
@@ -86,7 +86,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
     }
   }, [])
 
-  const [selectedAmount, setSelectedAmount] = useState<number>(12)
+  const [selectedAmount, setSelectedAmount] = useState<number>(15)
   const [customAmount, setCustomAmount] = useState<string>('')
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -201,8 +201,8 @@ export default function WalletClient({ initialBalance, initialTransactions, user
   }
 
   const handleCreatePayment = async () => {
-    if (finalAmount < 12 || isNaN(finalAmount)) {
-      setError('Minimum top-up amount is $12.00 USD (USDT TRC-20)')
+    if (finalAmount < 15 || isNaN(finalAmount)) {
+      setError('Minimum top-up amount is $15.00 USD')
       return
     }
     setError(null)
@@ -332,7 +332,7 @@ export default function WalletClient({ initialBalance, initialTransactions, user
         <div className="wallet-card wallet-topup-card" id="topup-card">
           <div className="wallet-topup-header">
             <h2 className="wallet-topup-title">Top Up Wallet</h2>
-            <p className="wallet-topup-subtitle">Pay with USDT (TRC-20) · Minimum $12.00 USD</p>
+            <p className="wallet-topup-subtitle">Pay with USDT (TRC-20) · Minimum $15.00 USD</p>
           </div>
 
           <div className="wallet-topup-amounts">
