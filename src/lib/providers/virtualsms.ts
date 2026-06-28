@@ -60,15 +60,11 @@ type PriceRaw = { price?: number; price_usd?: number; available?: boolean }
 
 export async function listServices(): Promise<VsmsService[]> {
   const data = await request<{ services: ServiceRaw[] }>('/customer/services')
-  const services = data.services.map(s => ({
+  return data.services.map(s => ({
     slug: s.service_id,
     name: s.service_name,
     icon_url: s.icon,
   }))
-  // Log slug→name pairs once per cold start so they surface in Vercel function logs
-  // and the full catalog can be audited against POPULAR_SERVICES slugs.
-  console.log('[VirtualSMS] catalog:', services.map(s => `${s.slug}=${s.name}`).join(', '))
-  return services
 }
 
 export async function listCountries(
