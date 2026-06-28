@@ -413,23 +413,6 @@ export default function DashboardClient({
   return (
     <div className="dashboard-layout-wrapper">
 
-      {/* Hero bar */}
-      {isLoggedIn && (
-        <div className="dashboard-hero">
-          <div>
-            <h1>Dashboard</h1>
-            <p>Welcome back. Manage your rentals and wallet balance.</p>
-          </div>
-          {walletBalance !== undefined && walletBalance < 1 && (
-            <Link href="/dashboard/wallet#topup-card" className="hero-topup-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-              </svg>
-              Add Funds
-            </Link>
-          )}
-        </div>
-      )}
 
       {/* Guest welcome banner */}
       {!isLoggedIn && (
@@ -549,14 +532,6 @@ export default function DashboardClient({
             )}
           </div>
 
-          {/* Stats bar */}
-          {!search && (
-            <div className="catalog-stats-bar mt-6 flex justify-center gap-6 text-sm text-secondary font-medium">
-              <span className="flex items-center gap-1.5"><span className="stat-dot stat-dot--success"></span> 2500+ services</span>
-              <span className="flex items-center gap-1.5"><span className="stat-dot stat-dot--accent"></span> 145+ countries</span>
-              <span className="flex items-center gap-1.5"><span className="stat-dot stat-dot--muted"></span> From $0.05</span>
-            </div>
-          )}
 
           {/* Recent Activity */}
           {isLoggedIn && recentTransactions && recentTransactions.length > 0 && (
@@ -602,7 +577,7 @@ export default function DashboardClient({
         </main>
 
         {/* Right panel — tablet + desktop */}
-        <aside className="catalog-right p-4 pt-0">
+        <aside className="catalog-right">
 
           {/* Step bar */}
           <StepBar selectedApp={selectedApp} selectedCountry={selectedCountry} price={price} priceLoading={priceLoading} />
@@ -618,7 +593,7 @@ export default function DashboardClient({
               )}
             </div>
             <h2 className="dynamic-hero-title">{activeApp ? activeApp.name : 'Real SMS Numbers'}</h2>
-            <p className="dynamic-hero-price">
+            <p className={`dynamic-hero-price${price !== null ? ' dynamic-hero-price--active' : ''}`}>
               {priceLoading
                 ? 'Fetching price…'
                 : price !== null
@@ -632,9 +607,10 @@ export default function DashboardClient({
           <div className="order-summary-box">
             {activeApp ? (
               <div className="mb-6">
-                <label className="block text-xs font-bold text-tertiary uppercase tracking-wider mb-2">
-                  Select Country{!countriesLoading && countries.length > 0 && (
-                    <span className="ml-2 font-normal normal-case tracking-normal text-faint">{countries.length} available</span>
+                <label className="catalog-country-label">
+                  Select Country{' '}
+                  {!countriesLoading && countries.length > 0 && (
+                    <span className="catalog-country-count">{countries.length} available</span>
                   )}
                 </label>
                 <CountryDropdown
@@ -685,6 +661,17 @@ export default function DashboardClient({
                   isCtaReady={isCtaReady}
                   onRent={handleRent}
                 />
+                {isLoggedIn && walletBalance !== undefined && (
+                  <p className="catalog-wallet-hint">
+                    Balance:{' '}
+                    <span className={walletBalance < (price ?? 0) && price !== null ? 'catalog-wallet-hint--low' : ''}>
+                      ${walletBalance.toFixed(2)}
+                    </span>
+                    {walletBalance < (price ?? 0) && price !== null && (
+                      <Link href="/dashboard/wallet#topup-card" className="catalog-wallet-topup">Top Up →</Link>
+                    )}
+                  </p>
+                )}
                 <p className="catalog-price-footnote">One-time charge. Auto-refund if no SMS received.</p>
               </>
             ) : (
