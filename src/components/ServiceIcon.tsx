@@ -52,6 +52,7 @@ export function getSimpleIconSlug(slug: string, name: string): string {
     'wechat': 'wechat',
     'viber': 'viber',
     'line': 'line',
+    'airbnb': 'airbnb',
   }
 
   if (nameMapping[nameLower]) {

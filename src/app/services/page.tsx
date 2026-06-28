@@ -70,10 +70,22 @@ export default function ServicesPage() {
         <div className="services-grid-lg">
           {rest.map(s => (
             <div key={s.name} className="services-card">
-              <ServiceIcon slug={s.slug} name={s.name} />
+              {s.slug === '' ? (
+                <div className="services-card-more-icon">
+                  <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="5" cy="5" r="1.5"/><circle cx="12" cy="5" r="1.5"/><circle cx="19" cy="5" r="1.5"/>
+                    <circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>
+                    <circle cx="5" cy="19" r="1.5"/><circle cx="12" cy="19" r="1.5"/><circle cx="19" cy="19" r="1.5"/>
+                  </svg>
+                </div>
+              ) : (
+                <ServiceIcon slug={s.slug} name={s.name} />
+              )}
               <h3 className="services-card-name">{s.name}</h3>
               <p className="services-card-desc">{s.desc}</p>
-              <Link href="/register" className="btn btn-secondary services-card-btn">Get a Number</Link>
+              <Link href="/register" className="btn btn-secondary services-card-btn">
+                {s.slug === '' ? 'Browse All →' : 'Get a Number'}
+              </Link>
             </div>
           ))}
         </div>

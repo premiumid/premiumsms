@@ -1600,6 +1600,18 @@ details[open] .faq-question::after {
   flex-grow: 1;
 }
 
+.services-card-more-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-muted);
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
 .services-card-btn {
   margin-top: 0.5rem;
   width: 100%;

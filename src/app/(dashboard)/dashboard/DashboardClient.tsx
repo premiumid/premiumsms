@@ -75,13 +75,16 @@ export default function DashboardClient({
   const [selectedApp, setSelectedApp] = useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  const sortedServices = [...initialServices].sort((a, b) => {
-    const aIndex = POPULAR_SERVICES.findIndex(
-      p => p.slug.toLowerCase() === a.slug.toLowerCase() || p.name.toLowerCase() === a.name.toLowerCase()
-    )
-    const bIndex = POPULAR_SERVICES.findIndex(
-      p => p.slug.toLowerCase() === b.slug.toLowerCase() || p.name.toLowerCase() === b.name.toLowerCase()
-    )
+  // Apply canonical name overrides so API casing (e.g. "facebook", "Whatsapp") is corrected everywhere
+  const nameMap = new Map(POPULAR_SERVICES.map(p => [p.slug.toLowerCase(), p.name]))
+  const normalizedServices = initialServices.map(s => ({
+    ...s,
+    name: nameMap.get(s.slug.toLowerCase()) || s.name,
+  }))
+
+  const sortedServices = [...normalizedServices].sort((a, b) => {
+    const aIndex = POPULAR_SERVICES.findIndex(p => p.slug.toLowerCase() === a.slug.toLowerCase())
+    const bIndex = POPULAR_SERVICES.findIndex(p => p.slug.toLowerCase() === b.slug.toLowerCase())
     if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex
     if (aIndex !== -1) return -1
     if (bIndex !== -1) return 1
@@ -93,15 +96,13 @@ export default function DashboardClient({
   )
 
   const popularApps = POPULAR_SERVICES.map(p => {
-    const found = initialServices.find(
-      s => s.slug.toLowerCase() === p.slug.toLowerCase() || s.name.toLowerCase() === p.name.toLowerCase()
-    )
-    return found ? { ...found, name: p.name } : p
+    const found = sortedServices.find(s => s.slug.toLowerCase() === p.slug.toLowerCase())
+    return found || p
   })
 
   const activeApp =
     selectedApp
-      ? initialServices.find(s => s.slug.toLowerCase() === selectedApp.toLowerCase()) ||
+      ? sortedServices.find(s => s.slug.toLowerCase() === selectedApp.toLowerCase()) ||
         POPULAR_SERVICES.find(s => s.slug === selectedApp) ||
         null
       : null
