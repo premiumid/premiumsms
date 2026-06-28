@@ -585,10 +585,10 @@ export default function DashboardClient({
           <div className="catalog-right-hero-dynamic">
             <div className="dynamic-hero-icon">
               {activeApp ? (
-                <ServiceIcon slug={activeApp.slug} name={activeApp.name} iconUrl={activeApp.icon_url} size={64} />
+                <ServiceIcon slug={activeApp.slug} name={activeApp.name} iconUrl={activeApp.icon_url} size={48} />
               ) : (
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/20">
-                  <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                <div className="order-panel-globe">
+                  <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                 </div>
               )}
             </div>
@@ -606,7 +606,7 @@ export default function DashboardClient({
 
           <div className="order-summary-box">
             {activeApp ? (
-              <div className="mb-6">
+              <div className="order-panel-country-section">
                 <label className="catalog-country-label">
                   Select Country{' '}
                   {!countriesLoading && countries.length > 0 && (
@@ -627,7 +627,7 @@ export default function DashboardClient({
                 />
               </div>
             ) : (
-              <p className="text-sm text-secondary mb-6 text-center">
+              <p className="order-panel-empty-text">
                 Select a service from the grid to get started.
               </p>
             )}
@@ -661,6 +661,7 @@ export default function DashboardClient({
                   isCtaReady={isCtaReady}
                   onRent={handleRent}
                 />
+                <p className="catalog-price-footnote">One-time charge. Auto-refund if no SMS received.</p>
                 {isLoggedIn && walletBalance !== undefined && (
                   <p className="catalog-wallet-hint">
                     Balance:{' '}
@@ -672,10 +673,9 @@ export default function DashboardClient({
                     )}
                   </p>
                 )}
-                <p className="catalog-price-footnote">One-time charge. Auto-refund if no SMS received.</p>
               </>
             ) : (
-              <button type="button" disabled className="catalog-right-cta opacity-50 cursor-not-allowed">
+              <button type="button" disabled className="catalog-right-cta">
                 Select a Service
               </button>
             )}

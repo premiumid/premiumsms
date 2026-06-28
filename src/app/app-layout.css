@@ -780,6 +780,11 @@
   border-color: var(--accent-muted);
 }
 
+.catalog-right-cta:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* ─────────── Hamburger menu ─────────── */
 .hamburger {
   display: none;
