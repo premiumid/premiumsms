@@ -61,7 +61,7 @@ export default function ContactForm() {
       </div>
       <div className="contact-field">
         <label htmlFor="contact-message" className="contact-label">Message</label>
-        <textarea id="contact-message" name="body" rows={5} placeholder="Describe your issue or question..." required className="input-field" style={{ resize: 'vertical' }} />
+        <textarea id="contact-message" name="body" rows={5} placeholder="Describe your issue or question..." required className="input-field" />
       </div>
       <button type="submit" className="btn btn-primary contact-submit" disabled={sending}>
         {sending ? 'Sending\u2026' : 'Send Message'}

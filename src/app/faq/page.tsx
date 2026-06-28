@@ -116,27 +116,25 @@ export default function FaqPage() {
       <MarketingNav />
 
       {/* Hero */}
-      <section className="hero-wrapper" style={{ paddingBottom: '5rem', textAlign: 'center' }}>
-        <div className="container">
+      <section className="hero-wrapper services-page-hero">
+        <div className="container pricing-hero-inner">
           <h1 className="hero-title">Frequently Asked<br /><span className="text-gradient">Questions</span></h1>
-          <p className="hero-desc" style={{ maxWidth: '600px', margin: '0 auto' }}>
-            Can&apos;t find the answer? Email us at <a href="mailto:support@premiumid.io" style={{ color: 'var(--accent)' }}>support@premiumid.io</a>
+          <p className="hero-desc pricing-hero-desc">
+            Can&apos;t find the answer? Email us at <a href="mailto:support@premiumid.io" className="faq-support-email">support@premiumid.io</a>
           </p>
         </div>
       </section>
 
       {/* FAQs */}
-      <section className="container" style={{ padding: '4rem 1.5rem 6rem', maxWidth: '800px' }}>
+      <section className="container faq-page-section">
         {faqs.map(group => (
-          <div key={group.category} style={{ marginBottom: '3rem' }}>
-            <h2 className="font-bold text-accent mb-4 uppercase" style={{ letterSpacing: '0.05em', fontSize: '13px' }}>
-              {group.category}
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div key={group.category} className="faq-group">
+            <h2 className="faq-category-label">{group.category}</h2>
+            <div className="pricing-faq-list">
               {group.items.map(({ q, a }) => (
-                <details key={q} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '1rem 1.25rem', boxShadow: 'var(--shadow-sm)' }}>
-                  <summary className="font-semibold cursor-pointer" style={{ fontSize: '15px' }}>{q}</summary>
-                  <p className="mt-3 text-secondary" style={{ fontSize: '0.875rem', lineHeight: '1.6' }}>{a}</p>
+                <details key={q} className="faq-item">
+                  <summary className="faq-question">{q}</summary>
+                  <p className="faq-answer">{a}</p>
                 </details>
               ))}
             </div>
@@ -144,20 +142,18 @@ export default function FaqPage() {
         ))}
 
         {/* Still need help */}
-        <div style={{ background: 'var(--bg-muted)', borderRadius: 'var(--radius-lg)', padding: '2rem', textAlign: 'center', marginTop: '2rem' }}>
-          <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem' }}>Still need help?</h3>
-          <p className="text-secondary mb-6" style={{ fontSize: '0.875rem' }}>Our team responds within 24 hours.</p>
+        <div className="faq-still-need-help">
+          <h3 className="faq-still-title">Still need help?</h3>
+          <p className="faq-still-desc">Our team responds within 24 hours.</p>
           <Link href="/contact" className="btn btn-primary">Contact Support</Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '2rem 1.5rem', textAlign: 'center' }}>
-        <p className="text-sm text-secondary">
-          &copy; {new Date().getFullYear()} PremiumID. &nbsp;|&nbsp;{' '}
-          <Link href="/privacy" className="text-secondary">Privacy</Link> &nbsp;|&nbsp;{' '}
-          <Link href="/terms" className="text-secondary">Terms</Link>
-        </p>
+      <footer className="pricing-page-footer">
+        &copy; {new Date().getFullYear()} PremiumID. &nbsp;|&nbsp;{' '}
+        <Link href="/privacy">Privacy</Link> &nbsp;|&nbsp;{' '}
+        <Link href="/terms">Terms</Link>
       </footer>
     </div>
   )

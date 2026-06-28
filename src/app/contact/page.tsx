@@ -16,7 +16,7 @@ export default function ContactPage() {
       <section className="hero-wrapper contact-hero">
         <div className="container">
           <h1 className="hero-title">Contact Us</h1>
-          <p className="hero-desc" style={{ margin: '0 auto' }}>
+          <p className="hero-desc pricing-hero-desc">
             We respond to all messages within 24 hours.
           </p>
         </div>

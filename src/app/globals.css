@@ -1080,10 +1080,25 @@ ul {
 }
 
 .faq-item {
-  background: white;
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.faq-item[open] {
+  border-color: var(--accent-muted);
+}
+
+.faq-category-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.875rem;
 }
 
 .faq-question {
@@ -1103,7 +1118,11 @@ ul {
 .faq-question::after {
   content: "+";
   font-size: 1.25rem;
-  color: var(--text-faint);
+  font-weight: 400;
+  color: var(--accent);
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
 }
 
 details[open] .faq-question::after {
@@ -1111,9 +1130,47 @@ details[open] .faq-question::after {
 }
 
 .faq-answer {
-  padding: 0 1.5rem 1.5rem 1.5rem;
+  padding: 0.875rem 1.5rem 1.25rem;
   color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ── FAQ page layout ── */
+.faq-page-section {
+  padding: 4rem 1.5rem 6rem;
+  max-width: 800px;
+}
+
+.faq-group {
+  margin-bottom: 2.5rem;
+}
+
+.faq-support-email {
+  color: var(--accent);
+}
+
+.faq-still-need-help {
+  background: var(--bg-muted);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: center;
+  margin-top: 2.5rem;
+  border: 1px solid var(--border);
+}
+
+.faq-still-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.faq-still-desc {
   font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
 }
 
 /* Bottom CTA */
@@ -2067,6 +2124,10 @@ details[open] .faq-question::after {
 .contact-label {
   font-size: 0.875rem;
   font-weight: 600;
+}
+
+.contact-field textarea {
+  resize: vertical;
 }
 
 .contact-submit {
